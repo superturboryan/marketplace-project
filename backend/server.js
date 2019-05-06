@@ -49,9 +49,20 @@ app.get("/get-single-item", function (req, res) {
    //Get item from query in fetch path
    let searchedItemId = req.query.search
 
-   let searchedItem = mockItems.find(item => {
+   let searchedItem = items.find(item => {
       return item.itemId === searchedItemId
    })
+
+   res.send(JSON.stringify(searchedItem))
+})
+
+app.get("get-items-by-user", function (req, res) {
+   let sessionId = req.cookies.sid
+
+   let currentUserName = sessions[sessionId]
+
+   let
+
 })
 
 //Will have to verify that username does not already exist!
