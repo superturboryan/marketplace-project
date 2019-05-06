@@ -7,25 +7,25 @@ let cookieParser = require('cookie-parser')
 const MongoClient = require("mongodb").MongoClient;
 
 //Local server storage:
-import { mockItems, mockReviews, mockUsers } from "./mockData.js"
+let data = require("./mockData.js")
 
-let items = mockItems
-let reviews = mockReviews
-let users = mockUsers
+let items = data.items
+let reviews = data.reviews
+let users = data.users
 
 //Remote db storage:
-let itemsCollection
-let usersCollection
-let reviewsCollection
-let sessionsCollection
-MongoClient.connect(url, (err, allDbs) => {
-   if (err) throw err;
-   marketplaceDB = allDbs.db("Marketplace-DB")
-   itemsCollection = marketplaceDB.collection("Items")
-   usersCollection = marketplaceDB.collection("Users")
-   reviewsCollection = marketplaceDB.collection("Reviews")
-   sessionsCollection = marketplaceDB.collection("Sessions")
-})
+// let itemsCollection
+// let usersCollection
+// let reviewsCollection
+// let sessionsCollection
+// MongoClient.connect(url, (err, allDbs) => {
+//    if (err) throw err;
+//    marketplaceDB = allDbs.db("Marketplace-DB")
+//    itemsCollection = marketplaceDB.collection("Items")
+//    usersCollection = marketplaceDB.collection("Users")
+//    reviewsCollection = marketplaceDB.collection("Reviews")
+//    sessionsCollection = marketplaceDB.collection("Sessions")
+// })
 
 let sessions = {}
 
@@ -119,7 +119,7 @@ app.post("/add-item", upload.single(), function (req, res) {
       images: newItemImages,
       stock: newItemStock,
       itemId: generateId(),
-      userId = newItemUserId,
+      userId: newItemUserId,
       city: newItemCity,
       province: newItemProvince,
       country: newItemCountry
