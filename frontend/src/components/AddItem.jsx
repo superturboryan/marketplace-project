@@ -23,11 +23,9 @@ class UnconnectedAddItem extends Component {
     data.append("description", this.state.description);
     data.append("price", this.state.price);
     data.append("stock", this.state.stock);
-    data.append("location", {
-      city: this.state.city,
-      province: this.state.province,
-      country: this.state.country
-    });
+    data.append("city", this.state.city);
+    data.append("province", this.state.province);
+    data.append("country", this.state.country);
     data.append("images", this.state.images);
     console.log(data);
 
