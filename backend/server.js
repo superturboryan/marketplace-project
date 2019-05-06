@@ -72,9 +72,9 @@ app.post("/login", upload.none(), function (req, res) {
    let enteredName = req.body.name
    let enteredPass = req.body.password
    //Check users array to find corresponding password
-   
+
    let expectedPass
-   
+
    let expectedPassUser = users.find(user => {
       return user.name === enteredName
    })
@@ -108,18 +108,24 @@ app.post("/add-item", upload.single(), function (req, res) {
    let currentUserName = sessions[sessionId]
 
    //Get userId from mock
-   let newItemUserId = users.find(user => {
+   let newItemUser = users.find(user => {
       return user.name === currentUserName
-   }).userId
+   })
+
+   let newItemUserId
+
+   if (newItemUser !== undefined) {
+      newItemUserId = newItemUser.userId
+   }
 
    let newItemTitle = req.body.title
-   let newItemDetails = req.body.details
+   let newItemDetails = req.body.description
    let newItemPrice = req.body.price
    let newItemImages = req.body.images
    let newItemStock = req.body.stock
-   let newItemCity = req.body.location.city
-   let newItemProvince = req.body.location.province
-   let newItemCountry = req.body.location.country
+   let newItemCity = req.body.city
+   let newItemProvince = req.body.province
+   let newItemCountry = req.body.country
 
    let newItem = {
       title: newItemTitle,
