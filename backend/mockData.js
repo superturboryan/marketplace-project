@@ -8,7 +8,10 @@ let mockItems = [
       //
       itemId: "abc",
       //UserId identifies who is selling item
-      userId: 123
+      userId: 123,
+      city: "Montreal",
+      province: "Kweebek",
+      country: "Canada"
    },
    {
       title: "Socks",
@@ -17,7 +20,10 @@ let mockItems = [
       images: [],
       stock: 10,
       itemId: "def",
-      userId: 123
+      userId: 123,
+      city: "Montreal",
+      province: "Kweebek",
+      country: "Canada"
    },
    {
       title: "Hat",
@@ -26,7 +32,10 @@ let mockItems = [
       images: [],
       stock: 10,
       itemId: "ghi",
-      userId: 123
+      userId: 123,
+      city: "Montreal",
+      province: "Kweebek",
+      country: "Canada"
    }
 ]
 

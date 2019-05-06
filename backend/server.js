@@ -37,13 +37,13 @@ app.use(cors({ credentials: true, origin: "http://localhost:3000" }))
 // app.use(cors({ credentials: true, origin: "http://134.209.119.133:3000" }))
 
 
-app.get("get-all-items", function (req, res) {
+app.get("/get-all-items", function (req, res) {
    console.log("Returning  all items...")
 
    res.send(JSON.stringify(items))
 })
 
-app.get("get-single-item", function (req, res) {
+app.get("/get-single-item", function (req, res) {
    //Get item from query in fetch path
    let searchedItemId = req.query.search
 
@@ -52,7 +52,8 @@ app.get("get-single-item", function (req, res) {
    })
 })
 
-app.post("signup", upload.none(), function (req, res) {
+//Will have to verify that username does not already exist!
+app.post("/signup", upload.none(), function (req, res) {
 
    let newUserName = req.body.name
    let newUserPass = req.body.password
@@ -64,7 +65,7 @@ app.post("signup", upload.none(), function (req, res) {
 
 })
 
-app.post("login", upload.none(), function (req, res) {
+app.post("/login", upload.none(), function (req, res) {
 
    let enteredName = req.body.name
    let enteredPass = req.body.password
@@ -91,7 +92,7 @@ app.post("login", upload.none(), function (req, res) {
 
 })
 
-app.post("add-item", upload.single(), function (req, res) {
+app.post("/add-item", upload.single(), function (req, res) {
 
    let sessionId = req.cookies.sid
 
@@ -107,6 +108,9 @@ app.post("add-item", upload.single(), function (req, res) {
    let newItemPrice = req.body.price
    let newItemImages = req.body.images
    let newItemStock = req.body.stock
+   let newItemCity = req.body.location.city
+   let newItemProvince = req.body.location.province
+   let newItemCountry = req.body.location.country
 
    let newItem = {
       title: newItemTitle,
@@ -115,14 +119,19 @@ app.post("add-item", upload.single(), function (req, res) {
       images: newItemImages,
       stock: newItemStock,
       itemId: generateId(),
-      userId = newItemUserId
+      userId = newItemUserId,
+      city: newItemCity,
+      province: newItemProvince,
+      country: newItemCountry
    }
 
    //Add new item to local object
    items = items.concat(newItem)
+
+   res.send({ success: true })
 })
 
-app.post("add-review", upload.none(), function (req, res) {
+app.post("/add-review", upload.none(), function (req, res) {
 
    let sessionId = req.cookies.sid
    let currentUserName = sessions[sessionId]
@@ -150,16 +159,25 @@ app.post("add-review", upload.none(), function (req, res) {
    res.send({ success: true })
 })
 
-app.get("get-reviews-for-id", function (req, res) {
+//GET REVIEWS FILTERED BY EITHER USERID OR ITEMID
+app.get("/get-reviews-for-id", function (req, res) {
+
+   let reviewsToReturn
 
    //GET REVIEWS BY SELLER
    if (req.body.itemId === undefined) {
-
+      reviewsToReturn = reviews.filter(review => {
+         return review.userId = req.body.userId
+      })
    }
    //OTHERWISE GET REVIEWS BY ITEM
    else if (req.body.userId === undefined) {
-
+      reviewsToReturn = reviews.filter(review => {
+         return review.itemId = req.body.itemId
+      })
    }
+
+   res.send(JSON.stringify(reviewsToReturn))
 })
 
 
