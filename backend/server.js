@@ -57,21 +57,35 @@ app.get("/get-single-item", function (req, res) {
    //Get item from query in fetch path
    let searchedItemId = req.query.search
 
+   //Search for item in local object
    let searchedItem = items.find(item => {
       return item.itemId === searchedItemId
    })
-
    res.send(JSON.stringify(searchedItem))
+
+   //Search for item in database
+   // itemsCollection.findOne({ itemId: searchedItemId}).toArray((err, result) => {
+   //    if (err) throw err;
+   //    let searchedItem = result[0]
+   //    res.send(JSON.stringify(searchedItem))
+   // })
 })
 
 app.get("get-items-by-user", function (req, res) {
-   let userId = req.query.userId
+   let searchedUserId = req.query.userId
 
+   //Search for item in local object
    let searchedItems = items.filter(item => {
       return item.userId
    })
-
    res.send(JSON.stringify(searchedItems))
+
+   //Search for item in database
+   // itemsCollection.find({ userId: searchedUserId }).toArray((err, result) => {
+   //    if (err) throw err;
+   //    let searchedItems = result
+   //    res.send(JSON.stringify(searchedItems))
+   // })
 })
 
 //Will have to verify that username does not already exist!
@@ -84,6 +98,7 @@ app.post("/signup", upload.none(), function (req, res) {
 
    //Add new users to local users object
    users = users.concat(newUser)
+
    //Add new user to remote database
    usersCollection.insertOne(newUser, (err, result) => {
       if (err) throw err;
