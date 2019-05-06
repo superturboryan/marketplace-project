@@ -14,8 +14,10 @@ class UnconnectedLogin extends Component {
     event.preventDefault();
     // req.body.username
     // req.body.password
-    let data = new FormData(event.target);
-    console.log(event.target);
+    let data = new FormData();
+    data.append("username", this.state.username);
+    data.append("password", this.state.password);
+    console.log(data);
 
     fetch("/login", {
       method: "POST",
@@ -68,14 +70,12 @@ class UnconnectedLogin extends Component {
             type="text"
             onChange={this.handleUsername}
             value={this.state.username}
-            name={"username"}
           />
           <div>Password</div>
           <input
             type="text"
             onChange={this.handlePassword}
             value={this.state.password}
-            name={"password"}
           />
           <input type="submit" value="Submit" />
         </form>
