@@ -19,6 +19,9 @@ class UnconnectedApp extends Component {
         <div>
           <Link to={"/login"}>Login</Link>
         </div>
+        <div>
+          <Link to={"/add-item"}>Add an item</Link>
+        </div>
       </div>
     );
   };
