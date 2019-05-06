@@ -10,6 +10,7 @@ import Signup from "./components/Signup.jsx";
 import Login from "./components/Login.jsx";
 import AddItem from "./components/AddItem.jsx";
 import AnimatedMessage from "./components/AnimatedMessage.jsx";
+import renderProfile from "./components/renderProfile.jsx";
 
 let root = (
   <Provider store={store}>
@@ -20,6 +21,7 @@ let root = (
       <Route exact={true} path="/signup" component={Signup} />
       <Route exact={true} path="/login" component={Login} />
       <Route exact={true} path="/add-item" component={AddItem} />
+      <Route exact={true} path="/profile/:userId" component={renderProfile} />
     </BrowserRouter>
   </Provider>
 );
