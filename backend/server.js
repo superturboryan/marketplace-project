@@ -7,11 +7,13 @@ let cookieParser = require('cookie-parser')
 const MongoClient = require("mongodb").MongoClient;
 
 //Local server storage:
-import { mockItems, mockReviews, mockUsers } from "./mockData.js"
+let data = require("./mockData.js")
 
-let items = mockItems
-let reviews = mockReviews
-let users = mockUsers
+let items = data.items
+let reviews = data.reviews
+let users = data.users
+
+let url = "mongodb+srv://admin:12345@cluster0-nswep.mongodb.net/test?retryWrites=true"
 
 //Remote db storage:
 let itemsCollection
@@ -37,13 +39,13 @@ app.use(cors({ credentials: true, origin: "http://localhost:3000" }))
 // app.use(cors({ credentials: true, origin: "http://134.209.119.133:3000" }))
 
 
-app.get("get-all-items", function (req, res) {
+app.get("/get-all-items", function (req, res) {
    console.log("Returning  all items...")
 
    res.send(JSON.stringify(items))
 })
 
-app.get("get-single-item", function (req, res) {
+app.get("/get-single-item", function (req, res) {
    //Get item from query in fetch path
    let searchedItemId = req.query.search
 
@@ -52,7 +54,8 @@ app.get("get-single-item", function (req, res) {
    })
 })
 
-app.post("signup", upload.none(), function (req, res) {
+//Will have to verify that username does not already exist!
+app.post("/signup", upload.none(), function (req, res) {
 
    let newUserName = req.body.name
    let newUserPass = req.body.password
@@ -64,14 +67,21 @@ app.post("signup", upload.none(), function (req, res) {
 
 })
 
-app.post("login", upload.none(), function (req, res) {
+app.post("/login", upload.none(), function (req, res) {
 
    let enteredName = req.body.name
    let enteredPass = req.body.password
    //Check users array to find corresponding password
-   let expectedPass = users.find(user => {
+   
+   let expectedPass
+   
+   let expectedPassUser = users.find(user => {
       return user.name === enteredName
-   }).password
+   })
+
+   if (expectedPassUser !== undefined) {
+      expectedPass = expectedPassUser.password
+   }
 
    //Check that password matches
    if (enteredPass !== expectedPass) {
@@ -91,7 +101,7 @@ app.post("login", upload.none(), function (req, res) {
 
 })
 
-app.post("add-item", upload.single(), function (req, res) {
+app.post("/add-item", upload.single(), function (req, res) {
 
    let sessionId = req.cookies.sid
 
@@ -107,6 +117,9 @@ app.post("add-item", upload.single(), function (req, res) {
    let newItemPrice = req.body.price
    let newItemImages = req.body.images
    let newItemStock = req.body.stock
+   let newItemCity = req.body.location.city
+   let newItemProvince = req.body.location.province
+   let newItemCountry = req.body.location.country
 
    let newItem = {
       title: newItemTitle,
@@ -115,14 +128,25 @@ app.post("add-item", upload.single(), function (req, res) {
       images: newItemImages,
       stock: newItemStock,
       itemId: generateId(),
-      userId = newItemUserId
+      userId: newItemUserId,
+      city: newItemCity,
+      province: newItemProvince,
+      country: newItemCountry
    }
 
    //Add new item to local object
    items = items.concat(newItem)
+
+   //Add item to database
+   itemsCollection.insertOne(newItem, (err, result) => {
+      if (err) throw err;
+      console.log("DB: Successfully inserted entry into Items collection")
+   })
+
+   res.send({ success: true })
 })
 
-app.post("add-review", upload.none(), function (req, res) {
+app.post("/add-review", upload.none(), function (req, res) {
 
    let sessionId = req.cookies.sid
    let currentUserName = sessions[sessionId]
@@ -150,16 +174,28 @@ app.post("add-review", upload.none(), function (req, res) {
    res.send({ success: true })
 })
 
-app.get("get-reviews-for-id", function (req, res) {
+//GET REVIEWS FILTERED BY EITHER USERID OR ITEMID
+app.get("/get-reviews-for-id", function (req, res) {
+
+   let itemId = req.query.itemId
+   let sellerId = req.query.sellerId
+
+   let reviewsToReturn
 
    //GET REVIEWS BY SELLER
-   if (req.body.itemId === undefined) {
-
+   if (itemId === undefined) {
+      reviewsToReturn = reviews.filter(review => {
+         return review.userId = userId
+      })
    }
    //OTHERWISE GET REVIEWS BY ITEM
-   else if (req.body.userId === undefined) {
-
+   else if (sellerId === undefined) {
+      reviewsToReturn = reviews.filter(review => {
+         return review.itemId = itemId
+      })
    }
+
+   res.send(JSON.stringify(reviewsToReturn))
 })
 
 
