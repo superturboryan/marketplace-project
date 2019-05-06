@@ -12,9 +12,34 @@ class UnconnectedLogin extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
+    // req.body.username
+    // req.body.password
     let data = new FormData(event.target);
     console.log(event.target);
-    // TO DO: Fetch request -> set global 'loggedIn' state.
+
+    fetch("/login", {
+      method: "POST",
+      credentials: "include",
+      body: data
+    })
+      .then(response => {
+        return response.text();
+      })
+      .then(responseBody => {
+        let body = JSON.parse(responseBody);
+
+        if (!body.success) {
+          console.log(body);
+          return;
+        }
+
+        // TODO: Do stuff. Redirect?
+        console.log(body);
+        this.props.dispatch({
+          type: "logged-in",
+          toggle: true
+        });
+      });
   };
 
   handleUsername = event => {

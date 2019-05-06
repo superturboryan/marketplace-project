@@ -8,6 +8,7 @@ class UnconnectedAddItem extends Component {
       title: "",
       description: "",
       price: 0,
+      stock: 1,
       city: "",
       province: "",
       country: "",
@@ -21,6 +22,7 @@ class UnconnectedAddItem extends Component {
     data.append("title", this.state.title);
     data.append("description", this.state.description);
     data.append("price", this.state.price);
+    data.append("stock", this.state.stock);
     data.append("location", {
       city: this.state.city,
       province: this.state.province,
@@ -28,7 +30,26 @@ class UnconnectedAddItem extends Component {
     });
     data.append("images", this.state.images);
     console.log(data);
-    // TO DO: Fetch request to add item to database.
+
+    fetch("/add-item", {
+      method: "POST",
+      credentials: "include",
+      body: data
+    })
+      .then(response => {
+        return response.text();
+      })
+      .then(responseBody => {
+        let body = JSON.parse(responseBody);
+
+        if (!body.success) {
+          console.log(body);
+          return;
+        }
+
+        // TODO: Do stuff. Redirect?
+        console.log(body);
+      });
   };
 
   handleTitle = event => {
@@ -49,9 +70,23 @@ class UnconnectedAddItem extends Component {
       this.setState({
         price: 0
       });
+      return;
     }
     this.setState({
       price: result
+    });
+  };
+
+  handleStock = event => {
+    let result = parseFloat(event.target.value);
+    if (isNaN(result)) {
+      this.setState({
+        stock: 1
+      });
+      return;
+    }
+    this.setState({
+      stock: result
     });
   };
 
@@ -105,6 +140,14 @@ class UnconnectedAddItem extends Component {
             type="number"
             onChange={this.handlePrice}
             value={this.state.price}
+            min={0}
+          />
+          <div>How many in stock</div>
+          <input
+            type="number"
+            onChange={this.handleStock}
+            value={this.state.stock}
+            min={1}
           />
           <div>
             <div>Location</div>
@@ -139,6 +182,7 @@ class UnconnectedAddItem extends Component {
               accept="image/*"
               onChange={this.handleFiles}
               id="uploads"
+              multiple
             />
           </div>
           <div>
