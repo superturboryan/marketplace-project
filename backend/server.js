@@ -162,18 +162,21 @@ app.post("/add-review", upload.none(), function (req, res) {
 //GET REVIEWS FILTERED BY EITHER USERID OR ITEMID
 app.get("/get-reviews-for-id", function (req, res) {
 
+   let itemId = req.query.itemId
+   let sellerId = req.query.sellerId
+
    let reviewsToReturn
 
    //GET REVIEWS BY SELLER
-   if (req.body.itemId === undefined) {
+   if (itemId === undefined) {
       reviewsToReturn = reviews.filter(review => {
-         return review.userId = req.body.userId
+         return review.userId = userId
       })
    }
    //OTHERWISE GET REVIEWS BY ITEM
-   else if (req.body.userId === undefined) {
+   else if (sellerId === undefined) {
       reviewsToReturn = reviews.filter(review => {
-         return review.itemId = req.body.itemId
+         return review.itemId = itemId
       })
    }
 
