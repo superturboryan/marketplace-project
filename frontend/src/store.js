@@ -4,8 +4,8 @@ let reducer = (state, action) => {
   switch (action.type) {
     case "logged-in":
       return { ...state, loggedIn: action.toggle };
-    case "set-number":
-      return { ...state, randomNumber: action.number };
+    case "show-message":
+      return { ...state, message: action.message };
     default:
       return state;
   }
@@ -15,7 +15,7 @@ const store = createStore(
   reducer,
   {
     loggedIn: false,
-    randomNumber: ""
+    message: "Welcome!"
   },
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );

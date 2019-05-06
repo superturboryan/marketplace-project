@@ -1,14 +1,22 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
 
 class UnconnectedLogin extends Component {
   constructor(props) {
     super(props);
     this.state = {
       username: "",
-      password: ""
+      password: "",
+      redirect: false
     };
   }
+
+  componentWillReceiveProps = () => {
+    this.setState({
+      redirect: true
+    });
+  };
 
   handleSubmit = event => {
     event.preventDefault();
@@ -35,8 +43,11 @@ class UnconnectedLogin extends Component {
           return;
         }
 
-        // TODO: Do stuff. Redirect?
         console.log(body);
+        this.props.dispatch({
+          type: "show-message",
+          message: "Login successful!"
+        });
         this.props.dispatch({
           type: "logged-in",
           toggle: true
@@ -57,8 +68,8 @@ class UnconnectedLogin extends Component {
   };
 
   render = () => {
-    if (this.props.loggedIn) {
-      return null; // TO DO: Point to the main page.
+    if (this.props.loggedIn || this.state.redirect) {
+      return <Redirect to="/" />;
     }
 
     return (

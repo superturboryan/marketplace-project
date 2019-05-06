@@ -48,7 +48,6 @@ class UnconnectedAddItem extends Component {
           return;
         }
 
-        // TODO: Do stuff. Redirect?
         console.log(body);
         this.setState({
           redirect: true
