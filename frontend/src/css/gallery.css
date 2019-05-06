@@ -1,0 +1,45 @@
+.galleryItem:hover,
+.galleryItem:focus {
+  background-color: #a8c4e7;
+}
+
+.popover {
+  color: #ffffff;
+}
+.panel-default > .panel-heading {
+  background-color: #464545;
+}
+
+.container {
+  width: 80%;
+  margin: 2rem auto;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(5, auto);
+  grid-template-rows: repeat(5, relative);
+  grid-gap: 2rem;
+}
+
+.gallery__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border: black;
+  border-style: solid;
+  border-width: 3px;
+}
+
+.galleryItem {
+  border: black;
+  border-style: solid;
+}
+
+body {
+  padding: 10px;
+  background-color: rgb(158, 160, 247);
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+}

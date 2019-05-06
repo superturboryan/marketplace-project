@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 
 class UnconnectedItem extends Component {
   handleClick = () => {
@@ -9,14 +10,29 @@ class UnconnectedItem extends Component {
     });
   };
 
+  // render = () => {
+  //   return (
+  //     <div>
+  //       This is Item {this.props.match.params.id}!
+  //       <button onClick={this.handleClick}>
+  //         Random number: {this.props.randNum}
+  //       </button>
+  //     </div>
+  //   );
+  // };
+
   render = () => {
+    console.log("Item props: \n" + this.props);
     return (
-      <div>
-        This is Item {this.props.match.params.id}!
-        <button onClick={this.handleClick}>
-          Random number: {this.props.randNum}
-        </button>
-      </div>
+      <figure className="galleryItem">
+        {" "}
+        <Link to={"/item/" + this.props.itemId}>
+          <div>{this.props.description}</div>{" "}
+          <img height="100px" src={this.props.imageLocation} />{" "}
+        </Link>{" "}
+        <div>{this.props.cost}$</div>
+        <Link to={"/seller/" + this.props.sellerId}> Link to seller </Link>
+      </figure>
     );
   };
 }
