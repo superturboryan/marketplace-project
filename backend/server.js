@@ -13,19 +13,21 @@ let items = data.items
 let reviews = data.reviews
 let users = data.users
 
+let url = "mongodb+srv://admin:12345@cluster0-nswep.mongodb.net/test?retryWrites=true"
+
 //Remote db storage:
-// let itemsCollection
-// let usersCollection
-// let reviewsCollection
-// let sessionsCollection
-// MongoClient.connect(url, (err, allDbs) => {
-//    if (err) throw err;
-//    marketplaceDB = allDbs.db("Marketplace-DB")
-//    itemsCollection = marketplaceDB.collection("Items")
-//    usersCollection = marketplaceDB.collection("Users")
-//    reviewsCollection = marketplaceDB.collection("Reviews")
-//    sessionsCollection = marketplaceDB.collection("Sessions")
-// })
+let itemsCollection
+let usersCollection
+let reviewsCollection
+let sessionsCollection
+MongoClient.connect(url, (err, allDbs) => {
+   if (err) throw err;
+   marketplaceDB = allDbs.db("Marketplace-DB")
+   itemsCollection = marketplaceDB.collection("Items")
+   usersCollection = marketplaceDB.collection("Users")
+   reviewsCollection = marketplaceDB.collection("Reviews")
+   sessionsCollection = marketplaceDB.collection("Sessions")
+})
 
 let sessions = {}
 
@@ -70,9 +72,16 @@ app.post("/login", upload.none(), function (req, res) {
    let enteredName = req.body.name
    let enteredPass = req.body.password
    //Check users array to find corresponding password
-   let expectedPass = users.find(user => {
+   
+   let expectedPass
+   
+   let expectedPassUser = users.find(user => {
       return user.name === enteredName
-   }).password
+   })
+
+   if (expectedPassUser !== undefined) {
+      expectedPass = expectedPassUser.password
+   }
 
    //Check that password matches
    if (enteredPass !== expectedPass) {
@@ -127,6 +136,12 @@ app.post("/add-item", upload.single(), function (req, res) {
 
    //Add new item to local object
    items = items.concat(newItem)
+
+   //Add item to database
+   itemsCollection.insertOne(newItem, (err, result) => {
+      if (err) throw err;
+      console.log("DB: Successfully inserted entry into Items collection")
+   })
 
    res.send({ success: true })
 })
