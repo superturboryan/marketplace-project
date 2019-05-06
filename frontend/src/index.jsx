@@ -7,6 +7,7 @@ import store from "./store.js";
 import App from "./components/App.jsx";
 import Item from "./components/Item.jsx";
 import Signup from "./components/Signup.jsx";
+import Login from "./components/Login.jsx";
 
 let root = (
   <Provider store={store}>
@@ -14,6 +15,7 @@ let root = (
       <Route exact={true} path="/" component={App} />
       <Route exact={true} path="/item/:id" component={Item} />
       <Route exact={true} path="/signup" component={Signup} />
+      <Route exact={true} path="/login" component={Login} />
     </BrowserRouter>
   </Provider>
 );
