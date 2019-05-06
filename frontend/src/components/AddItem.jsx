@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
+import Oops from "./Oops";
 
 class UnconnectedAddItem extends Component {
   constructor(props) {
@@ -12,7 +14,8 @@ class UnconnectedAddItem extends Component {
       city: "",
       province: "",
       country: "",
-      images: undefined
+      images: undefined,
+      redirect: false
     };
   }
 
@@ -47,6 +50,9 @@ class UnconnectedAddItem extends Component {
 
         // TODO: Do stuff. Redirect?
         console.log(body);
+        this.setState({
+          redirect: true
+        });
       });
   };
 
@@ -113,9 +119,13 @@ class UnconnectedAddItem extends Component {
   };
 
   render = () => {
-    /*if (!this.props.loggedIn) {
-      return null; // TO DO: Redirect to the main page if not logged int
-    }*/
+    if (!this.props.loggedIn) {
+      return <Oops message={"You're not signed in!"} />;
+    }
+
+    if (this.state.redirect) {
+      return <Redirect to="/" />;
+    }
 
     return (
       <div>

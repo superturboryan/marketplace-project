@@ -42,6 +42,14 @@ app.use(cors({ credentials: true, origin: "http://localhost:3000" }))
 app.get("/get-all-items", function (req, res) {
    console.log("Returning  all items...")
 
+   //Get items from DB
+   // itemsCollection.find({}).toArray((err, resultArr) => {
+   //    if (err) throw err;
+
+   //    res.send(JSON.stringify(resultArr))
+   // })
+
+   //Get items from local object
    res.send(JSON.stringify(items))
 })
 
@@ -49,56 +57,110 @@ app.get("/get-single-item", function (req, res) {
    //Get item from query in fetch path
    let searchedItemId = req.query.search
 
-   let searchedItem = mockItems.find(item => {
+   //Search for item in local object
+   let searchedItem = items.find(item => {
       return item.itemId === searchedItemId
    })
+   res.send(JSON.stringify(searchedItem))
+
+   //Search for item in database
+   // itemsCollection.findOne({ itemId: searchedItemId}).toArray((err, result) => {
+   //    if (err) throw err;
+   //    let searchedItem = result[0]
+   //    res.send(JSON.stringify(searchedItem))
+   // })
+})
+
+app.get("get-items-by-user", function (req, res) {
+   let searchedUserId = req.query.userId
+
+   //Search for item in local object
+   let searchedItems = items.filter(item => {
+      return item.userId
+   })
+   res.send(JSON.stringify(searchedItems))
+
+   //Search for item in database
+   // itemsCollection.find({ userId: searchedUserId }).toArray((err, result) => {
+   //    if (err) throw err;
+   //    let searchedItems = result
+   //    res.send(JSON.stringify(searchedItems))
+   // })
 })
 
 //Will have to verify that username does not already exist!
 app.post("/signup", upload.none(), function (req, res) {
 
-   let newUserName = req.body.name
+   let newUserName = req.body.username
    let newUserPass = req.body.password
    let newUserId = generateId()
    let newUser = { username: newUserName, password: newUserPass, userId: newUserId }
+
    //Add new users to local users object
    users = users.concat(newUser)
-   res.send({ success: true })
+
+   //Add new user to remote database
+   usersCollection.insertOne(newUser, (err, result) => {
+      if (err) throw err;
+      console.log("DB: Successfully inserted entry into Users collection")
+   })
+   res.send(JSON.stringify({ success: true }))
 
 })
 
 app.post("/login", upload.none(), function (req, res) {
 
-   let enteredName = req.body.name
+   let enteredName = req.body.username
    let enteredPass = req.body.password
-   //Check users array to find corresponding password
-   
    let expectedPass
-   
-   let expectedPassUser = users.find(user => {
+
+   //Check local users object 
+   let expectedUser = users.find(user => {
       return user.name === enteredName
    })
 
-   if (expectedPassUser !== undefined) {
-      expectedPass = expectedPassUser.password
+   if (expectedUser !== undefined) {
+      expectedPass = expectedUser.password
    }
 
    //Check that password matches
    if (enteredPass !== expectedPass) {
       console.log("Passwords did not match!")
-      res.send({ success: false })
+      res.send(JSON.stringify({ success: true }))
       return
    }
 
-   //Add new sessionId to sessions object
+   //Generate random number for cookie
    let newSessionId = generateId()
+
+   //Add new session to local sessions object
    sessions[newSessionId] = enteredName
+   //Add new session to remote database
+   sessionsCollection.insertOne({ sessionId: newSessionId, user: enteredName }, (err, result) => {
+      if (err) throw err;
+      console.log("DB: Successfully added entry to Sessions collection")
+   })
 
    console.log(`Logging in user ${enteredName}`)
    //Send back set-cookie and successful response
-   res.cookie('sid', sessionId);
-   res.send({ success: true })
+   res.cookie('sid', newSessionId);
+   res.send(JSON.stringify({ success: true }))
+})
 
+app.get("/logout", function (req, res) {
+
+   console.log("Logging out user...")
+
+   //Remove from local sessions object
+   delete sessions[req.cookies.sid]
+
+   //Remove from remote database
+   sessionsCollection.deleteOne({ sessionId: req.cookies.sid }, (err, result) => {
+      if (err) throw err;
+      console.log("DB: Successfully removed entry from sessions collection!")
+   })
+
+   res.send(JSON.stringify({ success: true }))
 })
 
 app.post("/add-item", upload.single(), function (req, res) {
@@ -108,18 +170,24 @@ app.post("/add-item", upload.single(), function (req, res) {
    let currentUserName = sessions[sessionId]
 
    //Get userId from mock
-   let newItemUserId = users.find(user => {
+   let newItemUser = users.find(user => {
       return user.name === currentUserName
-   }).userId
+   })
+
+   let newItemUserId
+
+   if (newItemUser !== undefined) {
+      newItemUserId = newItemUser.userId
+   }
 
    let newItemTitle = req.body.title
-   let newItemDetails = req.body.details
+   let newItemDetails = req.body.description
    let newItemPrice = req.body.price
    let newItemImages = req.body.images
    let newItemStock = req.body.stock
-   let newItemCity = req.body.location.city
-   let newItemProvince = req.body.location.province
-   let newItemCountry = req.body.location.country
+   let newItemCity = req.body.city
+   let newItemProvince = req.body.province
+   let newItemCountry = req.body.country
 
    let newItem = {
       title: newItemTitle,
@@ -143,7 +211,7 @@ app.post("/add-item", upload.single(), function (req, res) {
       console.log("DB: Successfully inserted entry into Items collection")
    })
 
-   res.send({ success: true })
+   res.send(JSON.stringify({ success: true }))
 })
 
 app.post("/add-review", upload.none(), function (req, res) {
@@ -171,7 +239,7 @@ app.post("/add-review", upload.none(), function (req, res) {
 
    reviews.concat(newReviewToAdd)
 
-   res.send({ success: true })
+   res.send(JSON.stringify({ success: true }))
 })
 
 //GET REVIEWS FILTERED BY EITHER USERID OR ITEMID
@@ -197,7 +265,6 @@ app.get("/get-reviews-for-id", function (req, res) {
 
    res.send(JSON.stringify(reviewsToReturn))
 })
-
 
 //USE WITH REMOTE SERVER! 
 // app.listen(4000, "0.0.0.0", () => {

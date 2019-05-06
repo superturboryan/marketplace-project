@@ -14,8 +14,10 @@ class UnconnectedSignup extends Component {
     event.preventDefault();
     // req.body.username
     // req.body.password
-    let data = new FormData(event.target);
-    console.log(event.target);
+    let data = new FormData();
+    data.append("username", this.state.username);
+    data.append("password", this.state.password);
+    console.log(data);
 
     fetch("/signup", {
       method: "POST",
