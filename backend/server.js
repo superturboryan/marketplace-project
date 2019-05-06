@@ -112,10 +112,9 @@ app.post("/login", upload.none(), function (req, res) {
 
    let enteredName = req.body.username
    let enteredPass = req.body.password
-   //Check users array to find corresponding password
-
    let expectedPass
 
+   //Check local users object 
    let expectedUser = users.find(user => {
       return user.name === enteredName
    })
@@ -136,7 +135,6 @@ app.post("/login", upload.none(), function (req, res) {
 
    //Add new session to local sessions object
    sessions[newSessionId] = enteredName
-
    //Add new session to remote database
    sessionsCollection.insertOne({ sessionId: newSessionId, user: enteredName }, (err, result) => {
       if (err) throw err;
@@ -147,7 +145,22 @@ app.post("/login", upload.none(), function (req, res) {
    //Send back set-cookie and successful response
    res.cookie('sid', newSessionId);
    res.send(JSON.stringify({ success: true }))
+})
 
+app.get("/logout", function (req, res) {
+
+   console.log("Logging out user...")
+
+   //Remove from local sessions object
+   delete sessions[req.cookies.sid]
+
+   //Remove from remote database
+   sessionsCollection.deleteOne({ sessionId: req.cookies.sid }, (err, result) => {
+      if (err) throw err;
+      console.log("DB: Successfully removed entry from sessions collection!")
+   })
+
+   res.send(JSON.stringify({ success: true }))
 })
 
 app.post("/add-item", upload.single(), function (req, res) {
@@ -252,7 +265,6 @@ app.get("/get-reviews-for-id", function (req, res) {
 
    res.send(JSON.stringify(reviewsToReturn))
 })
-
 
 //USE WITH REMOTE SERVER! 
 // app.listen(4000, "0.0.0.0", () => {
