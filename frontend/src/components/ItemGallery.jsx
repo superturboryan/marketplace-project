@@ -14,7 +14,7 @@ class UnconnectedApp extends Component {
             <Item
               cost={item.price}
               sellerId={item.sellerId}
-              imageLocation={item.image}
+              imageLocation={item.images[0]}
               description={item.description}
               itemId={item.id}
             />
