@@ -128,40 +128,58 @@ app.post("/login", upload.none(), function (req, res) {
    let enteredPass = req.body.password;
    let expectedPass;
 
-   //Check local users object
-   let expectedUser = users.find(user => {
-      return user.name === enteredName;
-   });
+   // //Check local users object
+   // let expectedUser = users.find(user => {
+   //    return user.name === enteredName;
+   // });
+   // if (expectedUser !== undefined) {
+   //    expectedPass = expectedUser.password
+   // }
+   // //Check that password matches
+   // if (enteredPass !== expectedPass) {
+   //    console.log("Passwords did not match!");
+   //    res.send(JSON.stringify({ success: false }));
+   //    return;
+   // }
 
-   if (expectedUser !== undefined) {
-      expectedPass = expectedUser.password
-   }
+   //Check remote users collection in db
+   usersCollection.find({ username: enteredName }).toArray((err, result) => {
+      console.log("DB: Retrieving expected password for user")
+      if (err) throw err;
 
-   //Check that password matches
-   if (enteredPass !== expectedPass) {
-      console.log("Passwords did not match!");
-      res.send(JSON.stringify({ success: false }));
-      return;
-   }
-
-   //Generate random number for cookie
-   let newSessionId = generateId();
-
-   //Add new session to local sessions object
-   sessions[newSessionId] = enteredName;
-   //Add new session to remote database
-   sessionsCollection.insertOne(
-      { sessionId: newSessionId, user: enteredName },
-      (err, result) => {
-         if (err) throw err;
-         console.log("DB: Successfully added entry to Sessions collection");
+      if (result === undefined) {
+         console.log("DB: User not found")
       }
-   );
 
-   console.log(`Logging in user ${enteredName}`);
-   //Send back set-cookie and successful response
-   res.cookie("sid", newSessionId);
-   res.send(JSON.stringify({ success: true }));
+      expectedPass = result[0].password
+
+      //Check that password matches
+      if (enteredPass !== expectedPass) {
+         console.log("Passwords did not match!");
+         res.send(JSON.stringify({ success: false }));
+         return;
+      }
+
+      //Generate random number for cookie
+      let newSessionId = generateId();
+
+      //Add new session to local sessions object
+      sessions[newSessionId] = enteredName;
+      //Add new session to remote database
+      sessionsCollection.insertOne(
+         { sessionId: newSessionId, user: enteredName },
+         (err, result) => {
+            if (err) throw err;
+            console.log("DB: Successfully added entry to Sessions collection");
+         }
+      );
+
+      console.log(`Logging in user ${enteredName}`);
+      //Send back set-cookie and successful response
+      res.cookie("sid", newSessionId);
+      res.send(JSON.stringify({ success: true }));
+   })
+
 });
 
 app.get("/logout", upload.none(), function (req, res) {
