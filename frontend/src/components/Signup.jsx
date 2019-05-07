@@ -1,21 +1,31 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
 
 class UnconnectedSignup extends Component {
   constructor(props) {
     super(props);
     this.state = {
       username: "",
-      password: ""
+      password: "",
+      redirect: false
     };
   }
+
+  componentWillReceiveProps = () => {
+    this.setState({
+      redirect: true
+    });
+  };
 
   handleSubmit = event => {
     event.preventDefault();
     // req.body.username
     // req.body.password
-    let data = new FormData(event.target);
-    console.log(event.target);
+    let data = new FormData();
+    data.append("username", this.state.username);
+    data.append("password", this.state.password);
+    console.log(data);
 
     fetch("/signup", {
       method: "POST",
@@ -30,11 +40,19 @@ class UnconnectedSignup extends Component {
 
         if (!body.success) {
           console.log(body);
+          this.props.dispatch({
+            type: "show-message",
+            message:
+              "Username not available, or an error occurred. Please try again"
+          });
           return;
         }
 
-        // TODO: Do stuff. Redirect?
         console.log(body);
+        this.props.dispatch({
+          type: "show-message",
+          message: "Signup successful!"
+        });
         this.props.dispatch({
           type: "logged-in",
           toggle: true
@@ -55,8 +73,8 @@ class UnconnectedSignup extends Component {
   };
 
   render = () => {
-    if (this.props.loggedIn) {
-      return null; // TO DO: Point to the main page.
+    if (this.props.loggedIn || this.state.redirect) {
+      return <Redirect to="/" />;
     }
 
     return (

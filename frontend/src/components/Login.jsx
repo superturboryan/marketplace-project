@@ -1,21 +1,31 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
 
 class UnconnectedLogin extends Component {
   constructor(props) {
     super(props);
     this.state = {
       username: "",
-      password: ""
+      password: "",
+      redirect: false
     };
   }
+
+  componentWillReceiveProps = () => {
+    this.setState({
+      redirect: true
+    });
+  };
 
   handleSubmit = event => {
     event.preventDefault();
     // req.body.username
     // req.body.password
-    let data = new FormData(event.target);
-    console.log(event.target);
+    let data = new FormData();
+    data.append("username", this.state.username);
+    data.append("password", this.state.password);
+    console.log(data);
 
     fetch("/login", {
       method: "POST",
@@ -30,11 +40,18 @@ class UnconnectedLogin extends Component {
 
         if (!body.success) {
           console.log(body);
+          this.props.dispatch({
+            type: "show-message",
+            message: "Login not successful. Please try again"
+          });
           return;
         }
 
-        // TODO: Do stuff. Redirect?
         console.log(body);
+        this.props.dispatch({
+          type: "show-message",
+          message: "Login successful!"
+        });
         this.props.dispatch({
           type: "logged-in",
           toggle: true
@@ -55,8 +72,8 @@ class UnconnectedLogin extends Component {
   };
 
   render = () => {
-    if (this.props.loggedIn) {
-      return null; // TO DO: Point to the main page.
+    if (this.props.loggedIn || this.state.redirect) {
+      return <Redirect to="/" />;
     }
 
     return (
@@ -68,14 +85,12 @@ class UnconnectedLogin extends Component {
             type="text"
             onChange={this.handleUsername}
             value={this.state.username}
-            name={"username"}
           />
           <div>Password</div>
           <input
             type="text"
             onChange={this.handlePassword}
             value={this.state.password}
-            name={"password"}
           />
           <input type="submit" value="Submit" />
         </form>
