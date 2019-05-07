@@ -99,10 +99,7 @@ class UnconnectedAddReview extends Component {
             value={this.state.title}
           />
           <div>Rating</div>
-          <select
-            value={this.state.rating}
-            onChange={this.UNSAFE_componentWillMount.handleRating}
-          >
+          <select value={this.state.rating} onChange={this.handleRating}>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
