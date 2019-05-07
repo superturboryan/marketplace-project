@@ -70,7 +70,6 @@ app.get("/get-all-items", function (req, res) {
 app.get("/get-single-item", function (req, res) {
    //Get item from query in fetch path
    let searchedItemId = req.query.search;
-
    //Search for item in local object
    // let searchedItem = items.find(item => {
    //    return item.itemId === searchedItemId;
@@ -341,24 +340,35 @@ app.get("/get-cart", function (req, res) {
             return cart.userId === currentUserId
          })
 
-         let itemIdArray = currentUserCart.itemIds
+         console.log(currentUserCart.itemIds)
+
+         let itemIdArray = JSON.parse(currentUserCart.itemIds)
 
          let cartItems = []
 
-         itemIdArray.forEach(itemId => {
+         //itemIdArray.forEach(itemId => {
 
-            itemsCollection.find({ itemId: itemId }).toArray((err, result) => {
+         let query = {
+            itemId: {
+               $regex: new RegExp("(" + itemIdArray.join("|") + ")")
+            }
+         }
+         console.log("Item id array: !!!", itemIdArray)
+         itemsCollection.find(query).toArray((err, result) => {
 
-               cartItems.push(result[0])
-            })
+            cartItems.push(result)
+            res.send(JSON.stringify(result))
          })
-         console.log("Sending back the following items: ", cartItems)
-         res.send(JSON.stringify(cartItems))
+         //})
+
+         // console.log("Sending back the following items: ", cartItems)
+         // res.send(JSON.stringify(cartItems))
       })
    })
+
 })
 
-app.post("/set-cart", function (req, res) {
+app.post("/set-cart", upload.none(), function (req, res) {
 
    let sessionId = req.cookies.sid
 
@@ -376,7 +386,14 @@ app.post("/set-cart", function (req, res) {
             return cart.userId === currentUserId
          })
 
-         currentUserCart.itemIds = req.body.itemIds
+         if (currentUserCart === undefined) {
+            userCarts.push({ userId: currentUserId, itemIds: JSON.parse(req.body.itemIds) })
+            console.log(`New cart created for user ${currentUserName}`)
+            res.send(JSON.stringify({ success: true }))
+            return
+         }
+
+         currentUserCart.itemIds = JSON.parse(req.body.itemIds)
          console.log(`Cart successfully updated for user ${currentUserName}`)
          res.send(JSON.stringify({ success: true }))
       })
