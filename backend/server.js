@@ -18,12 +18,11 @@ let imagePath = "/images/";
 //Files in local folder uploads have endpoints as /images/x
 app.use("/images", express.static(__dirname + "/uploads"));
 
-//Local server storage:
-let data = require("./mockData.js");
+app.use(cors())
 
-let items = data.items;
-let reviews = data.reviews;
-let users = data.users;
+let userCarts = []
+
+//Cart-Example: { userID: 123, itemIds: [ 123, 123, 123 ] }
 
 let url =
    "mongodb+srv://admin:12345@cluster0-nswep.mongodb.net/test?retryWrites=true";
@@ -33,6 +32,7 @@ let itemsCollection;
 let usersCollection;
 let reviewsCollection;
 let sessionsCollection;
+
 //Add option useNewUrlParser to get rid of console warning message
 MongoClient.connect(url, { useNewUrlParser: true }, (err, allDbs) => {
    if (err) throw err;
@@ -72,21 +72,21 @@ app.get("/get-single-item", function (req, res) {
    let searchedItemId = req.query.search;
 
    //Search for item in local object
-   let searchedItem = items.find(item => {
-      return item.itemId === searchedItemId;
-   });
-   res.send(JSON.stringify(searchedItem));
+   // let searchedItem = items.find(item => {
+   //    return item.itemId === searchedItemId;
+   // });
+   // res.send(JSON.stringify(searchedItem));
 
    //Search for item in database
-   // itemsCollection.findOne({ itemId: searchedItemId}).toArray((err, result) => {
-   //    if (err) throw err;
-   //    let searchedItem = result[0]
-   //    res.send(JSON.stringify(searchedItem))
-   // })
+   itemsCollection.find({ itemId: searchedItemId }).toArray((err, result) => {
+      if (err) throw err;
+      let searchedItem = result[0]
+      res.send(JSON.stringify(searchedItem))
+   })
 });
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-app.get("get-items-by-user", function (req, res) {
+app.get("/get-items-by-user", function (req, res) {
    let searchedUserId = req.query.userId;
 
    //Search for item in local object
@@ -113,22 +113,28 @@ app.post("/signup", upload.none(), function (req, res) {
          res.send(JSON.stringify({ success: false }))
          return;
       }
-
       let newUser = {
          username: req.body.username,
          password: req.body.password,
          userId: generateId()
       };
 
-      //Add new users to local users object
-      users = users.concat(newUser);
-
       //Add new user to remote database
       usersCollection.insertOne(newUser, (err, result) => {
          if (err) throw err;
          console.log("DB: Successfully inserted entry into Users collection");
+
+         //Generate random number for cookie
+         let newSessionId = generateId();
+
+         sessionsCollection.insertOne({ sessionId: newSessionId, user: req.body.username }, (err, result) => {
+            if (err) throw err;
+            console.log("DB: Successfully added entry to Sessions collection");
+
+            res.cookie("sid", newSessionId);
+            res.send(JSON.stringify({ success: true }));
+         });
       });
-      res.send(JSON.stringify({ success: true }));
    })
 });
 
@@ -195,6 +201,7 @@ app.get("/logout", upload.none(), function (req, res) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 app.post("/add-item", upload.array("images"), function (req, res) {
+
    //Find username from remote database
    sessionsCollection.find({ sessionId: req.cookies.sid }).toArray((err, result) => {
       if (err) throw err;
@@ -204,7 +211,7 @@ app.post("/add-item", upload.array("images"), function (req, res) {
       let imageCount = req.files.length;
       let newItemImagePaths = [];
       for (let x = 0; x < imageCount; x++) {
-         console.log(`FILE # ${x} : `, req.files[x]);
+         // console.log(`FILE # ${x} : `, req.files[x]);
          let file = req.files[x];
          let ext = file.originalname.split(".").pop();
          let newFileName = `${file.filename}.${ext}`;
@@ -233,7 +240,7 @@ app.post("/add-item", upload.array("images"), function (req, res) {
          };
 
          //Add new item to local object
-         items = items.concat(newItem);
+         // items = items.concat(newItem);
 
          //Add item to database
          itemsCollection.insertOne(newItem, (err, result) => {
@@ -314,6 +321,68 @@ app.get("/get-reviews-for-id", function (req, res) {
       })
    }
 });
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+app.get("/get-cart", function (req, res) {
+
+   let sessionId = req.cookies.sid
+
+   //Get username from remote sessions colleciton
+   sessionsCollection.find({ sessionId: sessionId }).toArray((err, result) => {
+      if (err) throw err;
+
+      let currentUserName = result[0].user
+      //Get userId from users collection
+      usersCollection.find({ username: currentUserName }).toArray((err, result) => {
+
+         let currentUserId = result[0].userId
+
+         let currentUserCart = userCarts.find(cart => {
+            return cart.userId === currentUserId
+         })
+
+         let itemIdArray = currentUserCart.itemIds
+
+         let cartItems = []
+
+         itemIdArray.forEach(itemId => {
+
+            itemsCollection.find({ itemId: itemId }).toArray((err, result) => {
+
+               cartItems.push(result[0])
+            })
+         })
+         console.log("Sending back the following items: ", cartItems)
+         res.send(JSON.stringify(cartItems))
+      })
+   })
+})
+
+app.post("/set-cart", function (req, res) {
+
+   let sessionId = req.cookies.sid
+
+   //Get username from remote sessions colleciton
+   sessionsCollection.find({ sessionId: sessionId }).toArray((err, result) => {
+      if (err) throw err;
+
+      let currentUserName = result[0].user
+      //Get userId from users collection
+      usersCollection.find({ username: currentUserName }).toArray((err, result) => {
+
+         let currentUserId = result[0].userId
+
+         let currentUserCart = userCarts.find(cart => {
+            return cart.userId === currentUserId
+         })
+
+         currentUserCart.itemIds = req.body.itemIds
+         console.log(`Cart successfully updated for user ${currentUserName}`)
+         res.send(JSON.stringify({ success: true }))
+      })
+   })
+})
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //USE WITH REMOTE SERVER!
