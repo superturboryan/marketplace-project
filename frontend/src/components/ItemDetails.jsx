@@ -20,7 +20,7 @@ class UnconnectedItem extends Component {
         {/* look for the to local string thingy for $ */}
         <div>{item.price}$</div>
         <div>{item.stock} in stock.</div>
-        <Link to={"/seller/" + item.sellerId}> Link to seller </Link>
+        <Link to={"/profile/" + item.sellerId}> Link to seller </Link>
         <div>Reviews: </div>
         <div>
           {itemReviews.map(review => {
