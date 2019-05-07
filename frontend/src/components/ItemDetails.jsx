@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { initialItems, itemReviews } from "./../dummyData.js";
+import AddToCart from "./AddToCart.jsx";
 import AddReview from "./AddReview.jsx";
 import TabbedImageGallery from "./TabbedImageGallery.jsx";
 
@@ -25,13 +26,6 @@ class UnconnectedItem extends Component {
       <div>
         {" "}
         <div>{this.state.item.description}</div>{" "}
-        {/* Replace with new multiple image compnent */}
-        {/*}
-        {item.images.map((val, index) => {
-          return <img alt="" height="200px" src={item.images[index]} />;
-        })}
-      */}
-        {/* **************************************** */}
         <TabbedImageGallery
           images={this.state.item.images}
           itemId={this.state.item.id}
@@ -45,6 +39,7 @@ class UnconnectedItem extends Component {
           {" "}
           Link to seller{" "}
         </Link>
+        <AddToCart item={item} />
         <AddReview itemId={this.state.item.id} />
         <div>Reviews: </div>
         <div>
