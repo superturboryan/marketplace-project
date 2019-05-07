@@ -19,46 +19,45 @@ class UnconnectedAddItem extends Component {
     };
   }
 
-   handleSubmit = event => {
-      event.preventDefault();
-      let data = new FormData();
-      data.append("title", this.state.title);
-      data.append("description", this.state.description);
-      data.append("price", this.state.price);
-      data.append("stock", this.state.stock);
-      data.append("city", this.state.city);
-      data.append("province", this.state.province);
-      data.append("country", this.state.country);
-      // data.append("images", this.state.images);
-      for (let i = 0; i < this.state.images.length; i++) {
-         data.append("images", this.state.images[i])
+  handleSubmit = event => {
+    event.preventDefault();
+    let data = new FormData();
+    data.append("title", this.state.title);
+    data.append("description", this.state.description);
+    data.append("price", this.state.price);
+    data.append("stock", this.state.stock);
+    data.append("city", this.state.city);
+    data.append("province", this.state.province);
+    data.append("country", this.state.country);
+    // data.append("images", this.state.images);
+    for (let i = 0; i < this.state.images.length; i++) {
+      data.append("images", this.state.images[i]);
+    }
+
+    console.log("First image: ", this.state.images[0]);
+    console.log(data);
+
+    fetch("http://localhost:4000/add-item", {
+      method: "POST",
+      credentials: "include",
+      body: data
+    }).then(responseBody => {
+      let body = JSON.parse(responseBody);
+
+      if (!body.success) {
+        console.log(body);
+        return;
       }
 
-      console.log("First image: ", this.state.images[0])
-      console.log(data);
-
-      fetch("http://localhost:4000/add-item", {
-         method: "POST",
-         credentials: "include",
-         body: data
-      })
-      .then(responseBody => {
-        let body = JSON.parse(responseBody);
-
-        if (!body.success) {
-          console.log(body);
-          return;
-        }
-
-        console.log(body);
-        this.props.dispatch({
-          type: "show-message",
-          message: "Your item has been added!"
-        });
-        this.setState({
-          redirect: true
-        });
+      console.log(body);
+      this.props.dispatch({
+        type: "show-message",
+        message: "Your item has been added!"
       });
+      this.setState({
+        redirect: true
+      });
+    });
   };
 
   handleTitle = event => {
