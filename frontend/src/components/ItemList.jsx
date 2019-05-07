@@ -5,11 +5,7 @@ import renderProfile from "./renderProfile";
 import ItemListElem from "./ItemListElem.jsx";
 
 let listElementMaker = itemData => {
-  return (
-    <li>
-      <ItemListElem item={itemData} />
-    </li>
-  );
+  return <ItemListElem item={itemData} />;
 };
 
 class UnconnectedItemList extends Component {

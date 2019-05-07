@@ -2,7 +2,11 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { initialItems, itemReviews } from "./../dummyData.js";
+<<<<<<< HEAD
+import AddToCart from "./AddToCart.jsx";
+=======
 import AddReview from "./AddReview.jsx";
+>>>>>>> 7d037eb9e9914538d665b8f1a05c28e1e16af560
 
 class UnconnectedItem extends Component {
   render() {
@@ -22,8 +26,15 @@ class UnconnectedItem extends Component {
         {/* **************************************** */}{" "}
         <div>${item.price.toLocaleString({ style: "currency" })}</div>
         <div>{item.stock} in stock.</div>
+<<<<<<< HEAD
+        <Link to={"/seller/" + item.sellerId}> Link to seller </Link>
+        <div>
+          <AddToCart item={item} />
+        </div>
+=======
         <Link to={"/profile/" + item.sellerId}> Link to seller </Link>
         <AddReview itemId={item.id} />
+>>>>>>> 7d037eb9e9914538d665b8f1a05c28e1e16af560
         <div>Reviews: </div>
         <div>
           {itemReviews.map(review => {
