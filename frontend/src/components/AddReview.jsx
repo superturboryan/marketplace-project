@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import "./../css/addReview.css";
 
 class UnconnectedAddReview extends Component {
   constructor(props) {
@@ -74,7 +75,7 @@ class UnconnectedAddReview extends Component {
 
   postedReview = () => {
     return (
-      <div>
+      <div className="your-review">
         <h3>{this.state.title}</h3>
         <h4>{this.state.rating} stars</h4>
         <p>{this.state.content}</p>
@@ -92,7 +93,7 @@ class UnconnectedAddReview extends Component {
     }
 
     return (
-      <div>
+      <div className="new-review-container">
         <h3>Rate:</h3>
         <form onSubmit={this.handleSubmit} encType={"multipart/form-data"}>
           <div>Title</div>
@@ -112,8 +113,8 @@ class UnconnectedAddReview extends Component {
           <div>Content</div>
           <input
             type="text"
-            onChange={this.handleDescription}
-            value={this.state.description}
+            onChange={this.handleContent}
+            value={this.state.content}
           />
           <div>
             <input type="submit" value="Submit" />

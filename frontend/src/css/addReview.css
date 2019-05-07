@@ -1,0 +1,15 @@
+.your-review {
+  border-style: outset;
+  border-radius: 10px;
+  width: fit-content;
+  padding: 0px 10px 10px 10px;
+  margin: 20px 0px 20px 0px;
+}
+
+.new-review-container {
+  border-style: outset;
+  border-radius: 10px;
+  width: fit-content;
+  padding: 0px 10px 10px 10px;
+  margin: 20px 0px 20px 0px;
+}

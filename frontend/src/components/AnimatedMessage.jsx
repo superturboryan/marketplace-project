@@ -12,7 +12,7 @@ class UnconnectedAnimatedMessage extends Component {
 
     console.log("start timeout!");
 
-    let handle = setTimeout(() => {
+    setTimeout(() => {
       this.props.dispatch({
         type: "show-message",
         message: ""
