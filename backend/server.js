@@ -13,7 +13,7 @@ let upload = multer({
    dest: __dirname + "/uploads/"
 });
 
-let imagePath = "http://localhost:4000/images/"
+let imagePath = "/images/"
 
 //Files in local folder uploads have endpoints as /images/x
 app.use("/images", express.static(__dirname + "/uploads"));
@@ -133,12 +133,14 @@ app.post("/login", upload.none(), function (req, res) {
       return user.name === enteredName;
    });
 
-   if (expectedUser !== undefined) { expectedPass = expectedUser.password }
+   if (expectedUser !== undefined) {
+      expectedPass = expectedUser.password
+   }
 
    //Check that password matches
    if (enteredPass !== expectedPass) {
       console.log("Passwords did not match!");
-      res.send(JSON.stringify({ success: true }));
+      res.send(JSON.stringify({ success: false }));
       return;
    }
 
@@ -186,9 +188,6 @@ app.post("/add-item", upload.array("images"), function (req, res) {
 
    let sessionId = req.cookies.sid;
    let currentUserName = sessions[sessionId];
-   console.log("req.files = ", req.files)
-   console.log("req.body.images[0] = ", req.body.images[0])
-
 
    //Handle image uploads
    let imageCount = req.files.length
@@ -196,9 +195,14 @@ app.post("/add-item", upload.array("images"), function (req, res) {
    let newItemImagePaths = []
 
    for (let x = 0; x < imageCount; x++) {
+      console.log(`FILE # ${x} : `, req.files[x])
       let file = req.files[x]
-      console.log(file.filename)
-      newItemImagePaths.push(imagePath + file.filename)
+      let ext = file.originalname.split(".").pop()
+      let newFileName = `${file.filename}.${ext}`
+
+      fs.renameSync(file.path, `${__dirname}/uploads/${newFileName}`)
+
+      newItemImagePaths.push(imagePath + newFileName)
    }
 
    //Get userId from mock

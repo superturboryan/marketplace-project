@@ -29,11 +29,15 @@ class UnconnectedAddItem extends Component {
       data.append("city", this.state.city);
       data.append("province", this.state.province);
       data.append("country", this.state.country);
-      data.append("images", this.state.images);
+      // data.append("images", this.state.images);
+      for (let i = 0; i < this.state.images.length; i++) {
+         data.append("images", this.state.images[i])
+      }
+
       console.log("First image: ", this.state.images[0])
       console.log(data);
 
-      fetch("/add-item", {
+      fetch("http://localhost:4000/add-item", {
          method: "POST",
          credentials: "include",
          body: data
