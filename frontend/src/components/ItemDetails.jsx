@@ -13,16 +13,14 @@ class UnconnectedItem extends Component {
     return (
       <div>
         {" "}
-        <Link to={"/item/" + item.id}>
-          <div>{item.description}</div>{" "}
-          {item.images.map((val, index) => {
-            return <img alt="" height="200px" src={item.images[index]} />;
-          })}
-        </Link>{" "}
+        <div>{item.description}</div>{" "}
+        {item.images.map((val, index) => {
+          return <img alt="" height="200px" src={item.images[index]} />;
+        })}{" "}
         {/* look for the to local string thingy for $ */}
         <div>{item.price}$</div>
         <div>{item.stock} in stock.</div>
-        <Link to={"/seller/" + item.sellerId}> Link to seller </Link>
+        <Link to={"/profile/" + item.sellerId}> Link to seller </Link>
         <div>Reviews: </div>
         <div>
           {itemReviews.map(review => {
