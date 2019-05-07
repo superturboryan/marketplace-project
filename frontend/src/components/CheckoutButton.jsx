@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Link, BrowserRouter } from "react-router-dom";
 class UnconnectedCheckoutButton extends Component {
   render = () => {
-    return <Link to={"/recipt"}>CheckOut!</Link>;
+    return <Link to={"/Purchase"}>CheckOut!</Link>;
   };
 }
 let CheckoutButton = connect()(UnconnectedCheckoutButton);

@@ -10,13 +10,25 @@ class UnconnectedCart extends Component {
     this.state = { items: [] };
   }
   componentDidMount = () => {
-    console.log("mounted");
-    fetch("http://localhost:4000/cart-items")
+    if (this.props.cartItems === undefined) {
+      return;
+    }
+    if (this.props.cartItems.length < 1) {
+      return;
+    }
+    let data = new FormData();
+    this.props.cartItems.forEach((item, index) => {
+      data.append("cart[]", item.item[index]);
+    });
+    fetch("http://localhost:4000/cart-items", {
+      method: "POST",
+      body: data,
+      credentials: "include"
+    })
       .then(res => {
         return res.text();
       })
       .then(resBody => {
-        console.log("in then");
         let parsedBody = JSON.parse(resBody);
         this.setState({ items: parsedBody });
       });
@@ -25,12 +37,14 @@ class UnconnectedCart extends Component {
   render = () => {
     return (
       <div>
-        <ItemList allItems={this.state.items} />
+        <ItemList allItems={this.props.cartItems} />
         <CheckoutButton />
       </div>
     );
   };
 }
-
-let Cart = connect()(UnconnectedCart);
+let mapStateToProps = state => {
+  return { cartItems: state.cart };
+};
+let Cart = connect(mapStateToProps)(UnconnectedCart);
 export default Cart;

@@ -5,9 +5,12 @@ import renderProfile from "./renderProfile";
 
 class UnconnectedItemListElem extends Component {
   render = () => {
-    let price = this.props.item.price;
-    price = "$" + price.toLocaleString({ style: "currency" });
+    //let price = this.props.item.price;
+    //price = "$" + price.toLocaleString({ style: "currency" });
     return (
+      <div>
+        item
+      </div> /*
       <li>
         <div>
           <span>{this.props.item.title}</span>
@@ -16,7 +19,7 @@ class UnconnectedItemListElem extends Component {
             <img height="50px" src={this.props.item.images[0]} />
           </span>
         </div>
-      </li>
+      </li>*/
     );
   };
 }

@@ -26,7 +26,7 @@ class Searchbar extends Component {
   formattedInput = () => {
     // Encode the search input into a URI-safe input.
     // Must replace '%' with an underscore '_' or it will crash.
-    return encodeURIComponent(this.state.input.replace(/%/gi, "_"));
+    return encodeURIComponent(this.state.input.replace(/%/gi, ""));
   };
 
   render = () => {

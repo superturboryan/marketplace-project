@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { initialItems, itemReviews } from "./../dummyData.js";
+import AddToCart from "./AddToCart.jsx";
 import AddReview from "./AddReview.jsx";
 
 class UnconnectedItem extends Component {
@@ -23,6 +24,9 @@ class UnconnectedItem extends Component {
         <div>${item.price.toLocaleString({ style: "currency" })}</div>
         <div>{item.stock} in stock.</div>
         <Link to={"/profile/" + item.sellerId}> Link to seller </Link>
+        <div>
+          <AddToCart item={item} />
+        </div>
         <AddReview itemId={item.id} />
         <div>Reviews: </div>
         <div>
