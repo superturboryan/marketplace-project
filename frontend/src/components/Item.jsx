@@ -35,7 +35,7 @@ class UnconnectedItem extends Component {
             height="100px"
             src={this.props.imageLocation}
           />{" "}
-          <div>{this.props.cost}$</div>
+          <div>${this.props.cost.toLocaleString({ style: "currency" })}</div>
           <Link to={"/profile/" + this.props.sellerId}> Link to seller </Link>
         </figure>
       </Link>
