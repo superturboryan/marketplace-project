@@ -49,6 +49,10 @@ class UnconnectedAddItem extends Component {
         }
 
         console.log(body);
+        this.props.dispatch({
+          type: "show-message",
+          message: "Your item has been added!"
+        });
         this.setState({
           redirect: true
         });

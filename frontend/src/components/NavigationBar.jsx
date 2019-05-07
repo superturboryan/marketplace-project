@@ -9,7 +9,12 @@ class UnconnectedNavigationBar extends Component {
     if (this.props.loggedIn) {
       return (
         <div>
-          <Logout />
+          <div>
+            <Logout />
+          </div>
+          <div>
+            <Link to={"/add-item"}>Sell Something!</Link>
+          </div>
         </div>
       );
     } else {
