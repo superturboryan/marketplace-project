@@ -15,6 +15,7 @@ class UnconnectedAddReview extends Component {
   handleSubmit = event => {
     event.preventDefault();
     let data = new FormData();
+    data.append("itemid", this.props.itemid);
     data.append("title", this.state.title);
     data.append("rating", this.state.rating);
     data.append("content", this.state.content);
