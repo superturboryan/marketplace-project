@@ -39,7 +39,7 @@ class UnconnectedItem extends Component {
           {" "}
           Link to seller{" "}
         </Link>
-        <AddToCart item={item} />
+        <AddToCart item={this.state.item} />
         <AddReview itemId={this.state.item.id} />
         <div>Reviews: </div>
         <div>
