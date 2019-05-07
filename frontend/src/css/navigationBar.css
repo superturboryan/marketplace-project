@@ -1,4 +1,5 @@
 .navigation-bar {
+  display: flex;
   margin: auto;
   font-size: 30px;
   border-style: solid;
