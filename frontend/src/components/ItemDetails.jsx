@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { initialItems, itemReviews } from "./../dummyData.js";
+import AddReview from "./AddReview.jsx";
 
 class UnconnectedItem extends Component {
   render() {
@@ -14,13 +15,15 @@ class UnconnectedItem extends Component {
       <div>
         {" "}
         <div>{item.description}</div>{" "}
+        {/* Replace with new multiple image compnent */}
         {item.images.map((val, index) => {
           return <img alt="" height="200px" src={item.images[index]} />;
-        })}{" "}
-        {/* look for the to local string thingy for $ */}
-        <div>{item.price}$</div>
+        })}
+        {/* **************************************** */}{" "}
+        <div>${item.price.toLocaleString({ style: "currency" })}</div>
         <div>{item.stock} in stock.</div>
         <Link to={"/profile/" + item.sellerId}> Link to seller </Link>
+        <AddReview itemId={item.id} />
         <div>Reviews: </div>
         <div>
           {itemReviews.map(review => {
