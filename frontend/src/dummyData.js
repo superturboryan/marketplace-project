@@ -105,29 +105,40 @@ let initialItems = [
   }
 ];
 
-let initialSellers = [
+let initialUsers = [
   {
     id: "ewio",
-    name: "Jack Frost",
-    rating: "5 stars"
+    name: "Jack Frost"
   },
   {
     id: "xcvb",
-    name: "Hank Green",
-    rating: "2 stars"
+    name: "Hank Green"
+  },
+  {
+    id: "123abc",
+    name: "Judge Judy"
+  },
+  {
+    id: "456def",
+    name: "Dr. Phil"
+  }
+];
+
+let initialSellers = [
+  {
+    id: "ewio"
+  },
+  {
+    id: "xcvb"
   }
 ];
 
 let initialReviewers = [
   {
-    id: "123abc",
-    name: "Judge Judy",
-    rating: "5 stars"
+    id: "123abc"
   },
   {
-    id: "456def",
-    name: "Dr. Phil",
-    rating: "5 stars"
+    id: "456def"
   }
 ];
 
