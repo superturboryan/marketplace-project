@@ -50,6 +50,10 @@ class UnconnectedAddItem extends Component {
 
         if (!body.success) {
           console.log(body);
+          this.props.dispatch({
+            type: "show-message",
+            message: "An error occurred."
+          });
           return;
         }
 
