@@ -149,6 +149,8 @@ app.post("/login", upload.none(), function (req, res) {
 
       if (result === undefined) {
          console.log("DB: User not found")
+         res.send(JSON.stringify({ success: false }));
+         return;
       }
 
       expectedPass = result[0].password
@@ -159,10 +161,8 @@ app.post("/login", upload.none(), function (req, res) {
          res.send(JSON.stringify({ success: false }));
          return;
       }
-
       //Generate random number for cookie
       let newSessionId = generateId();
-
       //Add new session to local sessions object
       sessions[newSessionId] = enteredName;
       //Add new session to remote database
@@ -179,11 +179,6 @@ app.post("/login", upload.none(), function (req, res) {
       res.cookie("sid", newSessionId);
       res.send(JSON.stringify({ success: true }));
    })
-
-   console.log(`Logging in user ${enteredName}`);
-   //Send back set-cookie and successful response
-   res.cookie("sid", newSessionId);
-   res.send(JSON.stringify({ success: true }));
 
 });
 
@@ -202,21 +197,24 @@ app.get("/logout", upload.none(), function (req, res) {
          console.log("DB: Successfully removed entry from sessions collection!");
       }
    );
-
    res.send(JSON.stringify({ success: true }));
 });
 
-
 app.post("/add-item", upload.array("images"), function (req, res) {
-
+   //Find username from local sessions object
    let sessionId = req.cookies.sid;
    let currentUserName = sessions[sessionId];
 
+   //Find username from remote database
+   sessionsCollection.find({ sessionId: req.cookies.sid }).toArray((err, result) => {
+      if (err) throw err;
+
+      currentUserName = result[0]
+   })
+
    //Handle image uploads
    let imageCount = req.files.length
-
    let newItemImagePaths = []
-
    for (let x = 0; x < imageCount; x++) {
       console.log(`FILE # ${x} : `, req.files[x])
       let file = req.files[x]
@@ -239,25 +237,17 @@ app.post("/add-item", upload.array("images"), function (req, res) {
       newItemUserId = newItemUser.userId;
    }
 
-   let newItemTitle = req.body.title;
-   let newItemDetails = req.body.description;
-   let newItemPrice = req.body.price;
-   let newItemStock = req.body.stock;
-   let newItemCity = req.body.city;
-   let newItemProvince = req.body.province;
-   let newItemCountry = req.body.country;
-
    let newItem = {
-      title: newItemTitle,
-      details: newItemDetails,
-      price: newItemPrice,
-      images: newItemImagePaths,
-      stock: newItemStock,
+      title: req.body.title,
+      details: req.body.description,
+      price: req.body.price,
+      stock: req.body.stock,
       itemId: generateId(),
       userId: newItemUserId,
-      city: newItemCity,
-      province: newItemProvince,
-      country: newItemCountry
+      city: req.body.city,
+      province: req.body.province,
+      country: req.body.country,
+      images: newItemImagePaths,
    };
 
    //Add new item to local object
@@ -302,7 +292,7 @@ app.post("/add-review", upload.none(), function (req, res) {
 //GET REVIEWS FILTERED BY EITHER USERID OR ITEMID
 app.get("/get-reviews-for-id", function (req, res) {
    let itemId = req.query.itemId;
-   let sellerId = req.query.sellerId;
+   let userId = req.query.userId;
 
    let reviewsToReturn;
 
