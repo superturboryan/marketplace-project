@@ -124,23 +124,10 @@ app.post("/signup", upload.none(), function (req, res) {
 });
 
 app.post("/login", upload.none(), function (req, res) {
+
    let enteredName = req.body.username;
    let enteredPass = req.body.password;
    let expectedPass;
-
-   // //Check local users object
-   // let expectedUser = users.find(user => {
-   //    return user.name === enteredName;
-   // });
-   // if (expectedUser !== undefined) {
-   //    expectedPass = expectedUser.password
-   // }
-   // //Check that password matches
-   // if (enteredPass !== expectedPass) {
-   //    console.log("Passwords did not match!");
-   //    res.send(JSON.stringify({ success: false }));
-   //    return;
-   // }
 
    //Check remote users collection in db
    usersCollection.find({ username: enteredName }).toArray((err, result) => {
@@ -148,6 +135,8 @@ app.post("/login", upload.none(), function (req, res) {
       if (err) throw err;
       if (result === undefined) {
          console.log("DB: User not found")
+         res.send(JSON.stringify({ success: false }));
+         return;
       }
       expectedPass = result[0].password
       //Check that password matches
@@ -196,94 +185,86 @@ app.get("/logout", upload.none(), function (req, res) {
 });
 
 app.post("/add-item", upload.array("images"), function (req, res) {
-   //Find username from local sessions object
-   let sessionId = req.cookies.sid;
-   let currentUserName = sessions[sessionId];
 
    //Find username from remote database
-   sessionsCollection
-      .find({ sessionId: req.cookies.sid })
-      .toArray((err, result) => {
+   sessionsCollection.find({ sessionId: req.cookies.sid }).toArray((err, result) => {
+      if (err) throw err;
+      let currentUserName = result[0].user;
+
+      //Handle image uploads
+      let imageCount = req.files.length;
+      let newItemImagePaths = [];
+      for (let x = 0; x < imageCount; x++) {
+         console.log(`FILE # ${x} : `, req.files[x]);
+         let file = req.files[x];
+         let ext = file.originalname.split(".").pop();
+         let newFileName = `${file.filename}.${ext}`;
+         fs.renameSync(file.path, `${__dirname}/uploads/${newFileName}`);
+         //Add image path to array
+         newItemImagePaths.push(imagePath + newFileName);
+      }
+
+      //Find user's id from database
+      usersCollection.find({ username: currentUserName }).toArray((err, result) => {
          if (err) throw err;
 
-         currentUserName = result[0];
-      });
+         let newItemUserId = result[0].userId
 
-   //Handle image uploads
-   let imageCount = req.files.length;
-   let newItemImagePaths = [];
-   for (let x = 0; x < imageCount; x++) {
-      console.log(`FILE # ${x} : `, req.files[x]);
-      let file = req.files[x];
-      let ext = file.originalname.split(".").pop();
-      let newFileName = `${file.filename}.${ext}`;
+         let newItem = {
+            title: req.body.title,
+            details: req.body.description,
+            price: req.body.price,
+            stock: req.body.stock,
+            itemId: generateId(),
+            userId: newItemUserId,
+            city: req.body.city,
+            province: req.body.province,
+            country: req.body.country,
+            images: newItemImagePaths
+         };
 
-      fs.renameSync(file.path, `${__dirname}/uploads/${newFileName}`);
+         //Add new item to local object
+         items = items.concat(newItem);
 
-      newItemImagePaths.push(imagePath + newFileName);
-   }
-
-   //Get userId from mock
-   let newItemUser = users.find(user => {
-      return user.name === currentUserName;
+         //Add item to database
+         itemsCollection.insertOne(newItem, (err, result) => {
+            if (err) throw err;
+            console.log("DB: Successfully inserted entry into Items collection");
+         });
+         res.send(JSON.stringify({ success: true }));
+      })
    });
-
-   let newItemUserId;
-
-   if (newItemUser !== undefined) {
-      newItemUserId = newItemUser.userId;
-   }
-
-   let newItem = {
-      title: req.body.title,
-      details: req.body.description,
-      price: req.body.price,
-      stock: req.body.stock,
-      itemId: generateId(),
-      userId: newItemUserId,
-      city: req.body.city,
-      province: req.body.province,
-      country: req.body.country,
-      images: newItemImagePaths
-   };
-
-   //Add new item to local object
-   items = items.concat(newItem);
-
-   //Add item to database
-   itemsCollection.insertOne(newItem, (err, result) => {
-      if (err) throw err;
-      console.log("DB: Successfully inserted entry into Items collection");
-   });
-
-   res.send(JSON.stringify({ success: true }));
 });
 
 app.post("/add-review", upload.none(), function (req, res) {
    let sessionId = req.cookies.sid;
    let currentUserName = sessions[sessionId];
+   //Get username from remote sessions colleciton
+   sessionsCollection.find({ sessionId: sessionId }).toArray((err, result) => {
+      if (err) throw err;
 
-   let newReviewUserId = users.find(user => {
-      return user.name === currentUserName;
-   }).userId;
+      let currentUserName = result[0].user
+      //Get userId from users collection
+      usersCollection.find({ username: currentUserName }).toArray((err, result) => {
 
-   let newReviewItemId = req.body.itemId;
-   let newReviewRating = req.body.rating;
-   let newReviewTitle = req.body.title;
-   let newReviewContent = req.body.content;
+         let currentUserId = result[0].userId
 
-   let newReviewToAdd = {
-      userId: newReviewUserId,
-      username: currentUserName,
-      itemId: newReviewItemId,
-      rating: newReviewRating,
-      title: newReviewTitle,
-      content: newReviewContent
-   };
-
-   reviews.concat(newReviewToAdd);
-
-   res.send(JSON.stringify({ success: true }));
+         let newReview = {
+            userId: currentUserId,
+            username: currentUserName,
+            itemId: req.body.itemId,
+            rating: req.body.rating,
+            title: req.body.title,
+            content: req.body.content
+         };
+         //Add entry to reviews collection
+         reviewsCollection.insertOne(newReview, (err, result) => {
+            if (err) throw err;
+            console.log("DB: Successfully added entry to Reviews collection")
+            res.send(JSON.stringify({ success: true }));
+         })
+      })
+   })
 });
 
 //GET REVIEWS FILTERED BY EITHER USERID OR ITEMID
