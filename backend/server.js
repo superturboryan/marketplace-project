@@ -277,26 +277,39 @@ app.get("/get-reviews-for-id", function (req, res) {
    let itemId = req.query.itemId;
    let userId = req.query.userId;
 
-   let reviewsToReturn;
-
-   //GET REVIEWS BY SELLER
+   //GET REVIEWS BY USER/SELLER
    if (itemId === undefined) {
-      reviewsToReturn = reviews.filter(review => {
-         return (review.userId = userId);
-      });
 
+      usersCollection.find({ userId: userId }).toArray((err, result) => {
+         if (err) throw err;
+         if (result[0] === undefined) {
+            console.log("DB: No reviews found that match the userId provided")
+            res.send(JSON.stringify({ success: false }))
+         }
+         let username = result[0].username
 
+         reviewsCollection.find({ username: username }).toArray((err, result) => {
+            if (err) throw err;
+            console.log("DB: Sending back reviews that match userId in response")
+            res.send(JSON.stringify(result))
+         })
+      })
    }
    //OTHERWISE GET REVIEWS BY ITEM
    else if (sellerId === undefined) {
-      reviewsToReturn = reviews.filter(review => {
-         return (review.itemId = itemId);
-      });
+      reviewsCollection.find({ itemId: itemId }).toArray((err, result) => {
+         if (err) throw err;
+         if (result[0] === undefined) {
+            console.log("DB: No reviews found that match the itemId provided")
+            res.send(JSON.stringify({ success: false }))
+         }
+         console.log("DB: Sending back reviews that match itemId in response")
+         res.send(JSON.stringify(result))
+      })
    }
-
-   res.send(JSON.stringify(reviewsToReturn));
 });
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //USE WITH REMOTE SERVER!
 // app.listen(4000, "0.0.0.0", () => {
 //    console.log("Running on port 4000 , 0.0.0.0")
