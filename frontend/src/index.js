@@ -12,6 +12,7 @@ import AddItem from "./components/AddItem.jsx";
 import AnimatedMessage from "./components/AnimatedMessage.jsx";
 import NavigationBar from "./components/NavigationBar.jsx";
 import renderProfile from "./components/renderProfile.jsx";
+import Cart from "./components/Cart.jsx";
 
 let root = (
   <Provider store={store}>
@@ -24,6 +25,7 @@ let root = (
       <Route exact={true} path="/login" component={Login} />
       <Route exact={true} path="/add-item" component={AddItem} />
       <Route exact={true} path="/profile/:userId" component={renderProfile} />
+      <Route exact={true} path="/cart" component={Cart} />
     </BrowserRouter>
   </Provider>
 );

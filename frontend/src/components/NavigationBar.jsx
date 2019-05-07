@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import Logout from "./Logout.jsx";
+import Searchbar from "./Searchbar.jsx";
 import "./../css/navigationBar.css";
 
 class UnconnectedNavigationBar extends Component {
@@ -36,8 +37,8 @@ class UnconnectedNavigationBar extends Component {
       <div className="navigation-bar">
         <div>
           <Link to={"/"}>Ali-Bae</Link>
-          <Link to={"/cart"}>My Cart</Link>
         </div>
+        <Searchbar />
         {this.getButtonHtml()}
       </div>
     );

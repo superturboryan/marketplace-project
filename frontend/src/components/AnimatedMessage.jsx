@@ -9,14 +9,17 @@ class UnconnectedAnimatedMessage extends Component {
 
   startTimeout = ms => {
     if (this.props.message === "") return;
+
     console.log("start timeout!");
+
     setTimeout(() => {
       this.props.dispatch({
         type: "show-message",
         message: ""
       });
+
       console.log("timed out!");
-    }, 5000);
+    }, ms);
   };
 
   render = () => {
@@ -24,7 +27,9 @@ class UnconnectedAnimatedMessage extends Component {
       return null;
     }
     console.log("Animated message: " + this.props.message);
-    this.startTimeout(5000);
+
+    this.startTimeout(2000);
+
     return <div className="animated-message">{this.props.message}</div>;
   };
 }
