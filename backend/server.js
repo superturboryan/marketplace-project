@@ -90,40 +90,46 @@ app.get("get-items-by-user", function (req, res) {
    let searchedUserId = req.query.userId;
 
    //Search for item in local object
-   let searchedItems = items.filter(item => {
-      return item.userId === searchedUserId;
-   });
-   res.send(JSON.stringify(searchedItems));
+   // let searchedItems = items.filter(item => {
+   //    return item.userId === searchedUserId;
+   // });
+   // res.send(JSON.stringify(searchedItems));
 
    //Search for item in database
-   // itemsCollection.find({ userId: searchedUserId }).toArray((err, result) => {
-   //    if (err) throw err;
-   //    let searchedItems = result
-   //    res.send(JSON.stringify(searchedItems))
-   // })
+   itemsCollection.find({ userId: searchedUserId }).toArray((err, result) => {
+      if (err) throw err;
+      let searchedItems = result
+      res.send(JSON.stringify(searchedItems))
+   })
 });
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Will have to verify that username does not already exist!
 app.post("/signup", upload.none(), function (req, res) {
-   let newUserName = req.body.username;
-   let newUserPass = req.body.password;
-   let newUserId = generateId();
-   let newUser = {
-      username: newUserName,
-      password: newUserPass,
-      userId: newUserId
-   };
 
-   //Add new users to local users object
-   users = users.concat(newUser);
+   //Check user collection in remote database to see if username already exists
+   usersCollection.find({ username: req.body.username }).toArray((err, result) => {
+      if (result[0] !== undefined) {
+         console.log("DB: Name already being used! Try something original...")
+         res.send(JSON.stringify({ success: false }))
+         return;
+      }
 
-   //Add new user to remote database
-   usersCollection.insertOne(newUser, (err, result) => {
-      if (err) throw err;
-      console.log("DB: Successfully inserted entry into Users collection");
-   });
-   res.send(JSON.stringify({ success: true }));
+      let newUser = {
+         username: req.body.username,
+         password: req.body.password,
+         userId: generateId()
+      };
+
+      //Add new users to local users object
+      users = users.concat(newUser);
+
+      //Add new user to remote database
+      usersCollection.insertOne(newUser, (err, result) => {
+         if (err) throw err;
+         console.log("DB: Successfully inserted entry into Users collection");
+      });
+      res.send(JSON.stringify({ success: true }));
+   })
 });
 
 app.post("/login", upload.none(), function (req, res) {
