@@ -4,6 +4,7 @@ import { Redirect } from "react-router-dom";
 import Oops from "./Oops";
 
 class UnconnectedAddItem extends Component {
+<<<<<<< HEAD
   constructor(props) {
     super(props);
     this.state = {
@@ -40,6 +41,45 @@ class UnconnectedAddItem extends Component {
     })
       .then(response => {
         return response.text();
+=======
+   constructor(props) {
+      super(props);
+      this.state = {
+         title: "",
+         description: "",
+         price: 0,
+         stock: 1,
+         city: "",
+         province: "",
+         country: "",
+         images: undefined,
+         redirect: false
+      };
+   }
+
+   handleSubmit = event => {
+      event.preventDefault();
+      let data = new FormData();
+      data.append("title", this.state.title);
+      data.append("description", this.state.description);
+      data.append("price", this.state.price);
+      data.append("stock", this.state.stock);
+      data.append("city", this.state.city);
+      data.append("province", this.state.province);
+      data.append("country", this.state.country);
+      // data.append("images", this.state.images);
+      for (let i = 0; i < this.state.images.length; i++) {
+         data.append("images", this.state.images[i])
+      }
+
+      console.log("First image: ", this.state.images[0])
+      console.log(data);
+
+      fetch("http://localhost:4000/add-item", {
+         method: "POST",
+         credentials: "include",
+         body: data
+>>>>>>> 56c23492aec8d26d14f1298c3b8ee983cdff9d65
       })
       .then(responseBody => {
         let body = JSON.parse(responseBody);

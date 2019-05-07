@@ -13,7 +13,11 @@ let upload = multer({
   dest: __dirname + "/uploads/"
 });
 
+<<<<<<< HEAD
 let imagePath = "http://localhost:4000/images/";
+=======
+let imagePath = "/images/"
+>>>>>>> 56c23492aec8d26d14f1298c3b8ee983cdff9d65
 
 //Files in local folder uploads have endpoints as /images/x
 app.use("/images", express.static(__dirname + "/uploads"));
@@ -123,6 +127,7 @@ app.post("/signup", upload.none(), function(req, res) {
   res.send(JSON.stringify({ success: true }));
 });
 
+<<<<<<< HEAD
 app.post("/login", upload.none(), function(req, res) {
   let enteredName = req.body.username;
   let enteredPass = req.body.password;
@@ -162,6 +167,47 @@ app.post("/login", upload.none(), function(req, res) {
   //Send back set-cookie and successful response
   res.cookie("sid", newSessionId);
   res.send(JSON.stringify({ success: true }));
+=======
+app.post("/login", upload.none(), function (req, res) {
+   let enteredName = req.body.username;
+   let enteredPass = req.body.password;
+   let expectedPass;
+
+   //Check local users object
+   let expectedUser = users.find(user => {
+      return user.name === enteredName;
+   });
+
+   if (expectedUser !== undefined) {
+      expectedPass = expectedUser.password
+   }
+
+   //Check that password matches
+   if (enteredPass !== expectedPass) {
+      console.log("Passwords did not match!");
+      res.send(JSON.stringify({ success: false }));
+      return;
+   }
+
+   //Generate random number for cookie
+   let newSessionId = generateId();
+
+   //Add new session to local sessions object
+   sessions[newSessionId] = enteredName;
+   //Add new session to remote database
+   sessionsCollection.insertOne(
+      { sessionId: newSessionId, user: enteredName },
+      (err, result) => {
+         if (err) throw err;
+         console.log("DB: Successfully added entry to Sessions collection");
+      }
+   );
+
+   console.log(`Logging in user ${enteredName}`);
+   //Send back set-cookie and successful response
+   res.cookie("sid", newSessionId);
+   res.send(JSON.stringify({ success: true }));
+>>>>>>> 56c23492aec8d26d14f1298c3b8ee983cdff9d65
 });
 
 app.get("/logout", upload.none(), function(req, res) {
@@ -183,6 +229,7 @@ app.get("/logout", upload.none(), function(req, res) {
   res.send(JSON.stringify({ success: true }));
 });
 
+<<<<<<< HEAD
 app.post("/add-item", upload.array("images"), function(req, res) {
   let sessionId = req.cookies.sid;
   let currentUserName = sessions[sessionId];
@@ -242,6 +289,72 @@ app.post("/add-item", upload.array("images"), function(req, res) {
   });
 
   res.send(JSON.stringify({ success: true }));
+=======
+
+app.post("/add-item", upload.array("images"), function (req, res) {
+
+   let sessionId = req.cookies.sid;
+   let currentUserName = sessions[sessionId];
+
+   //Handle image uploads
+   let imageCount = req.files.length
+
+   let newItemImagePaths = []
+
+   for (let x = 0; x < imageCount; x++) {
+      console.log(`FILE # ${x} : `, req.files[x])
+      let file = req.files[x]
+      let ext = file.originalname.split(".").pop()
+      let newFileName = `${file.filename}.${ext}`
+
+      fs.renameSync(file.path, `${__dirname}/uploads/${newFileName}`)
+
+      newItemImagePaths.push(imagePath + newFileName)
+   }
+
+   //Get userId from mock
+   let newItemUser = users.find(user => {
+      return user.name === currentUserName;
+   });
+
+   let newItemUserId;
+
+   if (newItemUser !== undefined) {
+      newItemUserId = newItemUser.userId;
+   }
+
+   let newItemTitle = req.body.title;
+   let newItemDetails = req.body.description;
+   let newItemPrice = req.body.price;
+   let newItemStock = req.body.stock;
+   let newItemCity = req.body.city;
+   let newItemProvince = req.body.province;
+   let newItemCountry = req.body.country;
+
+   let newItem = {
+      title: newItemTitle,
+      details: newItemDetails,
+      price: newItemPrice,
+      images: newItemImagePaths,
+      stock: newItemStock,
+      itemId: generateId(),
+      userId: newItemUserId,
+      city: newItemCity,
+      province: newItemProvince,
+      country: newItemCountry
+   };
+
+   //Add new item to local object
+   items = items.concat(newItem);
+
+   //Add item to database
+   itemsCollection.insertOne(newItem, (err, result) => {
+      if (err) throw err;
+      console.log("DB: Successfully inserted entry into Items collection");
+   });
+
+   res.send(JSON.stringify({ success: true }));
+>>>>>>> 56c23492aec8d26d14f1298c3b8ee983cdff9d65
 });
 
 app.post("/add-review", upload.none(), function(req, res) {
