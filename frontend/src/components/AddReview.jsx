@@ -41,6 +41,9 @@ class UnconnectedAddReview extends Component {
           type: "show-message",
           message: "Your rating has been posted!"
         });
+        this.setState({
+          posted: true
+        });
       });
   };
 
