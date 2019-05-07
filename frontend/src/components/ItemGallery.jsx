@@ -17,6 +17,7 @@ class UnconnectedApp extends Component {
               imageLocation={item.images[0]}
               description={item.description}
               itemId={item.id}
+              key={item.id}
             />
           ))}
         </div>

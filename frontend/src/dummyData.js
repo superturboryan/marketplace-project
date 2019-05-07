@@ -2,7 +2,8 @@
 
 let initialItems = [
   {
-    description: "Nice boats. 50% off. wow.",
+    title: "Boat",
+    description: "Nice boats. 50% off. wow.", //rename to details
     price: 100000,
     images: ["./../uploads/boat.gif"],
     stock: 1,
@@ -11,6 +12,7 @@ let initialItems = [
   },
   {
     id: "wqwasq",
+    title: "Lawn Chair",
     description: "Lawn chairs",
     price: 50,
     stock: 5,
@@ -18,7 +20,8 @@ let initialItems = [
     sellerId: "xcvb"
   },
   {
-    description: "Shirt",
+    title: "Shirt",
+    description: "Best shirt for shirting around",
     stock: 42,
     price: 10000,
     images: ["./../uploads/shirt.png"],
@@ -28,13 +31,15 @@ let initialItems = [
   {
     id: "123rtyh",
     stock: 13,
-    description: "Shoes",
+    title: "Running Shoes",
+    description: "For those baby steps...",
     price: 50,
     images: ["./../uploads/shoes.jfif"],
     sellerId: "xcvb"
   },
   {
-    description: "hat",
+    title: "Hat",
+    description: "Stylish much?",
     stock: 21,
     price: 10,
     images: ["./../uploads/hat.jpg"],
@@ -44,13 +49,15 @@ let initialItems = [
   {
     id: "5tyhgr6",
     stock: 11,
-    description: "coffe mug",
+    title: "Coffee mug",
+    description: "Keeping your fuel warm.",
     price: 15,
     images: ["./../uploads/coffeemug.jpg"],
     sellerId: "xcvb"
   },
   {
-    description: "Galaxy S10",
+    title: "Galaxy S10",
+    description: "A new phone",
     price: 1000,
     stock: 3,
     images: [
@@ -66,13 +73,15 @@ let initialItems = [
   {
     id: "hjhjhgh",
     stock: 17,
-    description: "Katana Set",
+    title: "Katana set",
+    description: "Don't use this at home. Decoration only",
     price: 800,
     images: ["./../uploads/katanaset.jpg"],
     sellerId: "xcvb"
   },
   {
-    description: "Drizzt Shirt",
+    title: "Drizzt Shirt",
+    description: "Drizzt Shirt from the Legend of Drizzt novels.",
     price: 40,
     stock: 71,
     images: ["./../uploads/drizztshirt.jpg"],
@@ -81,14 +90,16 @@ let initialItems = [
   },
   {
     id: "567",
-    description: "Helmet",
+    title: "Helmet",
+    description: "Safety first!",
     price: 50,
     stock: 1,
     images: ["./../uploads/helmet.jpg"],
     sellerId: "xcvb"
   },
   {
-    description: "beanie hat",
+    title: "Beanie hat",
+    description: "Cool beans",
     stock: 99,
     price: 10,
     images: ["./../uploads/hat.jfif"],
@@ -97,7 +108,8 @@ let initialItems = [
   },
   {
     id: "4242",
-    description: "Drizzt mug",
+    title: "Drizzt mug",
+    description: "Have a drink while reading your favorite fantasy novel",
     stock: 13,
     price: 25,
     images: ["./../uploads/drizztmug.jpg"],
@@ -159,7 +171,7 @@ let itemReviews = [
     itemID: "0987",
     reviewString: "Super duper.",
     rating: 3,
-    reviewerId: "456def"
+    reviewerId: "123abc"
   },
   {
     itemID: "artemis",
@@ -169,4 +181,10 @@ let itemReviews = [
   }
 ];
 
-export { initialItems, initialSellers, initialReviewers, itemReviews };
+export {
+  initialItems,
+  initialSellers,
+  initialReviewers,
+  itemReviews,
+  initialUsers
+};
