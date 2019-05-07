@@ -22,13 +22,14 @@ class UnconnectedItem extends Component {
   // };
 
   render = () => {
-    console.log("Item props: \n" + this.props);
+    console.log("Prop contents: ");
+    console.log(this.props);
     return (
       <figure className="galleryItem">
         {" "}
         <Link to={"/item/" + this.props.itemId}>
           <div>{this.props.description}</div>{" "}
-          <img height="100px" src={this.props.imageLocation} />{" "}
+          <img alt="" height="100px" src={this.props.imageLocation} />{" "}
         </Link>{" "}
         <div>{this.props.cost}$</div>
         <Link to={"/seller/" + this.props.sellerId}> Link to seller </Link>
