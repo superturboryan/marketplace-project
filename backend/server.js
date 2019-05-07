@@ -52,20 +52,21 @@ app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 //Config for remote server cors
 // app.use(cors({ credentials: true, origin: "http://134.209.119.133:3000" }))
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 app.get("/get-all-items", function (req, res) {
    console.log("Returning  all items...");
-
    //Get items from DB
-   // itemsCollection.find({}).toArray((err, resultArr) => {
-   //    if (err) throw err;
+   itemsCollection.find({}).toArray((err, resultArr) => {
+      if (err) throw err;
 
-   //    res.send(JSON.stringify(resultArr))
-   // })
+      res.send(JSON.stringify(resultArr))
+   })
 
    //Get items from local object
-   res.send(JSON.stringify(items));
+   // res.send(JSON.stringify(items));
 });
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 app.get("/get-single-item", function (req, res) {
    //Get item from query in fetch path
    let searchedItemId = req.query.search;
@@ -84,6 +85,7 @@ app.get("/get-single-item", function (req, res) {
    // })
 });
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 app.get("get-items-by-user", function (req, res) {
    let searchedUserId = req.query.userId;
 
@@ -101,6 +103,7 @@ app.get("get-items-by-user", function (req, res) {
    // })
 });
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Will have to verify that username does not already exist!
 app.post("/signup", upload.none(), function (req, res) {
    let newUserName = req.body.username;
@@ -133,7 +136,7 @@ app.post("/login", upload.none(), function (req, res) {
    usersCollection.find({ username: enteredName }).toArray((err, result) => {
       console.log("DB: Retrieving expected password for user")
       if (err) throw err;
-      if (result === undefined) {
+      if (result[0] === undefined) {
          console.log("DB: User not found")
          res.send(JSON.stringify({ success: false }));
          return;
@@ -166,9 +169,9 @@ app.post("/login", upload.none(), function (req, res) {
    })
 })
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 app.get("/logout", upload.none(), function (req, res) {
    console.log("Logging out...");
-   console.log("Request cookie: ", req.cookies.sid);
 
    //Remove from local sessions object
    delete sessions[req.cookies.sid];
@@ -184,8 +187,8 @@ app.get("/logout", upload.none(), function (req, res) {
    res.send(JSON.stringify({ success: true }));
 });
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 app.post("/add-item", upload.array("images"), function (req, res) {
-
    //Find username from remote database
    sessionsCollection.find({ sessionId: req.cookies.sid }).toArray((err, result) => {
       if (err) throw err;
@@ -236,9 +239,10 @@ app.post("/add-item", upload.array("images"), function (req, res) {
    });
 });
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 app.post("/add-review", upload.none(), function (req, res) {
    let sessionId = req.cookies.sid;
-   let currentUserName = sessions[sessionId];
+
    //Get username from remote sessions colleciton
    sessionsCollection.find({ sessionId: sessionId }).toArray((err, result) => {
       if (err) throw err;
@@ -267,6 +271,7 @@ app.post("/add-review", upload.none(), function (req, res) {
    })
 });
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //GET REVIEWS FILTERED BY EITHER USERID OR ITEMID
 app.get("/get-reviews-for-id", function (req, res) {
    let itemId = req.query.itemId;
@@ -279,6 +284,8 @@ app.get("/get-reviews-for-id", function (req, res) {
       reviewsToReturn = reviews.filter(review => {
          return (review.userId = userId);
       });
+
+
    }
    //OTHERWISE GET REVIEWS BY ITEM
    else if (sellerId === undefined) {
