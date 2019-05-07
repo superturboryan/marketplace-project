@@ -30,14 +30,17 @@ body {
   clear: both;
 }
 .imgRow {
-  width: 45%;
+  display: flex;
+  justify-content: center;
+  width: 35%;
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
 }
 
 /* The expanding image container */
 .expandedImgContainer {
   position: relative;
   display: visible;
-  width: 45%;
+  width: 35%;
   background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
 }
 
