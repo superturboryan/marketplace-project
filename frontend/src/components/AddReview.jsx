@@ -15,7 +15,7 @@ class UnconnectedAddReview extends Component {
   handleSubmit = event => {
     event.preventDefault();
     let data = new FormData();
-    data.append("itemid", this.props.itemid);
+    data.append("itemId", this.props.itemId);
     data.append("title", this.state.title);
     data.append("rating", this.state.rating);
     data.append("content", this.state.content);
@@ -81,7 +81,7 @@ class UnconnectedAddReview extends Component {
 
   render = () => {
     if (!this.props.loggedIn) {
-      return <Oops message={"You're not signed in!"} />;
+      return null;
     }
 
     if (this.state.posted) {
