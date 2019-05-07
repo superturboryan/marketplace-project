@@ -10,11 +10,13 @@ import Signup from "./components/Signup.jsx";
 import Login from "./components/Login.jsx";
 import AddItem from "./components/AddItem.jsx";
 import AnimatedMessage from "./components/AnimatedMessage.jsx";
+import NavigationBar from "./components/NavigationBar.jsx";
 import renderProfile from "./components/renderProfile.jsx";
 
 let root = (
   <Provider store={store}>
     <BrowserRouter>
+      <Route exact={false} path="/" component={NavigationBar} />
       <Route exact={false} path="/" component={AnimatedMessage} />
       <Route exact={true} path="/" component={App} />
       <Route exact={true} path="/item/:id" component={Item} />
