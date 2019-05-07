@@ -36,6 +36,7 @@ class UnconnectedNavigationBar extends Component {
       <div className="navigation-bar">
         <div>
           <Link to={"/"}>Ali-Bae</Link>
+          <Link to={"/cart"}>My Cart</Link>
         </div>
         {this.getButtonHtml()}
       </div>

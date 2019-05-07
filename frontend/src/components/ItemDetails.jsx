@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { initialItems, itemReviews } from "./../dummyData.js";
+import AddToCart from "./AddToCart.jsx";
 
 class UnconnectedItem extends Component {
   render() {
@@ -23,6 +24,9 @@ class UnconnectedItem extends Component {
         <div>{item.price}$</div>
         <div>{item.stock} in stock.</div>
         <Link to={"/seller/" + item.sellerId}> Link to seller </Link>
+        <div>
+          <AddToCart item={item} />
+        </div>
         <div>Reviews: </div>
         <div>
           {itemReviews.map(review => {
