@@ -4,7 +4,7 @@ let initialItems = [
   {
     description: "Nice boats. 50% off. wow.",
     price: 100000,
-    image: "./../uploads/boat.gif",
+    images: ["./../uploads/boat.gif"],
     stock: 1,
     id: "asewq",
     sellerId: "ewio"
@@ -14,14 +14,14 @@ let initialItems = [
     description: "Lawn chairs",
     price: 50,
     stock: 5,
-    image: "./../uploads/lawnchair.jpg",
+    images: ["./../uploads/lawnchair.jpg"],
     sellerId: "xcvb"
   },
   {
     description: "Shirt",
     stock: 42,
     price: 10000,
-    image: "./../uploads/shirt.png",
+    images: ["./../uploads/shirt.png"],
     id: "qwer",
     sellerId: "ewio"
   },
@@ -30,14 +30,14 @@ let initialItems = [
     stock: 13,
     description: "Shoes",
     price: 50,
-    image: "./../uploads/shoes.jfif",
+    images: ["./../uploads/shoes.jfif"],
     sellerId: "xcvb"
   },
   {
     description: "hat",
     stock: 21,
     price: 10,
-    image: "./../uploads/hat.jpg",
+    images: ["./../uploads/hat.jpg"],
     id: "765hf",
     sellerId: "ewio"
   },
@@ -46,14 +46,20 @@ let initialItems = [
     stock: 11,
     description: "coffe mug",
     price: 15,
-    image: "./../uploads/coffeemug.jpg",
+    images: ["./../uploads/coffeemug.jpg"],
     sellerId: "xcvb"
   },
   {
     description: "Galaxy S10",
     price: 1000,
     stock: 3,
-    image: "./../uploads/gs10.png",
+    images: [
+      "./../uploads/gs10_3.png",
+      "./../uploads/gs10_2.png",
+      "./../uploads/gs10_4.png",
+      "./../uploads/gs10_5.png",
+      "./../uploads/gs10_1.png"
+    ],
     id: "765y",
     sellerId: "ewio"
   },
@@ -62,14 +68,14 @@ let initialItems = [
     stock: 17,
     description: "Katana Set",
     price: 800,
-    image: "./../uploads/katanaset.jpg",
+    images: ["./../uploads/katanaset.jpg"],
     sellerId: "xcvb"
   },
   {
     description: "Drizzt Shirt",
     price: 40,
     stock: 71,
-    image: "./../uploads/drizztshirt.jpg",
+    images: ["./../uploads/drizztshirt.jpg"],
     id: "artemis",
     sellerId: "ewio"
   },
@@ -78,14 +84,14 @@ let initialItems = [
     description: "Helmet",
     price: 50,
     stock: 1,
-    image: "./../uploads/helmet.jpg",
+    images: ["./../uploads/helmet.jpg"],
     sellerId: "xcvb"
   },
   {
     description: "beanie hat",
     stock: 99,
     price: 10,
-    image: "./../uploads/hat.jfif",
+    images: ["./../uploads/hat.jfif"],
     id: "0987",
     sellerId: "ewio"
   },
@@ -94,7 +100,7 @@ let initialItems = [
     description: "Drizzt mug",
     stock: 13,
     price: 25,
-    image: "./../uploads/drizztmug.jpg",
+    images: ["./../uploads/drizztmug.jpg"],
     sellerId: "xcvb"
   }
 ];
@@ -146,7 +152,7 @@ let itemReviews = [
   },
   {
     itemID: "artemis",
-    reviewString: "60% of the time it works aall the time :)",
+    reviewString: "60% of the time it works all the time :)",
     rating: 2,
     reviewerId: "123abc"
   }

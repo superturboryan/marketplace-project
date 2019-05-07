@@ -29,34 +29,35 @@ class UnconnectedAddItem extends Component {
     data.append("city", this.state.city);
     data.append("province", this.state.province);
     data.append("country", this.state.country);
-    data.append("images", this.state.images);
+    // data.append("images", this.state.images);
+    for (let i = 0; i < this.state.images.length; i++) {
+      data.append("images", this.state.images[i]);
+    }
+
+    console.log("First image: ", this.state.images[0]);
     console.log(data);
 
-    fetch("/add-item", {
+    fetch("http://localhost:4000/add-item", {
       method: "POST",
       credentials: "include",
       body: data
-    })
-      .then(response => {
-        return response.text();
-      })
-      .then(responseBody => {
-        let body = JSON.parse(responseBody);
+    }).then(responseBody => {
+      let body = JSON.parse(responseBody);
 
-        if (!body.success) {
-          console.log(body);
-          return;
-        }
-
+      if (!body.success) {
         console.log(body);
-        this.props.dispatch({
-          type: "show-message",
-          message: "Your item has been added!"
-        });
-        this.setState({
-          redirect: true
-        });
+        return;
+      }
+
+      console.log(body);
+      this.props.dispatch({
+        type: "show-message",
+        message: "Your item has been added!"
       });
+      this.setState({
+        redirect: true
+      });
+    });
   };
 
   handleTitle = event => {
@@ -119,6 +120,7 @@ class UnconnectedAddItem extends Component {
     this.setState({
       images: event.target.files
     });
+    console.log("Files to upload:", event.target.files);
   };
 
   render = () => {
@@ -192,7 +194,8 @@ class UnconnectedAddItem extends Component {
               type="file"
               accept="image/*"
               onChange={this.handleFiles}
-              id="uploads"
+              id="images"
+              name="images"
               multiple
             />
           </div>

@@ -43,3 +43,13 @@ body {
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
     "Lucida Sans", Arial, sans-serif;
 }
+
+img {
+  opacity: 1;
+  cursor: pointer;
+}
+
+img:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
