@@ -180,11 +180,16 @@ app.post("/login", upload.none(), function (req, res) {
       res.send(JSON.stringify({ success: true }));
    })
 
+   console.log(`Logging in user ${enteredName}`);
+   //Send back set-cookie and successful response
+   res.cookie("sid", newSessionId);
+   res.send(JSON.stringify({ success: true }));
+
 });
 
 app.get("/logout", upload.none(), function (req, res) {
    console.log("Logging out...");
-   console.log("Request cookie: ", req.cookies.sid)
+   console.log("Request cookie: ", req.cookies.sid);
 
    //Remove from local sessions object
    delete sessions[req.cookies.sid];

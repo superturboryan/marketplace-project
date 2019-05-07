@@ -40,6 +40,10 @@ class UnconnectedLogin extends Component {
 
         if (!body.success) {
           console.log(body);
+          this.props.dispatch({
+            type: "show-message",
+            message: "Login not successful. Please try again"
+          });
           return;
         }
 

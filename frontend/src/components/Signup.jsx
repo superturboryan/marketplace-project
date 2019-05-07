@@ -40,6 +40,11 @@ class UnconnectedSignup extends Component {
 
         if (!body.success) {
           console.log(body);
+          this.props.dispatch({
+            type: "show-message",
+            message:
+              "Username not available, or an error occurred. Please try again"
+          });
           return;
         }
 
