@@ -25,15 +25,20 @@ class UnconnectedItem extends Component {
     console.log("Prop contents: ");
     console.log(this.props);
     return (
-      <figure className="galleryItem">
-        {" "}
-        <Link to={"/item/" + this.props.itemId}>
+      <Link to={"/item/" + this.props.itemId}>
+        <figure className="galleryItem">
+          {" "}
           <div>{this.props.description}</div>{" "}
-          <img alt="" height="100px" src={this.props.imageLocation} />{" "}
-        </Link>{" "}
-        <div>{this.props.cost}$</div>
-        <Link to={"/seller/" + this.props.sellerId}> Link to seller </Link>
-      </figure>
+          <img
+            class="galleryImage"
+            alt=""
+            height="100px"
+            src={this.props.imageLocation}
+          />{" "}
+          <div>{this.props.cost}$</div>
+          <Link to={"/profile/" + this.props.sellerId}> Link to seller </Link>
+        </figure>
+      </Link>
     );
   };
 }

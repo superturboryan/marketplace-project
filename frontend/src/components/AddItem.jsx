@@ -37,27 +37,31 @@ class UnconnectedAddItem extends Component {
     console.log("First image: ", this.state.images[0]);
     console.log(data);
 
-    fetch("http://localhost:4000/add-item", {
+    fetch("/add-item", {
       method: "POST",
       credentials: "include",
       body: data
-    }).then(responseBody => {
-      let body = JSON.parse(responseBody);
+    })
+      .then(response => {
+        return response.text();
+      })
+      .then(responseBody => {
+        let body = JSON.parse(responseBody);
 
-      if (!body.success) {
+        if (!body.success) {
+          console.log(body);
+          return;
+        }
+
         console.log(body);
-        return;
-      }
-
-      console.log(body);
-      this.props.dispatch({
-        type: "show-message",
-        message: "Your item has been added!"
+        this.props.dispatch({
+          type: "show-message",
+          message: "Your item has been added!"
+        });
+        this.setState({
+          redirect: true
+        });
       });
-      this.setState({
-        redirect: true
-      });
-    });
   };
 
   handleTitle = event => {
