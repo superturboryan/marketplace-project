@@ -1,40 +1,44 @@
-//Import statements
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// IMPORTED GOODS
 
-let express = require("express");
-let cors = require("cors");
-let multer = require("multer");
-let fs = require("fs");
-let app = express();
-let cookieParser = require("cookie-parser");
+const express = require("express");
+const cors = require("cors");
+const multer = require("multer");
+const fs = require("fs");
+const cookieParser = require("cookie-parser");
 const MongoClient = require("mongodb").MongoClient;
 
-let upload = multer({
-   //Set file upload destination
-   dest: __dirname + "/uploads/"
-});
+const app = express();
 
-let imagePath = "/images/";
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// UPLOAD PATHS
 
-//Files in local folder uploads have endpoints as /images/x
-app.use("/images", express.static(__dirname + "/uploads"));
+const upload = multer({ dest: __dirname + "/uploads/" }); // Set file upload destination
+const imagePath = "/images/";
+const url = "mongodb+srv://admin:12345@cluster0-nswep.mongodb.net/test?retryWrites=true"; // URI for remote database!
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// MIDDLEWARES
+
+app.use("/images", express.static(__dirname + "/uploads")); // Files in local folder uploads have endpoints as /images/x
 app.use(cors())
+app.use(cookieParser());
+app.use(cors({ credentials: true, origin: "http://localhost:3000" })); // CONFIG FOR LOCAL SERVER
+// app.use(cors({ credentials: true, origin: "http://134.209.119.133:3000" })) // CONFIG FOR REMOTE SERVER
 
-let userCarts = []
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// STORAGE
 
-//Cart-Example: { userID: 123, itemIds: [ 123, 123, 123 ] }
+// Server storage: 
+let userCarts = [] // Cart-Example: { userID: 123, itemIds: [ 123, 456, 789 ] }
 
-let url =
-   "mongodb+srv://admin:12345@cluster0-nswep.mongodb.net/test?retryWrites=true";
-
-//Remote db storage:
+// Remote db storage:
 let itemsCollection;
 let usersCollection;
 let reviewsCollection;
 let sessionsCollection;
-
-//Add option useNewUrlParser to get rid of console warning message
-MongoClient.connect(url, { useNewUrlParser: true }, (err, allDbs) => {
+//Connection to DB, do not close!
+MongoClient.connect(url, { useNewUrlParser: true }, (err, allDbs) => { // Add option useNewUrlParser to get rid of console warning message
    if (err) throw err;
    marketplaceDB = allDbs.db("Marketplace-DB");
    itemsCollection = marketplaceDB.collection("Items");
@@ -43,93 +47,62 @@ MongoClient.connect(url, { useNewUrlParser: true }, (err, allDbs) => {
    sessionsCollection = marketplaceDB.collection("Sessions");
 });
 
-let sessions = {};
 
-app.use(cookieParser());
-
-//Config for local cors
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
-//Config for remote server cors
-// app.use(cors({ credentials: true, origin: "http://134.209.119.133:3000" }))
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ENDPOINTS
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 app.get("/get-all-items", function (req, res) {
    console.log("Returning  all items...");
-   //Get items from DB
-   itemsCollection.find({}).toArray((err, resultArr) => {
+   itemsCollection.find({}).toArray((err, resultArr) => {  // Get ALL items from DB
       if (err) throw err;
-
       res.send(JSON.stringify(resultArr))
    })
-
-   //Get items from local object
-   // res.send(JSON.stringify(items));
 });
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 app.get("/get-single-item", function (req, res) {
-   //Get item from query in fetch path
-   let searchedItemId = req.query.search;
-   //Search for item in local object
-   // let searchedItem = items.find(item => {
-   //    return item.itemId === searchedItemId;
-   // });
-   // res.send(JSON.stringify(searchedItem));
-
+   const itemId = req.query.itemId; // Get item from query in fetch path
    //Search for item in database
-   itemsCollection.find({ itemId: searchedItemId }).toArray((err, result) => {
+   itemsCollection.find({ itemId: itemId }).toArray((err, result) => {
       if (err) throw err;
-      let searchedItem = result[0]
+      if (result[0] === undefined) {
+         console.log("DB: No such item found!")
+         res.send(JSON.stringify({ success: false }))
+      }
+      const searchedItem = result[0]
       res.send(JSON.stringify(searchedItem))
    })
 });
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 app.get("/get-items-by-user", function (req, res) {
-   let searchedUserId = req.query.userId;
-
-   //Search for item in local object
-   // let searchedItems = items.filter(item => {
-   //    return item.userId === searchedUserId;
-   // });
-   // res.send(JSON.stringify(searchedItems));
-
+   const userId = req.query.userId;
    //Search for item in database
-   itemsCollection.find({ userId: searchedUserId }).toArray((err, result) => {
+   itemsCollection.find({ userId: userId }).toArray((err, result) => {
       if (err) throw err;
-      let searchedItems = result
+      const searchedItems = result
       res.send(JSON.stringify(searchedItems))
    })
 });
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 app.post("/signup", upload.none(), function (req, res) {
-
    //Check user collection in remote database to see if username already exists
    usersCollection.find({ username: req.body.username }).toArray((err, result) => {
-      if (result[0] !== undefined) {
-         console.log("DB: Name already being used! Try something original...")
+      if (result[0] !== undefined) { // If database return any entry, user exists already!
+         console.log("DB: Be yourself! Try something original...")
          res.send(JSON.stringify({ success: false }))
          return;
       }
-      let newUser = {
-         username: req.body.username,
-         password: req.body.password,
-         userId: generateId()
-      };
-
-      //Add new user to remote database
-      usersCollection.insertOne(newUser, (err, result) => {
+      const newUser = { username: req.body.username, password: req.body.password, userId: generateId() };
+      usersCollection.insertOne(newUser, (err, result) => { //Add new user to remote database
          if (err) throw err;
-         console.log("DB: Successfully inserted entry into Users collection");
-
-         //Generate random number for cookie
-         let newSessionId = generateId();
-
+         console.log(`DB: Successfully inserted user ${req.body.username} into Users collection`);
+         const newSessionId = generateId(); //Generate random number for cookie
          sessionsCollection.insertOne({ sessionId: newSessionId, user: req.body.username }, (err, result) => {
             if (err) throw err;
             console.log("DB: Successfully added entry to Sessions collection");
-
             res.cookie("sid", newSessionId);
             res.send(JSON.stringify({ success: true }));
          });
@@ -137,13 +110,10 @@ app.post("/signup", upload.none(), function (req, res) {
    })
 });
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 app.post("/login", upload.none(), function (req, res) {
-
-   let enteredName = req.body.username;
-   let enteredPass = req.body.password;
-   let expectedPass;
-
-   //Check remote users collection in db
+   const { username: enteredName, password: enteredPass } = req.body
+   // Check remote users collection in db
    usersCollection.find({ username: enteredName }).toArray((err, result) => {
       console.log("DB: Retrieving expected password for user")
       if (err) throw err;
@@ -152,30 +122,19 @@ app.post("/login", upload.none(), function (req, res) {
          res.send(JSON.stringify({ success: false }));
          return;
       }
-      expectedPass = result[0].password
-      //Check that password matches
-      if (enteredPass !== expectedPass) {
+      const expectedPass = result[0].password
+      if (enteredPass !== expectedPass) { // Check that password matches
          console.log("Passwords did not match!");
          res.send(JSON.stringify({ success: false }));
          return;
       }
-      //Generate random number for cookie
-      let newSessionId = generateId();
-
-      //Add new session to local sessions object
-      sessions[newSessionId] = enteredName;
-      //Add new session to remote database
-      sessionsCollection.insertOne(
-         { sessionId: newSessionId, user: enteredName },
-         (err, result) => {
-            if (err) throw err;
-            console.log("DB: Successfully added entry to Sessions collection");
-         }
-      );
-
+      const newSessionId = generateId(); // Generate random number for sid cookie
+      sessionsCollection.insertOne({ sessionId: newSessionId, user: enteredName }, (err, result) => {
+         if (err) throw err;
+         console.log("DB: Successfully added entry to Sessions collection");
+      });
       console.log(`Logging in user ${enteredName}`);
-      //Send back set-cookie and successful response
-      res.cookie("sid", newSessionId);
+      res.cookie("sid", newSessionId); // Send back set-cookie and successful response
       res.send(JSON.stringify({ success: true }));
    })
 })
@@ -183,17 +142,10 @@ app.post("/login", upload.none(), function (req, res) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 app.get("/logout", upload.none(), function (req, res) {
    console.log("Logging out...");
-
-   //Remove from local sessions object
-   delete sessions[req.cookies.sid];
-
-   //Remove from remote database
-   sessionsCollection.deleteOne(
-      { sessionId: req.cookies.sid },
-      (err, result) => {
-         if (err) throw err;
-         console.log("DB: Successfully removed entry from sessions collection!");
-      }
+   sessionsCollection.deleteOne({ sessionId: req.cookies.sid }, (err, result) => { // Remove from remote database
+      if (err) throw err;
+      console.log("DB: Successfully removed entry from sessions collection!");
+   }
    );
    res.send(JSON.stringify({ success: true }));
 });
@@ -201,50 +153,38 @@ app.get("/logout", upload.none(), function (req, res) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 app.post("/add-item", upload.array("images"), function (req, res) {
 
-   //Find username from remote database
+   // Find username from remote database
    sessionsCollection.find({ sessionId: req.cookies.sid }).toArray((err, result) => {
       if (err) throw err;
-      let currentUserName = result[0].user;
-
-      //Handle image uploads
-      let imageCount = req.files.length;
+      const currentUserName = result[0].user; // Store in variable to use in query
+      const imageCount = req.files.length; // Handle image uploads
       let newItemImagePaths = [];
       for (let x = 0; x < imageCount; x++) {
-         // console.log(`FILE # ${x} : `, req.files[x]);
-         let file = req.files[x];
-         let ext = file.originalname.split(".").pop();
-         let newFileName = `${file.filename}.${ext}`;
-         fs.renameSync(file.path, `${__dirname}/uploads/${newFileName}`);
-         //Add image path to array
-         newItemImagePaths.push(imagePath + newFileName);
+         const file = req.files[x]; // Get file in loop
+         const ext = file.originalname.split(".").pop(); // Get file extension
+         const newFileName = `${file.filename}.${ext}`; // Store new filename 
+         fs.renameSync(file.path, `${__dirname}/uploads/${newFileName}`); // Change filepath
+         newItemImagePaths.push(imagePath + newFileName); //Add image path to array
       }
-
       //Find user's id from database
       usersCollection.find({ username: currentUserName }).toArray((err, result) => {
          if (err) throw err;
-
-         let newItemUserId = result[0].userId
-
-         let newItem = {
+         const newItemUserId = result[0].userId
+         const newItem = {
             title: req.body.title,
             details: req.body.description,
             price: req.body.price,
             stock: req.body.stock,
             itemId: generateId(),
-            userId: newItemUserId,
+            userId: newItemUserId, // Result of searching userCollection
             city: req.body.city,
             province: req.body.province,
             country: req.body.country,
-            images: newItemImagePaths
+            images: newItemImagePaths //Array of image paths
          };
-
-         //Add new item to local object
-         // items = items.concat(newItem);
-
-         //Add item to database
-         itemsCollection.insertOne(newItem, (err, result) => {
+         itemsCollection.insertOne(newItem, (err, result) => { //Add item to database
             if (err) throw err;
-            console.log("DB: Successfully inserted entry into Items collection");
+            console.log(`DB: Successfully inserted user ${currentUserName}'s item "${req.body.title}" into Items collection`);
          });
          res.send(JSON.stringify({ success: true }));
       })
@@ -253,28 +193,23 @@ app.post("/add-item", upload.array("images"), function (req, res) {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 app.post("/add-review", upload.none(), function (req, res) {
-   let sessionId = req.cookies.sid;
-
+   const sessionId = req.cookies.sid;
    //Get username from remote sessions colleciton
    sessionsCollection.find({ sessionId: sessionId }).toArray((err, result) => {
       if (err) throw err;
-
-      let currentUserName = result[0].user
+      const currentUserName = result[0].user
       //Get userId from users collection
       usersCollection.find({ username: currentUserName }).toArray((err, result) => {
-
-         let currentUserId = result[0].userId
-
-         let newReview = {
+         const currentUserId = result[0].userId
+         const newReview = {
             userId: currentUserId,
             username: currentUserName,
             itemId: req.body.itemId,
             rating: req.body.rating,
             title: req.body.title,
-            content: req.body.content
+            content: req.body.content,
          };
-         //Add entry to reviews collection
-         reviewsCollection.insertOne(newReview, (err, result) => {
+         reviewsCollection.insertOne(newReview, (err, result) => { // Add entry to reviews collection
             if (err) throw err;
             console.log("DB: Successfully added entry to Reviews collection")
             res.send(JSON.stringify({ success: true }));
@@ -284,31 +219,18 @@ app.post("/add-review", upload.none(), function (req, res) {
 });
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//GET REVIEWS FILTERED BY EITHER USERID OR ITEMID
-app.get("/get-reviews-for-id", function (req, res) {
-   let itemId = req.query.itemId;
-   let userId = req.query.userId;
+app.get("/get-reviews-for-id", function (req, res) { //GET REVIEWS FILTERED BY EITHER USERID OR ITEMID
+   const itemId = req.query.itemId;
+   const userId = req.query.userId;
 
-   //GET REVIEWS BY USER/SELLER
-   if (itemId === undefined) {
-
-      usersCollection.find({ userId: userId }).toArray((err, result) => {
+   if (itemId === undefined) { //GET REVIEWS BY SELLER 
+      reviewsCollection.find({ userId: userId }).toArray((err, result) => {
          if (err) throw err;
-         if (result[0] === undefined) {
-            console.log("DB: No reviews found that match the userId provided")
-            res.send(JSON.stringify({ success: false }))
-         }
-         let username = result[0].username
-
-         reviewsCollection.find({ username: username }).toArray((err, result) => {
-            if (err) throw err;
-            console.log("DB: Sending back reviews that match userId in response")
-            res.send(JSON.stringify(result))
-         })
+         console.log("DB: Sending back reviews that match userId in response")
+         res.send(JSON.stringify(result))
       })
    }
-   //OTHERWISE GET REVIEWS BY ITEM
-   else if (sellerId === undefined) {
+   else if (userId === undefined) { // OTHERWISE GET REVIEWS BY ITEM
       reviewsCollection.find({ itemId: itemId }).toArray((err, result) => {
          if (err) throw err;
          if (result[0] === undefined) {
@@ -324,36 +246,31 @@ app.get("/get-reviews-for-id", function (req, res) {
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 app.get("/get-cart", function (req, res) {
 
-   let sessionId = req.cookies.sid
-
+   const sessionId = req.cookies.sid
    //Get username from remote sessions colleciton
    sessionsCollection.find({ sessionId: sessionId }).toArray((err, result) => {
       if (err) throw err;
-
-      let currentUserName = result[0].user
+      const currentUserName = result[0].user
       //Get userId from users collection
       usersCollection.find({ username: currentUserName }).toArray((err, result) => {
 
-         let currentUserId = result[0].userId
+         const currentUserId = result[0].userId
 
-         let currentUserCart = userCarts.find(cart => {
+         const currentUserCart = userCarts.find(cart => {
             return cart.userId === currentUserId
          })
 
-         console.log(currentUserCart.itemIds)
-
-         let itemIdArray = JSON.parse(currentUserCart.itemIds)
+         const itemIdArray = JSON.parse(currentUserCart.itemIds)
 
          let cartItems = []
 
          //itemIdArray.forEach(itemId => {
 
-         let query = {
+         const query = {
             itemId: {
                $regex: new RegExp("(" + itemIdArray.join("|") + ")")
             }
          }
-         console.log("Item id array: !!!", itemIdArray)
          itemsCollection.find(query).toArray((err, result) => {
 
             cartItems.push(result)
@@ -370,19 +287,19 @@ app.get("/get-cart", function (req, res) {
 
 app.post("/set-cart", upload.none(), function (req, res) {
 
-   let sessionId = req.cookies.sid
+   const sessionId = req.cookies.sid
 
    //Get username from remote sessions colleciton
    sessionsCollection.find({ sessionId: sessionId }).toArray((err, result) => {
       if (err) throw err;
 
-      let currentUserName = result[0].user
+      const currentUserName = result[0].user
       //Get userId from users collection
       usersCollection.find({ username: currentUserName }).toArray((err, result) => {
 
-         let currentUserId = result[0].userId
+         const currentUserId = result[0].userId
 
-         let currentUserCart = userCarts.find(cart => {
+         const currentUserCart = userCarts.find(cart => {
             return cart.userId === currentUserId
          })
 
@@ -400,8 +317,8 @@ app.post("/set-cart", upload.none(), function (req, res) {
    })
 })
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //USE WITH REMOTE SERVER!
 // app.listen(4000, "0.0.0.0", () => {
 //    console.log("Running on port 4000 , 0.0.0.0")
@@ -412,7 +329,10 @@ app.listen(4000, () => {
    console.log("Running on port 4000");
 });
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// UTILITY FUNCTIONS
+
 //Returns random number
-let generateId = () => {
+const generateId = () => {
    return "" + Math.floor(Math.random() * 100000000);
 };
