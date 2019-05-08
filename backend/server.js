@@ -34,7 +34,7 @@ app.use(cors({ credentials: true, origin: "http://localhost:3000" })); // CONFIG
 // STORAGE ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Server storage: 
-let userCarts = [] // Cart-Example: { userID: 123, itemIds: [ 123, 456, 789 ] }
+let userCarts = [] // Cart-Example: { userID: 123, item: [ {itemId: 456, quantity: 2} , {itemId: 789, quantity: 5} ] }
 
 // Remote db storage:
 let itemsCollection;
@@ -313,9 +313,6 @@ app.get("/get-cart", function (req, res) {
 
          const currentUserId = result[0].userId
 
-         console.log("CurrentUserId: ", currentUserId)
-         console.log("ALL user carts : ", userCarts)
-
          const currentUserCart = userCarts.find(cart => {
             return cart.userId === currentUserId
          })
@@ -329,8 +326,6 @@ app.get("/get-cart", function (req, res) {
 
          let cartItems = []
 
-         //itemIdArray.forEach(itemId => {
-
          const query = {
             itemId: {
                $regex: new RegExp("(" + itemIdArray.join("|") + ")")
@@ -341,9 +336,6 @@ app.get("/get-cart", function (req, res) {
             cartItems.push(result)
             res.send(JSON.stringify(result))
          })
-         //})
-         // console.log("Sending back the following items: ", cartItems)
-         // res.send(JSON.stringify(cartItems))
       })
    })
 })
@@ -352,35 +344,33 @@ app.get("/get-cart", function (req, res) {
 
 app.post("/set-cart", upload.none(), function (req, res) {
 
-   console.log("Item ids : ", req.body.itemIds)
+   const { itemId, quantity } = req.body
 
-   const itemIds = req.body.itemIds.split(" ")
+   console.log(req.body.itemId)
+
+   let addItem = { itemId: itemId, quantity: quantity }
+
    const currentCookie = req.cookies.sid
 
    //Get username from remote sessions colleciton
    sessionsCollection.find({ sessionId: currentCookie }).toArray((err, result) => {
       if (err) throw err;
-
-      console.log("Current sessionId cookie : ", currentCookie)
-
       const currentUserName = result[0].user
       //Get userId from users collection
       usersCollection.find({ username: currentUserName }).toArray((err, result) => {
-
          const currentUserId = result[0].userId
-
          const currentUserCart = userCarts.find(cart => {
             return cart.userId === currentUserId
          })
-
-         if (currentUserCart === undefined) { // Check if cart is empty/undefined
-            userCarts.push({ userId: currentUserId, itemIds: itemIds })
+         // Check if cart is empty/undefined
+         if (currentUserCart === undefined) {
+            userCarts.push({ userId: currentUserId, items: [addItem] })
             console.log(`New cart created for user ${currentUserName}`)
             res.send(JSON.stringify({ success: true }))
             return
          }
-
-         currentUserCart.itemIds = itemIds
+         //Otherwise add item to user's cart
+         currentUserCart.items = currentUserCart.items.concat(addItem)
          console.log(`Cart successfully updated for user ${currentUserName}`)
          res.send(JSON.stringify({ success: true }))
       })
