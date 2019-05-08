@@ -9,7 +9,7 @@ class UnconnectedNavigationBar extends Component {
   getButtonHtml = () => {
     if (this.props.loggedIn) {
       return (
-        <div>
+        <div className="navigation-flex">
           <div>
             <Logout />
           </div>
@@ -35,12 +35,22 @@ class UnconnectedNavigationBar extends Component {
   render = () => {
     return (
       <div className="navigation-bar">
-        <div>
-          <Link to={"/"}>Ali-Bae</Link>
-          <Link to={"/cart"}>My Cart</Link>
+        <div className="navigation-flex">
+          <div>
+            <Link to={"/"}>Ali-Bae</Link>
+            <Link to={"/cart"}>My Cart</Link>
+          </div>
+          <Searchbar />
+          {this.getButtonHtml()}
         </div>
-        <Searchbar />
-        {this.getButtonHtml()}
+        <div className="navigation-flex link-area">
+          Categories:
+          <div>Clothing and Accessories</div>
+          <div>Films and Music</div>
+          <div>Home and Appliances</div>
+          <div>Electronics</div>
+          <div>Video Games</div>
+        </div>
       </div>
     );
   };

@@ -1,5 +1,4 @@
 .navigation-bar {
-  display: flex;
   margin: auto;
   font-size: 30px;
   border-style: solid;
@@ -9,7 +8,14 @@
   color: #ffffff;
   width: 99%;
 }
+.navigation-flex {
+  display: flex;
+}
 
 .navigation-bar a {
   color: white !important;
+}
+
+.link-area {
+  font-size: medium;
 }

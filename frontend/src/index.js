@@ -11,7 +11,6 @@ import Login from "./components/Login.jsx";
 import AddItem from "./components/AddItem.jsx";
 import AnimatedMessage from "./components/AnimatedMessage.jsx";
 import NavigationBar from "./components/NavigationBar.jsx";
-import SideBar from "./components/SideBar.jsx";
 import renderProfile from "./components/renderProfile.jsx";
 import Oops from "./components/Oops.jsx";
 import Cart from "./components/Cart.jsx";
@@ -24,8 +23,6 @@ let root = (
       <Route exact={false} path="/" component={AutoLogin} />
       <Route exact={false} path="/" component={NavigationBar} />
       <Route exact={false} path="/" component={AnimatedMessage} />
-
-      <Route exact={false} path="/" component={SideBar} />
       <Switch>
         <Route exact={true} path="/(|search|)/" component={App} />
         <Route exact={true} path="/search/:query" component={App} />
