@@ -55,39 +55,40 @@ MongoClient.connect(url, { useNewUrlParser: true }, (err, allDbs) => { // Add op
 // ENDPOINTS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 app.get("/get-items", function (req, res) {
-
    const decodedSearch = decodeURIComponent(req.query.search)
-   console.log(decodedSearch)
-
    if (decodedSearch === undefined) {// If not query is provided, return all items!
-      console.log("No query provided, returning  all items...");
+      console.log("DB: No query provided, returning ALL items...");
       itemsCollection.find({}).toArray((err, resultArr) => {
          if (err) throw err;
          res.send(JSON.stringify(resultArr))
          return
       })
    }
-
-   searchWordsArray = decodedSearch.split(" ")
-
-   const query = {
-      title: {
-         $regex: new RegExp("(" + searchWordsArray.join("|") + ")"),
-         $options: "$i"
-      },
-      // details: {
-      //    $regex: new RegExp("(" + searchWordsArray.join("|") + ")"),
-      //    $options: "$i"
-      // },
-   }
-
-   itemsCollection.find(query).toArray((err, resultArr) => {
+   const searchWordsArray = decodedSearch.split(" ")
+   const query = [{
+      $match: {
+         $or: [
+            {
+               title: {
+                  $regex: new RegExp("(" + searchWordsArray.join("|") + ")"),
+                  $options: "$i"
+               }
+            },
+            {
+               details: {
+                  $regex: new RegExp("(" + searchWordsArray.join("|") + ")"),
+                  $options: "$i"
+               }
+            }
+         ]
+      }
+   }]
+   itemsCollection.aggregate(query).toArray((err, resultArr) => {
       if (err) throw err;
-      console.log(`Returning items that match provided query`)
+      console.log(`DB: Returning items that match provided query`)
       res.send(JSON.stringify(resultArr))
    })
 });
-
 
 //-----------------------------------------------------------------------------------------------------------------------//
 
@@ -109,11 +110,26 @@ app.get("/get-single-item", function (req, res) {
 
 app.get("/get-items-by-user", function (req, res) {
    const userId = req.query.userId;
-   //Search for item in database
-   itemsCollection.find({ userId: userId }).toArray((err, result) => {
+
+   let query = [
+      {
+         $match: {
+            userId: userId
+         }
+      },
+      {
+         $lookup: {
+            from: "Users",
+            localField: "userId",
+            foreignField: "userId",
+            as: "user"
+         }
+      }
+   ]
+
+   itemsCollection.aggregate(query).toArray((err, result) => {
       if (err) throw err;
-      const searchedItems = result
-      res.send(JSON.stringify(searchedItems))
+      res.send(JSON.stringify(result))
    })
 });
 
@@ -231,6 +247,7 @@ app.post("/add-item", upload.array("images"), function (req, res) {
 app.post("/add-review", upload.none(), function (req, res) {
    const sessionId = req.cookies.sid;
    const { itemId, rating, title, content } = req.body
+   console.log(req.body.itemId)
    //Get username from remote sessions colleciton
    sessionsCollection.find({ sessionId: sessionId }).toArray((err, result) => {
       if (err) throw err;
@@ -296,11 +313,19 @@ app.get("/get-cart", function (req, res) {
 
          const currentUserId = result[0].userId
 
+         console.log("CurrentUserId: ", currentUserId)
+         console.log("ALL user carts : ", userCarts)
+
          const currentUserCart = userCarts.find(cart => {
             return cart.userId === currentUserId
          })
 
-         const itemIdArray = JSON.parse(currentUserCart.itemIds)
+         if (currentUserCart === undefined) {
+            res.send(JSON.stringify({ success: false }))
+            return;
+         }
+
+         const itemIdArray = currentUserCart.itemIds
 
          let cartItems = []
 
@@ -313,12 +338,10 @@ app.get("/get-cart", function (req, res) {
          }
 
          itemsCollection.find(query).toArray((err, result) => {
-
             cartItems.push(result)
             res.send(JSON.stringify(result))
          })
          //})
-
          // console.log("Sending back the following items: ", cartItems)
          // res.send(JSON.stringify(cartItems))
       })
@@ -329,7 +352,9 @@ app.get("/get-cart", function (req, res) {
 
 app.post("/set-cart", upload.none(), function (req, res) {
 
-   const itemIds = req.body.itemIds
+   console.log("Item ids : ", req.body.itemIds)
+
+   const itemIds = req.body.itemIds.split(" ")
    const currentCookie = req.cookies.sid
 
    //Get username from remote sessions colleciton
@@ -349,13 +374,13 @@ app.post("/set-cart", upload.none(), function (req, res) {
          })
 
          if (currentUserCart === undefined) { // Check if cart is empty/undefined
-            userCarts.push({ userId: currentUserId, itemIds: JSON.parse(itemIds) })
+            userCarts.push({ userId: currentUserId, itemIds: itemIds })
             console.log(`New cart created for user ${currentUserName}`)
             res.send(JSON.stringify({ success: true }))
             return
          }
 
-         currentUserCart.itemIds = JSON.parse(itemIds)
+         currentUserCart.itemIds = itemIds
          console.log(`Cart successfully updated for user ${currentUserName}`)
          res.send(JSON.stringify({ success: true }))
       })
@@ -364,10 +389,30 @@ app.post("/set-cart", upload.none(), function (req, res) {
 
 //-----------------------------------------------------------------------------------------------------------------------//
 
+app.get("clear-cart", function (req, res) {
+
+   const sessionId = req.cookies.sid
+   //Get username from remote sessions colleciton
+   sessionsCollection.find({ sessionId: sessionId }).toArray((err, result) => {
+      if (err) throw err;
+      const currentUserName = result[0].user
+      //Get userId from users collection
+      usersCollection.find({ username: currentUserName }).toArray((err, result) => {
+
+         const currentUserId = result[0].userId
+         const currentUserCart = userCarts.find(cart => {
+            return cart.userId === currentUserId
+         })
+         currentUserCart.itemIds = []
+         console.log("User's cart has been cleared!")
+      })
+   })
+})
+
+//-----------------------------------------------------------------------------------------------------------------------//
+
 app.get("/verify-cookie", function (req, res) {
-
    const currentCookie = req.cookies.sid
-
    sessionsCollection.find({ sessionId: currentCookie }).toArray((err, result) => {
       if (err) throw err;
       if (result === undefined) {
@@ -378,6 +423,11 @@ app.get("/verify-cookie", function (req, res) {
    })
 })
 
+//-----------------------------------------------------------------------------------------------------------------------//
+
+app.post("checkout", function (req, res) {
+
+})
 
 // UTILITY FUNCTIONS //////////////////////////////////////////////////////////////////////////////////////////////////////
 
