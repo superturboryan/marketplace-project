@@ -16,45 +16,26 @@ class UnconnectedAddToCart extends Component {
     this.state = { quantity: 1 };
   }
   handlerButtonAddToCart = () => {
-    console.log("LOGGED IN: " + this.props.loggedIn);
     if (!this.props.loggedIn) {
       console.log("user needs to be logged in");
       return;
     }
-    if (this.props.cart !== undefined) {
-      if (this.props.cart.length) {
-        fetch("http://localhost:4000/get-cart", { credentials: "include" })
-          .then(res => {
-            return res.text();
-          })
-          .then(resBody => {
-            let newCart = JSON.parse(resBody);
-            this.props.dispatch({ type: "add-to-cart", item: newCart });
-          });
-      }
-    }
-    let cartItemIds = this.props.cart.map(item => {
-      if (item === undefined) {
-        return undefined;
-      }
-      return item.itemId;
-    });
-    cartItemIds = cartItemIds.filter(item => {
-      return item !== undefined;
-    });
-    let data = new FormData();
-    cartItemIds.forEach((itemId, index) => {
-      data.append("itemIds[]", itemId[index]);
-    });
-    fetch("http://localhost:4000/set-cart", {
-      method: "POST",
-      body: data,
-      credentials: "include"
-    });
     this.props.dispatch({
       type: "add-to-cart",
       item: this.props.item,
       quantity: this.props.numberInputValues[this.props.item.itemId]
+    });
+    let cartItemIds = this.props.cart.map(item => {
+      return item.item.itemId;
+    });
+
+    let idString = cartItemIds.slice().join(" ");
+    let data = new FormData();
+    data.append("itemIds", idString);
+    fetch("http://localhost:4000/set-cart", {
+      method: "POST",
+      body: data,
+      credentials: "include"
     });
   };
   render = () => {
