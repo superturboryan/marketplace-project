@@ -1,10 +1,3 @@
-body {
-  padding: 10px;
-  background-color: rgb(158, 160, 247);
-  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-    "Lucida Sans", Arial, sans-serif;
-}
-
 img {
   opacity: 1;
   cursor: pointer;
