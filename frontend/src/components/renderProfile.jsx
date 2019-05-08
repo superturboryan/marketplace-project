@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import ReviewList from "./ReviewList.jsx";
-import Item from "./Item.jsx";
+import { Link } from "react-router-dom";
 
 class Profile extends Component {
   constructor(props) {
@@ -25,6 +25,27 @@ class Profile extends Component {
       });
   };
 
+  itemDetailsHtml = item => {
+    return (
+      <div className="galleryItem">
+        <Link className="link1" to={"/item/" + item.itemId}>
+          <div className="galleryItemDescription">{item.title}</div>
+          <figure className="galleryImageContainer">
+            <img
+              className="gallery__img"
+              alt=""
+              height="100px"
+              src={item.images[0]}
+            />
+          </figure>
+          <div className="galleryItemCost">
+            ${item.price.toLocaleString({ style: "currency" })}
+          </div>
+        </Link>
+      </div>
+    );
+  };
+
   itemHtml = () => {
     if (this.state.items.length === 0) {
       return <h3>There are no items on sale by this user.</h3>;
@@ -33,17 +54,7 @@ class Profile extends Component {
         <div className="container">
           <p>All Items: </p>
           <div className="gallery">
-            {/*items.map(item => (
-          <Item
-            cost={item.price}
-            sellerId={item.sellerId}
-            imageLocation={item.images[0]}
-            description={item.description}
-            itemId={item.id}
-            key={item.id}
-          />
-        ))*/}
-            Item list work in progress.
+            {this.state.items.map(item => this.itemDetailsHtml(item))}
           </div>
         </div>
       );
