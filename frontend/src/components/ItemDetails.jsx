@@ -59,7 +59,8 @@ class UnconnectedItem extends Component {
           images={this.state.item.images}
           itemId={this.state.item.id}
           title={this.state.item.title}
-        />{" "}
+        />
+        <p>{this.state.item.details}</p>
         <div>
           $
           {parseFloat(this.state.item.price).toLocaleString({
