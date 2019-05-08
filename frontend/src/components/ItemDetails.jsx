@@ -11,8 +11,7 @@ class UnconnectedItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      item: undefined,
-      reviews: []
+      item: undefined
     };
     console.log("Initial state: ");
     console.log(this.state);
@@ -37,25 +36,6 @@ class UnconnectedItem extends Component {
           item: body
         });
       });
-
-    // Fetch item reviews from server
-    fetch("/get-reviews-for-id?itemId=" + this.getItemId())
-      .then(response => {
-        return response.text();
-      })
-      .then(responseBody => {
-        let body = JSON.parse(responseBody);
-
-        if (body.success === false) {
-          console.log("Reviews could not be retrieved.");
-          return;
-        }
-
-        console.log("Received item reviews: ", body);
-        this.setState({
-          reviews: body
-        });
-      });
   };
 
   getItemId = () => {
@@ -67,16 +47,8 @@ class UnconnectedItem extends Component {
     console.log("ItemDetailsCompenent props: ");
     console.log(this.props.match.params.id);
 
-    let itemReviews = this.state.reviews;
-
     if (this.state.item === undefined) {
       return null;
-    }
-
-    if (itemReviews.count === 0) {
-      itemReviews = <div>This item has not been reviewed yet.</div>;
-    } else {
-      itemReviews = <ReviewList itemId={this.state.item.itemId} />;
     }
 
     return (
@@ -98,7 +70,7 @@ class UnconnectedItem extends Component {
         </Link>
         <AddToCart item={this.state.item} />
         <AddReview itemId={this.state.item.id} />
-        {itemReviews}
+        <ReviewList itemId={this.state.item.itemId} />
       </div>
     );
   }

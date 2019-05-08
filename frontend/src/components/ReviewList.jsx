@@ -28,18 +28,27 @@ class UnconnectedReviewList extends Component {
       queryValue = this.props.itemId;
     }
     console.log(queryName + "  " + queryValue);
-    fetch(
-      "http://localhost:4000/get-reviews-for-id?" + queryName + "=" + queryValue
-    )
+    fetch("/get-reviews-for-id?" + queryName + "=" + queryValue)
       .then(res => {
         return res.text();
       })
       .then(resBody => {
         let parsedBody = JSON.parse(resBody);
+
+        if (parsedBody.success === false) {
+          console.log("There are no reviews yet. ", parsedBody);
+          return;
+        }
+
         this.setState({ allReviews: parsedBody });
       });
   };
   render = () => {
+    if (this.state.allReviews.length === 0) {
+      console.log("Reviews count. ", this.state.allReviews.length);
+      return <h3>There are no reviews for this item yet.</h3>;
+    }
+
     return (
       <div>
         <h3>Reviews</h3>
