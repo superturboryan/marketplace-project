@@ -414,13 +414,29 @@ app.get("clear-cart", function (req, res) {
 app.get("/verify-cookie", function (req, res) {
    const currentCookie = req.cookies.sid
 
-   sessionsCollection.find({ sessionId: currentCookie }).toArray((err, result) => {
+   let query = [
+      {
+         $match: {
+            sessionId: currentCookie
+         }
+      },
+      {
+         $lookup: {
+            from: "Users",
+            localField: "user",
+            foreignField: "username",
+            as: "user"
+         }
+      }
+   ]
+
+   sessionsCollection.aggregate(query).toArray((err, result) => {
       if (err) throw err;
       if (result === undefined) {
          res.send(JSON.stringify({ success: false }))
          return;
       }
-      res.send(JSON.stringify({ success: true }))
+      res.send(JSON.stringify({ success: true, username: result }))
    })
 })
 
