@@ -17,6 +17,10 @@ class UnconnectedAddToCart extends Component {
   }
   handlerButtonAddToCart = () => {
     console.log("LOGGED IN: " + this.props.loggedIn);
+    if (!this.props.loggedIn) {
+      console.log("user needs to be logged in");
+      return;
+    }
     if (this.props.cart !== undefined) {
       if (this.props.cart.length) {
         fetch("http://localhost:4000/get-cart", { credentials: "include" })
