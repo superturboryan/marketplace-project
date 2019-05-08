@@ -24,7 +24,7 @@ class UnconnectedAddToCart extends Component {
           })
           .then(resBody => {
             let newCart = JSON.parse(resBody);
-            this.props.dispatch({ type: "add-to-cart", item: resBody });
+            this.props.dispatch({ type: "add-to-cart", item: newCart });
           });
       }
     }
