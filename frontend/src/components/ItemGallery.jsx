@@ -4,9 +4,15 @@ import { withRouter } from "react-router-dom";
 import Item from "./Item.jsx";
 import "./../css/gallery.css";
 
-let items = [];
-
 class UnconnectedItemGallery extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      items: [],
+      reloadToggle: false
+    };
+  }
+
   fetchItems = () => {
     // Fetch -> pass result of this.getQuery()
     fetch("/get-items?search=" + this.getQuery(), {
@@ -20,25 +26,31 @@ class UnconnectedItemGallery extends Component {
 
         console.log(body);
         if (body === undefined) {
-          items = [];
+          this.setState({
+            items: [],
+            reloadToggle: !this.state.reloadToggle
+          });
           return;
         }
 
-        items = body;
-        //console.log("*****************Whats in items: **********************");
-        //console.log(items);
+        this.setState({
+          items: body,
+          reloadToggle: !this.state.reloadToggle
+        });
       });
   };
 
-  /*componentWillMount = () => {
-    console.log("Query: ", this.getQuery());
+  componentDidMount = () => {
+    console.log("Component did mount. Query: ", this.getQuery());
     this.fetchItems();
   };
 
-  componentDidUpdate = () => {
-    console.log("Query: ", this.getQuery());
-    this.fetchItems();
-  };*/
+  componentDidUpdate = (prevProps, prevState) => {
+    if (prevState.reloadToggle === this.state.reloadToggle) {
+      console.log("reloadToggle did update.");
+      this.fetchItems();
+    }
+  };
 
   getQuery = () => {
     //will get the item, from search term after the /
@@ -47,15 +59,10 @@ class UnconnectedItemGallery extends Component {
   };
 
   render = () => {
-    // Since this component doesn't update often,
-    // we can fetch here.
-    this.fetchItems();
-    console.log("*****************Whats in items: **********************");
-    console.log(items);
     return (
       <div className="galleryContainer">
         <div className="gallery">
-          {items.map(item => (
+          {this.state.items.map(item => (
             <Item
               cost={item.price}
               sellerId={item.userId}
