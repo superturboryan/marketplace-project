@@ -58,8 +58,8 @@ class UnconnectedReviewList extends Component {
       console.log("Reviews count. ", this.state.allReviews.length);
       return (
         <h3>
-          There are no reviews for this {this.isForItemId() ? "item" : "user"}{" "}
-          yet.
+          There are no reviews
+          {this.isForItemId() ? " for this item " : " by this user "}yet
         </h3>
       );
     }
