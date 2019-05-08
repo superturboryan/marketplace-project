@@ -12,7 +12,11 @@ class UnconnectedItemListElem extends Component {
           <span>{this.props.item.title}</span>
           <span>{price}</span>
           <span>
-            <img height="50px" src={this.props.item.images[0]} />
+            <img
+              alt={this.props.item.itemId}
+              height="50px"
+              src={this.props.item.images[0]}
+            />
           </span>
           <span>{this.props.quantity}</span>
         </div>
