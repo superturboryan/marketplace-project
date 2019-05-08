@@ -24,6 +24,8 @@ img:hover {
   /*border-style: solid;*/
   height: 190px;
   width: 200px;
+  border-radius: 10px;
+  padding: 2px;
   /*overflow: hidden;*/
 }
 
