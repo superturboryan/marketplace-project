@@ -8,13 +8,7 @@ class UnconnectedCart extends Component {
     super(props);
     this.state = { items: [] };
   }
-  componentDidMount = () => {
-    if (this.props.cartItems === undefined) {
-      return;
-    }
-    if (this.props.cartItems.length < 1) {
-      return;
-    }
+  componentWillMount = () => {
     //______________________________________
 
     fetch("http://localhost:4000/get-cart", { credentials: "include" })
@@ -27,21 +21,22 @@ class UnconnectedCart extends Component {
         cartFromServer.forEach(item => {
           if (cartToStore[item.itemId] === undefined) {
             cartToStore[item.itemId] = { item: item, quantity: 1 };
+            return;
           }
           cartToStore[item.itemId] = {
             ...cartToStore[item.itemId],
-            quantity: cartToStore[item.itemId]["quantity"] + 1
+            quantity: cartToStore[item.itemId]["quantity"]
           };
         });
+        this.setState({ items: Object.values(cartToStore) });
       });
-
     //______________________________________
   };
   handlerOnClick = () => {};
   render = () => {
     return (
       <div>
-        <ItemList allItems={this.props.cartItems} />
+        <ItemList allItems={this.state.items} />
         <CheckoutButton />
       </div>
     );

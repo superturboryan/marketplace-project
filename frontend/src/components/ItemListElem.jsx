@@ -3,15 +3,10 @@ import { connect } from "react-redux";
 
 class UnconnectedItemListElem extends Component {
   render = () => {
-    //let price = this.props.item.price;
-    //price = "$" + price.toLocaleString({ style: "currency" });
+    console.log(this.props);
+    let price = parseInt(this.props.item.price);
+    price = "$" + price.toLocaleString({ style: "currency" });
     return (
-      <div>
-        {"Item: " +
-          this.props.item.description +
-          " Quantity: " +
-          this.props.quantity}
-      </div> /*
       <li>
         <div>
           <span>{this.props.item.title}</span>
@@ -19,8 +14,9 @@ class UnconnectedItemListElem extends Component {
           <span>
             <img height="50px" src={this.props.item.images[0]} />
           </span>
+          <span>{this.props.quantity}</span>
         </div>
-      </li>*/
+      </li>
     );
   };
 }
