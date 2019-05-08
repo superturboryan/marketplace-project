@@ -1,0 +1,42 @@
+.add-item-form-input {
+  -webkit-border-radius: 4px;
+  border-radius: 2px;
+  color: #202124;
+  font-size: 12px;
+  height: 16px;
+  margin: 0px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 2px;
+  z-index: 1;
+}
+#add-item-form-file-input {
+  -webkit-border-radius: 4px;
+  border-radius: 2px;
+  color: #202124;
+  font-size: 12px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  z-index: 1;
+}
+#add-item-location-div {
+  display: flex;
+}
+.add-item-field-heading {
+  font-size: 16px;
+  margin: 0px;
+  padding: 0px;
+}
+#div-container-add-item {
+  background-color: rgba(121, 121, 121, 0.42);
+  margin: 0 auto;
+}
+#submitAddItem {
+  background-color: #1e1eb2;
+  color: white;
+  font-size: 16px;
+  border-color: #1e1eb2;
+  border-radius: 4px;
+  padding: 5px, 10px;
+  margin-top: 15px;
+}

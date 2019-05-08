@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import Oops from "./Oops";
+import "./../css/addItem.css";
 
 class UnconnectedAddItem extends Component {
   constructor(props) {
@@ -141,11 +142,12 @@ class UnconnectedAddItem extends Component {
     }
 
     return (
-      <div>
+      <div className={"standard-container"} id={"div-container-add-item"}>
         <h1>Sell Something!</h1>
         <form onSubmit={this.handleSubmit} encType={"multipart/form-data"}>
           <div>Title</div>
           <input
+            className={"add-item-form-input"}
             type="text"
             onChange={this.handleTitle}
             value={this.state.title}
@@ -153,6 +155,7 @@ class UnconnectedAddItem extends Component {
           />
           <div>Description</div>
           <input
+            className={"add-item-form-input"}
             type="text"
             onChange={this.handleDescription}
             value={this.state.description}
@@ -160,6 +163,7 @@ class UnconnectedAddItem extends Component {
           />
           <div>Price</div>
           <input
+            className={"add-item-form-input"}
             type="number"
             onChange={this.handlePrice}
             value={this.state.price}
@@ -167,19 +171,21 @@ class UnconnectedAddItem extends Component {
             step={0.01}
             required={true}
           />
-          <div>How many in stock</div>
+          <div>Quantity</div>
           <input
+            className={"add-item-form-input"}
             type="number"
             onChange={this.handleStock}
             value={this.state.stock}
             min={1}
             required={true}
           />
-          <div>
-            <div>Location</div>
+          <div id={"add-item-location-div"}>
             <div>
-              <div>City</div>
+              <p className={"add-item-field-heading"}>City</p>
+
               <input
+                className={"add-item-form-input"}
                 type="text"
                 onChange={this.handleCity}
                 value={this.state.city}
@@ -187,8 +193,10 @@ class UnconnectedAddItem extends Component {
               />
             </div>
             <div>
-              <div>Province/State</div>
+              <p className={"add-item-field-heading"}>Province/State</p>
+
               <input
+                className={"add-item-form-input"}
                 type="text"
                 onChange={this.handleProvince}
                 value={this.state.province}
@@ -196,8 +204,10 @@ class UnconnectedAddItem extends Component {
               />
             </div>
             <div>
-              <div>Country</div>
+              <p className={"add-item-field-heading"}>Country</p>
+
               <input
+                className={"add-item-form-input"}
                 type="text"
                 onChange={this.handleCountry}
                 value={this.state.country}
@@ -205,7 +215,7 @@ class UnconnectedAddItem extends Component {
               />
             </div>
           </div>
-          <div>
+          <div id={"add-item-form-file-input"}>
             <input
               type="file"
               accept="image/*"
@@ -217,7 +227,7 @@ class UnconnectedAddItem extends Component {
             />
           </div>
           <div>
-            <input type="submit" value="Submit" />
+            <input id={"submitAddItem"} type="submit" value="Submit" />
           </div>
         </form>
       </div>
