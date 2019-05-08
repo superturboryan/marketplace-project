@@ -3,8 +3,6 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import ItemGallery from "./ItemGallery.jsx";
 import "./../css/gallery.css";
-import Cart from "./Cart.jsx";
-import AddToCart from "./AddToCart.jsx";
 
 class UnconnectedApp extends Component {
   render = () => {

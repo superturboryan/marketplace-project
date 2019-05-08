@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import ReviewList from "./ReviewList.jsx";
-import Item from "./Item.jsx";
 
 class Profile extends Component {
   constructor(props) {
