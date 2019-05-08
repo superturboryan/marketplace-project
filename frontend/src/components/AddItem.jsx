@@ -84,7 +84,7 @@ class UnconnectedAddItem extends Component {
     let result = parseFloat(event.target.value);
     if (isNaN(result)) {
       this.setState({
-        price: 0
+        price: ""
       });
       return;
     }
@@ -94,8 +94,8 @@ class UnconnectedAddItem extends Component {
   };
 
   handleStock = event => {
-    let result = parseFloat(event.target.value);
-    if (isNaN(result)) {
+    let result = parseInt(event.target.value);
+    if (isNaN(result) || result === 0) {
       this.setState({
         stock: 1
       });
@@ -149,12 +149,14 @@ class UnconnectedAddItem extends Component {
             type="text"
             onChange={this.handleTitle}
             value={this.state.title}
+            required={true}
           />
           <div>Description</div>
           <input
             type="text"
             onChange={this.handleDescription}
             value={this.state.description}
+            required={true}
           />
           <div>Price</div>
           <input
@@ -162,6 +164,8 @@ class UnconnectedAddItem extends Component {
             onChange={this.handlePrice}
             value={this.state.price}
             min={0}
+            step={0.01}
+            required={true}
           />
           <div>How many in stock</div>
           <input
@@ -169,6 +173,7 @@ class UnconnectedAddItem extends Component {
             onChange={this.handleStock}
             value={this.state.stock}
             min={1}
+            required={true}
           />
           <div>
             <div>Location</div>
@@ -178,6 +183,7 @@ class UnconnectedAddItem extends Component {
                 type="text"
                 onChange={this.handleCity}
                 value={this.state.city}
+                required={true}
               />
             </div>
             <div>
@@ -186,6 +192,7 @@ class UnconnectedAddItem extends Component {
                 type="text"
                 onChange={this.handleProvince}
                 value={this.state.province}
+                required={true}
               />
             </div>
             <div>
@@ -194,6 +201,7 @@ class UnconnectedAddItem extends Component {
                 type="text"
                 onChange={this.handleCountry}
                 value={this.state.country}
+                required={true}
               />
             </div>
           </div>
@@ -205,6 +213,7 @@ class UnconnectedAddItem extends Component {
               id="images"
               name="images"
               multiple
+              required={true}
             />
           </div>
           <div>
