@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import ItemList from "./ItemList.jsx";
-import CheckoutButton from "./CheckoutButton.jsx";
 
 class UnconnectedCheckout extends Component {
   constructor(props) {

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 import ItemList from "./ItemList.jsx";
 import CheckoutButton from "./CheckoutButton.jsx";
 
@@ -30,7 +29,7 @@ class UnconnectedCart extends Component {
       })
       .then(resBody => {
         let parsedBody = JSON.parse(resBody);
-        if (typeof parsedBody === "array") {
+        if (typeof parsedBody === "object") {
           parsedBody = parsedBody.map(item => {
             return { item, quantity: 0 };
           });
