@@ -6,6 +6,12 @@ import Searchbar from "./Searchbar.jsx";
 import "./../css/navigationBar.css";
 
 class UnconnectedNavigationBar extends Component {
+  ifLoggedInDoThis = ret => {
+    if (this.props.loggedIn) {
+      return ret;
+    }
+  };
+
   getButtonHtml = () => {
     if (this.props.loggedIn) {
       return (
@@ -13,9 +19,7 @@ class UnconnectedNavigationBar extends Component {
           <div>
             <Logout />
           </div>
-          <div>
-            <Link to={"/add-item"}>Sell Something!</Link>
-          </div>
+          <div />
         </div>
       );
     } else {
@@ -36,12 +40,21 @@ class UnconnectedNavigationBar extends Component {
     return (
       <div className="navigation-bar">
         <div className="navigation-flex">
-          <div>
+          <div className="navigation-unflex">
             <Link to={"/"}>Ali-Bae</Link>
-            <Link to={"/cart"}>My Cart</Link>
           </div>
           <Searchbar />
           {this.getButtonHtml()}
+          {this.ifLoggedInDoThis(
+            <div className="toTheEnd navigation-unflex">
+              <Link className="toTheEnd" to={"/cart"}>
+                My Cart
+              </Link>
+              <Link className="toTheEnd" to={"/add-item"}>
+                Sell Something!
+              </Link>
+            </div>
+          )}
         </div>
         <div className="navigation-flex link-area">
           Categories:
@@ -58,7 +71,8 @@ class UnconnectedNavigationBar extends Component {
 
 let mapStateToProps = state => {
   return {
-    loggedIn: state.loggedIn
+    loggedIn: state.loggedIn,
+    username: state.username
   };
 };
 
