@@ -64,10 +64,7 @@ class UnconnectedItem extends Component {
           ${this.state.item.price.toLocaleString({ style: "currency" })}
         </div>
         <div>{this.state.item.stock} in stock.</div>
-        <Link to={"/profile/" + this.state.item.sellerId}>
-          {" "}
-          Link to seller{" "}
-        </Link>
+        <Link to={"/profile/" + this.state.item.userId}> Link to seller </Link>
         <AddToCart item={this.state.item} />
         <AddReview itemId={this.state.item.id} />
         <ReviewList itemId={this.state.item.itemId} />
