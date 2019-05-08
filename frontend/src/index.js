@@ -14,6 +14,7 @@ import NavigationBar from "./components/NavigationBar.jsx";
 import renderProfile from "./components/renderProfile.jsx";
 import Oops from "./components/Oops.jsx";
 import Cart from "./components/Cart.jsx";
+import Checkout from "./components/Checkout.jsx";
 
 let root = (
   <Provider store={store}>
@@ -29,6 +30,7 @@ let root = (
         <Route exact={true} path="/add-item" component={AddItem} />
         <Route exact={true} path="/profile/:userId" component={renderProfile} />
         <Route exact={true} path="/cart" component={Cart} />
+        <Route exact={true} path="/checkout" component={Checkout} />
         <Route
           render={props => (
             <Oops {...props} message={"This page doesn't exist."} />

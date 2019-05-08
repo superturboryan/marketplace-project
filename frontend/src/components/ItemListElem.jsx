@@ -9,7 +9,10 @@ class UnconnectedItemListElem extends Component {
     //price = "$" + price.toLocaleString({ style: "currency" });
     return (
       <div>
-        item
+        {"Item: " +
+          this.props.item.description +
+          " Quantity: " +
+          this.props.quantity}
       </div> /*
       <li>
         <div>

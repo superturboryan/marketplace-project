@@ -11,6 +11,7 @@ let reducer = (state, action) => {
       inputValueObj[action.name] = action.value;
       return { ...state, numberInput: { ...inputValueObj } };
     case "add-to-cart":
+      console.log(action.quantity + "   quantity");
       return {
         ...state,
         cart: state.cart.concat({

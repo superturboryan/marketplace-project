@@ -5,7 +5,10 @@ import renderProfile from "./renderProfile";
 import ItemListElem from "./ItemListElem.jsx";
 
 let listElementMaker = itemData => {
-  return <ItemListElem item={itemData} />;
+  console.log("------------------------------------");
+
+  console.log(itemData.quantity);
+  return <ItemListElem item={itemData.item} quantity={itemData.quantity} />;
 };
 
 class UnconnectedItemList extends Component {
