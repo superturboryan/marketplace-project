@@ -12,10 +12,24 @@
   display: flex;
 }
 
+.navigation-unflex {
+  display: grid;
+}
+
 .navigation-bar a {
   color: white !important;
 }
 
 .link-area {
   font-size: medium;
+}
+
+.toTheEnd {
+  justify-content: end;
+  margin-left: auto;
+}
+
+.searchBar {
+  margin: 5px;
+  width: 500px;
 }
