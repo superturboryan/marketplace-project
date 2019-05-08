@@ -51,10 +51,13 @@ class Profile extends Component {
       return <h3>There are no items on sale by this user.</h3>;
     } else {
       return (
-        <div className="container">
-          <p>All Items: </p>
-          <div className="gallery">
-            {this.state.items.map(item => this.itemDetailsHtml(item))}
+        <div>
+          <h2>{this.state.items[0].user[0].username}</h2>
+          <div className="container">
+            <p>All Items: </p>
+            <div className="gallery">
+              {this.state.items.map(item => this.itemDetailsHtml(item))}
+            </div>
           </div>
         </div>
       );
