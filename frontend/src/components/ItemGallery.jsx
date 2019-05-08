@@ -53,7 +53,7 @@ class UnconnectedItemGallery extends Component {
     console.log("*****************Whats in items: **********************");
     console.log(items);
     return (
-      <div className="container">
+      <div className="galleryContainer">
         <div className="gallery">
           {items.map(item => (
             <Item
