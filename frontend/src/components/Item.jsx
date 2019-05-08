@@ -7,21 +7,28 @@ class UnconnectedItem extends Component {
     console.log("Prop contents: ");
     console.log(this.props);
     return (
-      <div>
-        <figure className="galleryItem">
-          <Link to={"/item/" + this.props.itemId}>
-            {" "}
-            <div>{this.props.description}</div>{" "}
+      <div className="galleryItem">
+        <Link className="link1" to={"/item/" + this.props.itemId}>
+          {" "}
+          <div className="galleryItemDescription">
+            {this.props.description}
+          </div>{" "}
+          <figure className="galleryImageContainer">
             <img
-              className="galleryImage"
+              className="gallery__img"
               alt=""
               height="100px"
               src={this.props.imageLocation}
-            />{" "}
-            <div>${this.props.cost.toLocaleString({ style: "currency" })}</div>
-          </Link>
-          <Link to={"/profile/" + this.props.sellerId}> Link to seller </Link>
-        </figure>
+            />
+          </figure>{" "}
+          <div className="galleryItemCost">
+            ${this.props.cost.toLocaleString({ style: "currency" })}
+          </div>
+        </Link>
+        <Link className="link2" to={"/profile/" + this.props.sellerId}>
+          {" "}
+          Link to seller{" "}
+        </Link>
       </div>
     );
   };

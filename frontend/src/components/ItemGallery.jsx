@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { initialItems } from "./../dummyData.js";
 import Item from "./Item.jsx";
 import "./../css/gallery.css";
 
@@ -9,21 +8,15 @@ let items = [];
 
 class UnconnectedItemGallery extends Component {
   fetchItems = () => {
-    // TO DO
-    // Fetch -> pass result of this.getQuery() to body
-    items = initialItems;
-
-    let data = new FormData();
-    data.append("query", this.getQuery());
-    fetch("/get-all-items", {
-      method: "POST",
-      body: data
+    // Fetch -> pass result of this.getQuery()
+    fetch("/get-items?search=" + this.getQuery(), {
+      credentials: "include"
     })
       .then(response => {
         return response.text();
       })
       .then(responseBody => {
-        let body = JSON.stringify(responseBody);
+        let body = JSON.parse(responseBody);
 
         console.log(body);
         if (body === undefined) {
@@ -32,6 +25,8 @@ class UnconnectedItemGallery extends Component {
         }
 
         items = body;
+        //console.log("*****************Whats in items: **********************");
+        //console.log(items);
       });
   };
 
@@ -46,7 +41,8 @@ class UnconnectedItemGallery extends Component {
   };*/
 
   getQuery = () => {
-    let temp = decodeURIComponent(this.props.location.pathname);
+    //will get the item, from search term after the /
+    let temp = this.props.location.pathname;
     return temp.substring(temp.lastIndexOf("/") + 1);
   };
 
@@ -54,7 +50,8 @@ class UnconnectedItemGallery extends Component {
     // Since this component doesn't update often,
     // we can fetch here.
     this.fetchItems();
-
+    console.log("*****************Whats in items: **********************");
+    console.log(items);
     return (
       <div className="container">
         <p>All Items: </p>
@@ -62,11 +59,11 @@ class UnconnectedItemGallery extends Component {
           {items.map(item => (
             <Item
               cost={item.price}
-              sellerId={item.sellerId}
+              sellerId={item.userId}
               imageLocation={item.images[0]}
-              description={item.description}
-              itemId={item.id}
-              key={item.id}
+              description={item.title}
+              itemId={item.itemId}
+              key={item.itemId}
             />
           ))}
         </div>
