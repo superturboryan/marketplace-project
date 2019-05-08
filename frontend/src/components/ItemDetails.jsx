@@ -66,7 +66,7 @@ class UnconnectedItem extends Component {
         <div>{this.state.item.stock} in stock.</div>
         <Link to={"/profile/" + this.state.item.userId}> Link to seller </Link>
         <AddToCart item={this.state.item} />
-        <AddReview itemId={this.state.item.id} />
+        <AddReview itemId={this.state.item.itemId} />
         <ReviewList itemId={this.state.item.itemId} />
       </div>
     );

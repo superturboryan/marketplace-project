@@ -1,14 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import renderProfile from "./renderProfile";
 import NumberInput from "./NumberInput.jsx";
 
-let isQuantityMax = quantity => {
-  let quantityStr = quantity + "";
-  if (quantity.length > 6) {
-  }
-};
+// let isQuantityMax = quantity => {
+//   let quantityStr = quantity + "";
+//   if (quantity.length > 6) {
+//   }
+// };
 
 class UnconnectedAddToCart extends Component {
   constructor(props) {

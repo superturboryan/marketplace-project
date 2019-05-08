@@ -33,12 +33,15 @@ img:hover {
 }
 
 .container {
-  width: 60%;
+  display: flex;
+  justify-content: center;
+  width: 90%;
   margin: 2rem auto;
 }
 
 .gallery {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
   grid-template-columns: repeat(5, auto);
   grid-template-rows: repeat(5, relative);
   grid-gap: 2rem;

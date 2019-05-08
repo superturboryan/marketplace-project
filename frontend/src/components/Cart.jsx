@@ -51,7 +51,7 @@ class UnconnectedCart extends Component {
       })
       .then(resBody => {
         let parsedBody = JSON.parse(resBody);
-        if (typeof parsedBody === "array") {
+        if (typeof parsedBody === "object") {
           parsedBody = parsedBody.map(item => {
             return { item, quantity: 0 };
           });
