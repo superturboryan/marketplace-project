@@ -15,15 +15,24 @@ class UnconnectedReviewList extends Component {
     super(props);
     this.state = { allReviews: [] };
   }
+
+  isForUserId = () => {
+    return this.props.userId !== undefined;
+  };
+
+  isForItemId = () => {
+    return this.props.itemId !== undefined;
+  };
+
   componentDidMount = () => {
     let queryName = "noName";
     let queryValue = "noValue";
 
-    if (this.props.userId !== undefined) {
+    if (this.isForUserId()) {
       queryName = "userId";
       queryValue = this.props.userId;
     }
-    if (this.props.itemId !== undefined) {
+    if (this.isForItemId()) {
       queryName = "itemId";
       queryValue = this.props.itemId;
     }
@@ -43,10 +52,16 @@ class UnconnectedReviewList extends Component {
         this.setState({ allReviews: parsedBody });
       });
   };
+
   render = () => {
     if (this.state.allReviews.length === 0) {
       console.log("Reviews count. ", this.state.allReviews.length);
-      return <h3>There are no reviews for this item yet.</h3>;
+      return (
+        <h3>
+          There are no reviews for this {this.isForItemId() ? "item" : "user"}{" "}
+          yet.
+        </h3>
+      );
     }
 
     return (
@@ -57,6 +72,7 @@ class UnconnectedReviewList extends Component {
     );
   };
 }
+
 let ReviewList = connect()(UnconnectedReviewList);
 
 export default ReviewList;
