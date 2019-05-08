@@ -13,16 +13,7 @@ class UnconnectedNavigationBar extends Component {
   };
 
   getButtonHtml = () => {
-    if (this.props.loggedIn) {
-      return (
-        <div className="navigation-flex">
-          <div>
-            <Logout />
-          </div>
-          <div />
-        </div>
-      );
-    } else {
+    if (!this.props.loggedIn) {
       return (
         <div>
           <div>
@@ -53,6 +44,17 @@ class UnconnectedNavigationBar extends Component {
               <Link className="toTheEnd" to={"/add-item"}>
                 Sell Something!
               </Link>
+            </div>
+          )}
+        </div>
+        <div>
+          {this.ifLoggedInDoThis(
+            <div className="navigation-flex">
+              <div>{this.props.username}</div>
+              <div>
+                <Logout />
+              </div>
+              <div />
             </div>
           )}
         </div>
