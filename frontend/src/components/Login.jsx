@@ -55,7 +55,8 @@ class UnconnectedLogin extends Component {
         });
         this.props.dispatch({
           type: "logged-in",
-          toggle: true
+          toggle: true,
+          username: parsedBody.username
         });
       });
   };
