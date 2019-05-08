@@ -4,14 +4,14 @@ import { Link } from "react-router-dom";
 import ItemList from "./ItemList.jsx";
 import CheckoutButton from "./CheckoutButton.jsx";
 
-class UnconnectedAutoLogin {
+class UnconnectedAutoLogin extends Component {
   componentDidMount = () => {
     fetch("http://localhost:4000/verify-cookie", { credentials: "include" })
       .then(res => {
         return res.text();
       })
       .then(resBody => {
-        parsedBody = JSON.parse(resBody);
+        let parsedBody = JSON.parse(resBody);
         if (typeof parsedBody !== "object") {
           console.log("autologin fetch needs to return an object");
         }
@@ -24,6 +24,6 @@ class UnconnectedAutoLogin {
     return null;
   };
 }
-mapStateToProps = state => {};
-AutoLogin = connect()(UnconnectedAutoLogin);
+let mapStateToProps = state => {};
+let AutoLogin = connect()(UnconnectedAutoLogin);
 export default AutoLogin;
