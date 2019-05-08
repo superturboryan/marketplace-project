@@ -3,7 +3,7 @@ import { createStore } from "redux";
 let reducer = (state, action) => {
   switch (action.type) {
     case "logged-in":
-      return { ...state, loggedIn: action.toggle };
+      return { ...state, loggedIn: action.toggle, username: action.username };
     case "show-message":
       return { ...state, message: action.message };
     case "change-number-input-value":
@@ -28,6 +28,7 @@ const store = createStore(
   reducer,
   {
     loggedIn: false,
+    username: "",
     message: "Welcome!",
     numberInput: {},
     cart: []
