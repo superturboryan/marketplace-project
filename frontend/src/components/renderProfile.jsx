@@ -54,7 +54,6 @@ class Profile extends Component {
         <div>
           <h2>{this.state.items[0].user[0].username}</h2>
           <div className="container">
-            <p>All Items: </p>
             <div className="gallery">
               {this.state.items.map(item => this.itemDetailsHtml(item))}
             </div>
