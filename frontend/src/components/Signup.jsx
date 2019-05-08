@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
-
+import "./../css/signup.css";
 class UnconnectedSignup extends Component {
   constructor(props) {
     super(props);
@@ -78,24 +78,28 @@ class UnconnectedSignup extends Component {
     }
 
     return (
-      <div>
-        <h1>Signup</h1>
+      <div className={"standard-container"}>
+        <h1 id={"signupPageTitle"}>Signup</h1>
         <form onSubmit={this.handleSubmit} encType={"multipart/form-data"}>
-          <div>Username</div>
+          <h4 className={"signupHeaderText"}>Username</h4>
           <input
+            id={"usernameInputSignup"}
             type="text"
             onChange={this.handleUsername}
             value={this.state.username}
             name={"username"}
           />
-          <div>Password</div>
+          <h4 className={"signupHeaderText"}>Password</h4>
           <input
+            id={"passwordInputSignup"}
             type="text"
             onChange={this.handlePassword}
             value={this.state.password}
             name={"password"}
           />
-          <input type="submit" value="Submit" />
+          <div>
+            <input id={"submitSignup"} type="submit" value="Sign up" />
+          </div>
         </form>
       </div>
     );

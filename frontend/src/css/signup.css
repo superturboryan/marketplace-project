@@ -1,0 +1,40 @@
+#usernameInputSignup {
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  color: #202124;
+  font-size: 16px;
+  height: 28px;
+  margin: 1px 1px 0 1px;
+  padding: 13px 15px;
+  z-index: 1;
+}
+#passwordInputSignup {
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  color: #202124;
+  font-size: 16px;
+  height: 28px;
+  margin: 1px 1px 1px 1px;
+  padding: 13px 15px;
+  z-index: 1;
+}
+#submitSignup {
+  background-color: #1e1eb2;
+  color: white;
+  font-size: 16px;
+  border-color: #1e1eb2;
+  border-radius: 4px;
+  padding: 5px, 10px;
+  margin-top: 15px;
+}
+.signupHeaderText {
+  color: #202124;
+  margin: 0px;
+  padding: 0px;
+}
+#signupPageTitle {
+  color: #202124;
+  margin-bottom: 20px;
+  padding: 0px;
+  font-size: 25px;
+}
