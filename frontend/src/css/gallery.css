@@ -3,14 +3,11 @@ img {
   cursor: pointer;
 }
 
-img:hover {
-  opacity: 0.8;
-  cursor: pointer;
-}
-
 .galleryItem:hover,
 .galleryItem:focus {
-  background-color: #a8c4e7;
+  opacity: 0.5;
+  cursor: pointer;
+  background-color: #cedae9;
 }
 
 .galleryItem {
