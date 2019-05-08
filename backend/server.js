@@ -429,14 +429,14 @@ app.get("/verify-cookie", function (req, res) {
          }
       }
    ]
-
    sessionsCollection.aggregate(query).toArray((err, result) => {
       if (err) throw err;
       if (result === undefined) {
          res.send(JSON.stringify({ success: false }))
          return;
       }
-      res.send(JSON.stringify({ success: true, username: result }))
+
+      res.send(JSON.stringify({ success: true, username: result[0].user[0].username }))
    })
 })
 
