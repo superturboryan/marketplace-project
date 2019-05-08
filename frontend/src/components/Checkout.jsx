@@ -17,6 +17,14 @@ class UnconnectedCheckout extends Component {
   handlerStepTwoButton = () => {
     console.log(this.state.step);
     if (this.state.step === 1) {
+      fetch("/checkout", { credentials: "include" })
+        .then(res => {
+          return res.text();
+        })
+        .then(resBody => {
+          let parsedBody;
+          /*
+          if (parsedBody.success === true) {
       this.setState({ step: this.state.step + 1 });
     }
   };

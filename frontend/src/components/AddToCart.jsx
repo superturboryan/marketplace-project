@@ -21,10 +21,8 @@ class UnconnectedAddToCart extends Component {
     let itemQuantity = this.props.numberInputValues[this.props.item.itemId];
 
     let data = new FormData();
-    data.append("item", {
-      itemId: this.props.item.ItemId,
-      quantity: itemQuantity
-    });
+    data.append("itemId", this.props.item.itemId);
+    data.append("itemId", itemQuantity);
 
     fetch("http://localhost:4000/set-cart", {
       method: "POST",
