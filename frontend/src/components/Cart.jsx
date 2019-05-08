@@ -33,32 +33,9 @@ class UnconnectedCart extends Component {
             quantity: cartToStore[item.itemId]["quantity"] + 1
           };
         });
-        console.log(cartToStore);
       });
 
     //______________________________________
-    let data = new FormData();
-    this.props.cartItems.forEach((item, index) => {
-      data.append("cart[]", item.item[index]);
-    });
-    fetch("http://localhost:4000/cart-items", {
-      method: "POST",
-      body: data,
-      credentials: "include"
-    })
-      .then(res => {
-        return res.text();
-      })
-      .then(resBody => {
-        let parsedBody = JSON.parse(resBody);
-        if (typeof parsedBody === "object") {
-          parsedBody = parsedBody.map(item => {
-            return { item, quantity: 0 };
-          });
-        }
-
-        this.setState({ items: parsedBody });
-      });
   };
   handlerOnClick = () => {};
   render = () => {
