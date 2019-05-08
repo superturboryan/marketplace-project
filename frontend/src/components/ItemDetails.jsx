@@ -4,39 +4,55 @@ import { Link } from "react-router-dom";
 import { initialItems, itemReviews } from "./../dummyData.js";
 import AddToCart from "./AddToCart.jsx";
 import AddReview from "./AddReview.jsx";
+import TabbedImageGallery from "./TabbedImageGallery.jsx";
 
 class UnconnectedItem extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      item: initialItems.find(item => {
+        return item.id === this.props.match.params.id;
+      })
+    };
+    console.log("Initial state: ");
+    console.log(this.state);
+  }
+
   render() {
-    console.log("ItemDetailsCompenent pros: ");
+    console.log("ItemDetailsCompenent props: ");
     console.log(this.props.match.params.id);
-    let item = initialItems.find(item => {
-      return item.id === this.props.match.params.id;
-    });
+
     return (
       <div>
         {" "}
-        <div>{item.description}</div>{" "}
-        {/* Replace with new multiple image compnent */}
-        {item.images.map((val, index) => {
-          return <img alt="" height="200px" src={item.images[index]} />;
-        })}
-        {/* **************************************** */}{" "}
-        <div>${item.price.toLocaleString({ style: "currency" })}</div>
-        <div>{item.stock} in stock.</div>
-        <Link to={"/profile/" + item.sellerId}> Link to seller </Link>
+        <div>{this.state.item.description}</div>{" "}
+        <TabbedImageGallery
+          images={this.state.item.images}
+          itemId={this.state.item.id}
+          title={this.state.item.title}
+        />{" "}
         <div>
-          <AddToCart item={item} />
+          ${this.state.item.price.toLocaleString({ style: "currency" })}
         </div>
-        <AddReview itemId={item.id} />
+        <div>{this.state.item.stock} in stock.</div>
+        <Link to={"/profile/" + this.state.item.sellerId}>
+          {" "}
+          Link to seller{" "}
+        </Link>
+        <AddToCart item={this.state.item} />
+        <AddReview itemId={this.state.item.id} />
         <div>Reviews: </div>
         <div>
           {itemReviews.map(review => {
-            if (review.itemID === item.id) {
+            if (review.itemID === this.state.item.id) {
+              console.log(this.state.item.id + review.reviewerId);
               return (
-                <div>{review.reviewString + " rating: " + review.rating}</div>
+                <div key={this.state.item.id + review.reviewerId}>
+                  {review.reviewString + " rating: " + review.rating}
+                </div>
               );
             }
-            return <div />;
+            return "";
           })}
         </div>
       </div>
@@ -44,10 +60,6 @@ class UnconnectedItem extends Component {
   }
 }
 
-let mapStateToProps = state => {
-  return {};
-};
-
-let ItemDetails = connect(mapStateToProps)(UnconnectedItem);
+let ItemDetails = connect()(UnconnectedItem);
 
 export default ItemDetails;
