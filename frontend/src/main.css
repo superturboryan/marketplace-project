@@ -1,7 +1,12 @@
 body {
   background-color: white;
   margin: 0;
+  padding: 10px;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+  color: black;
 }
+
 .standard-container {
   border-style: outset;
   border-radius: 10px;
@@ -12,5 +17,5 @@ body {
 
 a {
   text-decoration: none;
-  color: white !important;
+  color: black;
 }

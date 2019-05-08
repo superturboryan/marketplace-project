@@ -9,3 +9,7 @@
   color: #ffffff;
   width: 99%;
 }
+
+.navigation-bar a {
+  color: white !important;
+}
