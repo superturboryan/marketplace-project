@@ -26,6 +26,8 @@ class UnconnectedCheckout extends Component {
           /*
           if (parsedBody.success === true) {
       this.setState({ step: this.state.step + 1 });
+    }*/
+        });
     }
   };
   renderSwitch = () => {
