@@ -54,7 +54,6 @@ class UnconnectedItemGallery extends Component {
     console.log(items);
     return (
       <div className="container">
-        <p>All Items: </p>
         <div className="gallery">
           {items.map(item => (
             <Item

@@ -15,6 +15,28 @@ class UnconnectedCart extends Component {
     if (this.props.cartItems.length < 1) {
       return;
     }
+    //______________________________________
+
+    fetch("http://localhost:4000/get-cart", { credentials: "include" })
+      .then(res => {
+        return res.text();
+      })
+      .then(resBody => {
+        let cartFromServer = JSON.parse(resBody);
+        let cartToStore = {};
+        cartFromServer.forEach(item => {
+          if (cartToStore[item.itemId] === undefined) {
+            cartToStore[item.itemId] = { item: item, quantity: 1 };
+          }
+          cartToStore[item.itemId] = {
+            ...cartToStore[item.itemId],
+            quantity: cartToStore[item.itemId]["quantity"] + 1
+          };
+        });
+        console.log(cartToStore);
+      });
+
+    //______________________________________
     let data = new FormData();
     this.props.cartItems.forEach((item, index) => {
       data.append("cart[]", item.item[index]);
