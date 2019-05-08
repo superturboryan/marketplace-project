@@ -26,6 +26,9 @@ class UnconnectedNumberInput extends Component {
     this.props.dispatch({ type: "remove-number-input", name: this.props.name });
   };
   updateStoreValue = newValue => {
+    if (newValue < 0) {
+      newValue = 0;
+    }
     this.props.dispatch({
       type: "change-number-input-value",
       name: this.props.name,

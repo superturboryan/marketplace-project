@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// IMPORTED GOODS
+// IMPORTED GOODS /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const express = require("express");
 const cors = require("cors");
@@ -7,18 +7,23 @@ const multer = require("multer");
 const fs = require("fs");
 const cookieParser = require("cookie-parser");
 const MongoClient = require("mongodb").MongoClient;
-
 const app = express();
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// UPLOAD PATHS
+// PATHS //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const upload = multer({ dest: __dirname + "/uploads/" }); // Set file upload destination
 const imagePath = "/images/";
 const url = "mongodb+srv://admin:12345@cluster0-nswep.mongodb.net/test?retryWrites=true"; // URI for remote database!
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// MIDDLEWARES
+// app.listen(4000, "0.0.0.0", () => { // REMOTE SERVER/DROPLET
+//    console.log("Running on port 4000 , 0.0.0.0")
+// })
+
+app.listen(4000, () => { // LOCAL SERVER
+   console.log("Running on port 4000");
+});
+
+// MIDDLEWARES ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 app.use("/images", express.static(__dirname + "/uploads")); // Files in local folder uploads have endpoints as /images/x
 app.use(cors())
@@ -26,8 +31,7 @@ app.use(cookieParser());
 app.use(cors({ credentials: true, origin: "http://localhost:3000" })); // CONFIG FOR LOCAL SERVER
 // app.use(cors({ credentials: true, origin: "http://134.209.119.133:3000" })) // CONFIG FOR REMOTE SERVER
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// STORAGE
+// STORAGE ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Server storage: 
 let userCarts = [] // Cart-Example: { userID: 123, itemIds: [ 123, 456, 789 ] }
@@ -48,19 +52,45 @@ MongoClient.connect(url, { useNewUrlParser: true }, (err, allDbs) => { // Add op
 });
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// ENDPOINTS
+// ENDPOINTS //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-app.get("/get-all-items", function (req, res) {
-   console.log("Returning  all items...");
-   itemsCollection.find({}).toArray((err, resultArr) => {  // Get ALL items from DB
+app.get("/get-items", function (req, res) {
+
+   const decodedSearch = decodeURIComponent(req.query.search)
+   console.log(decodedSearch)
+
+   if (decodedSearch === undefined) {// If not query is provided, return all items!
+      console.log("No query provided, returning  all items...");
+      itemsCollection.find({}).toArray((err, resultArr) => {
+         if (err) throw err;
+         res.send(JSON.stringify(resultArr))
+         return
+      })
+   }
+
+   searchWordsArray = decodedSearch.split(" ")
+
+   const query = {
+      title: {
+         $regex: new RegExp("(" + searchWordsArray.join("|") + ")"),
+         $options: "$i"
+      },
+      // details: {
+      //    $regex: new RegExp("(" + searchWordsArray.join("|") + ")"),
+      //    $options: "$i"
+      // },
+   }
+
+   itemsCollection.find(query).toArray((err, resultArr) => {
       if (err) throw err;
+      console.log(`Returning items that match provided query`)
       res.send(JSON.stringify(resultArr))
    })
 });
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//-----------------------------------------------------------------------------------------------------------------------//
+
 app.get("/get-single-item", function (req, res) {
    const itemId = req.query.itemId; // Get item from query in fetch path
    //Search for item in database
@@ -75,7 +105,8 @@ app.get("/get-single-item", function (req, res) {
    })
 });
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//-----------------------------------------------------------------------------------------------------------------------//
+
 app.get("/get-items-by-user", function (req, res) {
    const userId = req.query.userId;
    //Search for item in database
@@ -86,7 +117,8 @@ app.get("/get-items-by-user", function (req, res) {
    })
 });
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//-----------------------------------------------------------------------------------------------------------------------//
+
 app.post("/signup", upload.none(), function (req, res) {
    //Check user collection in remote database to see if username already exists
    usersCollection.find({ username: req.body.username }).toArray((err, result) => {
@@ -110,7 +142,8 @@ app.post("/signup", upload.none(), function (req, res) {
    })
 });
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//-----------------------------------------------------------------------------------------------------------------------//
+
 app.post("/login", upload.none(), function (req, res) {
    const { username: enteredName, password: enteredPass } = req.body
    // Check remote users collection in db
@@ -139,7 +172,8 @@ app.post("/login", upload.none(), function (req, res) {
    })
 })
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//-----------------------------------------------------------------------------------------------------------------------//
+
 app.get("/logout", upload.none(), function (req, res) {
    console.log("Logging out...");
    sessionsCollection.deleteOne({ sessionId: req.cookies.sid }, (err, result) => { // Remove from remote database
@@ -150,10 +184,11 @@ app.get("/logout", upload.none(), function (req, res) {
    res.send(JSON.stringify({ success: true }));
 });
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-app.post("/add-item", upload.array("images"), function (req, res) {
+//-----------------------------------------------------------------------------------------------------------------------//
 
-   // Find username from remote database
+app.post("/add-item", upload.array("images"), function (req, res) {
+   const { title, description, price, stock, city, province, country } = req.body // GET VARIABLES FROM REQ.BODY
+   // Find user's name from remote database
    sessionsCollection.find({ sessionId: req.cookies.sid }).toArray((err, result) => {
       if (err) throw err;
       const currentUserName = result[0].user; // Store in variable to use in query
@@ -171,29 +206,31 @@ app.post("/add-item", upload.array("images"), function (req, res) {
          if (err) throw err;
          const newItemUserId = result[0].userId
          const newItem = {
-            title: req.body.title,
-            details: req.body.description,
-            price: req.body.price,
-            stock: req.body.stock,
+            title: title,
+            details: description,
+            price: price,
+            stock: stock,
             itemId: generateId(),
             userId: newItemUserId, // Result of searching userCollection
-            city: req.body.city,
-            province: req.body.province,
-            country: req.body.country,
+            city: city,
+            province: province,
+            country: country,
             images: newItemImagePaths //Array of image paths
          };
          itemsCollection.insertOne(newItem, (err, result) => { //Add item to database
             if (err) throw err;
-            console.log(`DB: Successfully inserted user ${currentUserName}'s item "${req.body.title}" into Items collection`);
+            console.log(`DB: Successfully inserted user ${currentUserName}'s item "${title}" into Items collection`);
          });
          res.send(JSON.stringify({ success: true }));
       })
    });
 });
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//-----------------------------------------------------------------------------------------------------------------------//
+
 app.post("/add-review", upload.none(), function (req, res) {
    const sessionId = req.cookies.sid;
+   const { itemId, rating, title, content } = req.body
    //Get username from remote sessions colleciton
    sessionsCollection.find({ sessionId: sessionId }).toArray((err, result) => {
       if (err) throw err;
@@ -204,10 +241,10 @@ app.post("/add-review", upload.none(), function (req, res) {
          const newReview = {
             userId: currentUserId,
             username: currentUserName,
-            itemId: req.body.itemId,
-            rating: req.body.rating,
-            title: req.body.title,
-            content: req.body.content,
+            itemId: itemId,
+            rating: rating,
+            title: title,
+            content: content,
          };
          reviewsCollection.insertOne(newReview, (err, result) => { // Add entry to reviews collection
             if (err) throw err;
@@ -218,12 +255,13 @@ app.post("/add-review", upload.none(), function (req, res) {
    })
 });
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-app.get("/get-reviews-for-id", function (req, res) { //GET REVIEWS FILTERED BY EITHER USERID OR ITEMID
+//-----------------------------------------------------------------------------------------------------------------------//
+
+app.get("/get-reviews-for-id", function (req, res) { // GET REVIEWS FILTERED BY EITHER USERID OR ITEMID
    const itemId = req.query.itemId;
    const userId = req.query.userId;
 
-   if (itemId === undefined) { //GET REVIEWS BY SELLER 
+   if (itemId === undefined) { // GET REVIEWS BY SELLER 
       reviewsCollection.find({ userId: userId }).toArray((err, result) => {
          if (err) throw err;
          console.log("DB: Sending back reviews that match userId in response")
@@ -236,6 +274,7 @@ app.get("/get-reviews-for-id", function (req, res) { //GET REVIEWS FILTERED BY E
          if (result[0] === undefined) {
             console.log("DB: No reviews found that match the itemId provided")
             res.send(JSON.stringify({ success: false }))
+            return;
          }
          console.log("DB: Sending back reviews that match itemId in response")
          res.send(JSON.stringify(result))
@@ -243,7 +282,8 @@ app.get("/get-reviews-for-id", function (req, res) { //GET REVIEWS FILTERED BY E
    }
 });
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//-----------------------------------------------------------------------------------------------------------------------//
+
 app.get("/get-cart", function (req, res) {
 
    const sessionId = req.cookies.sid
@@ -269,8 +309,9 @@ app.get("/get-cart", function (req, res) {
          const query = {
             itemId: {
                $regex: new RegExp("(" + itemIdArray.join("|") + ")")
-            }
+            },
          }
+
          itemsCollection.find(query).toArray((err, result) => {
 
             cartItems.push(result)
@@ -282,16 +323,20 @@ app.get("/get-cart", function (req, res) {
          // res.send(JSON.stringify(cartItems))
       })
    })
-
 })
+
+//-----------------------------------------------------------------------------------------------------------------------//
 
 app.post("/set-cart", upload.none(), function (req, res) {
 
-   const sessionId = req.cookies.sid
+   const itemIds = req.body.itemIds
+   const currentCookie = req.cookies.sid
 
    //Get username from remote sessions colleciton
-   sessionsCollection.find({ sessionId: sessionId }).toArray((err, result) => {
+   sessionsCollection.find({ sessionId: currentCookie }).toArray((err, result) => {
       if (err) throw err;
+
+      console.log("Current sessionId cookie : ", currentCookie)
 
       const currentUserName = result[0].user
       //Get userId from users collection
@@ -303,36 +348,43 @@ app.post("/set-cart", upload.none(), function (req, res) {
             return cart.userId === currentUserId
          })
 
-         if (currentUserCart === undefined) {
-            userCarts.push({ userId: currentUserId, itemIds: JSON.parse(req.body.itemIds) })
+         if (currentUserCart === undefined) { // Check if cart is empty/undefined
+            userCarts.push({ userId: currentUserId, itemIds: JSON.parse(itemIds) })
             console.log(`New cart created for user ${currentUserName}`)
             res.send(JSON.stringify({ success: true }))
             return
          }
 
-         currentUserCart.itemIds = JSON.parse(req.body.itemIds)
+         currentUserCart.itemIds = JSON.parse(itemIds)
          console.log(`Cart successfully updated for user ${currentUserName}`)
          res.send(JSON.stringify({ success: true }))
       })
    })
 })
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//-----------------------------------------------------------------------------------------------------------------------//
 
-//USE WITH REMOTE SERVER!
-// app.listen(4000, "0.0.0.0", () => {
-//    console.log("Running on port 4000 , 0.0.0.0")
-// })
+app.get("/verify-cookie", function (req, res) {
 
-//USE WITH LOCAL SERVER!
-app.listen(4000, () => {
-   console.log("Running on port 4000");
-});
+   const currentCookie = req.cookies.sid
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// UTILITY FUNCTIONS
+   sessionsCollection.find({ sessionId: currentCookie }).toArray((err, result) => {
+      if (err) throw err;
+      if (result === undefined) {
+         res.send(JSON.stringify({ success: false }))
+         return;
+      }
+      res.send(JSON.stringify({ success: true }))
+   })
+})
+
+
+// UTILITY FUNCTIONS //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //Returns random number
 const generateId = () => {
    return "" + Math.floor(Math.random() * 100000000);
 };
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

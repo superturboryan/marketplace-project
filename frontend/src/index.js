@@ -15,10 +15,12 @@ import renderProfile from "./components/renderProfile.jsx";
 import Oops from "./components/Oops.jsx";
 import Cart from "./components/Cart.jsx";
 import Checkout from "./components/Checkout.jsx";
+import AutoLogin from "./components/AutoLogin";
 
 let root = (
   <Provider store={store}>
     <BrowserRouter>
+      <Route exact={false} path="/" component={AutoLogin} />
       <Route exact={false} path="/" component={NavigationBar} />
       <Route exact={false} path="/" component={AnimatedMessage} />
       <Switch>
