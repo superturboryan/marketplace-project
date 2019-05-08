@@ -39,7 +39,7 @@ class Profile extends Component {
             />
           </figure>
           <div className="galleryItemCost">
-            ${item.price.toLocaleString({ style: "currency" })}
+            ${parseFloat(item.price).toLocaleString({ style: "currency" })}
           </div>
         </Link>
       </div>

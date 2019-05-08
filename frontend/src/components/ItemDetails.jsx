@@ -61,7 +61,10 @@ class UnconnectedItem extends Component {
           title={this.state.item.title}
         />{" "}
         <div>
-          ${this.state.item.price.toLocaleString({ style: "currency" })}
+          $
+          {parseFloat(this.state.item.price).toLocaleString({
+            style: "currency"
+          })}
         </div>
         <div>{this.state.item.stock} in stock.</div>
         <Link to={"/profile/" + this.state.item.userId}> Link to seller </Link>

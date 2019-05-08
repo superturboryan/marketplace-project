@@ -22,7 +22,7 @@ class UnconnectedItem extends Component {
             />
           </figure>{" "}
           <div className="galleryItemCost">
-            ${this.props.cost.toLocaleString({ style: "currency" })}
+            ${parseFloat(this.props.cost).toLocaleString({ style: "currency" })}
           </div>
         </Link>
         <Link className="link2" to={"/profile/" + this.props.sellerId}>
