@@ -1,29 +1,21 @@
-body {
-  padding: 10px;
-  background-color: rgb(158, 160, 247);
-  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
-    "Lucida Sans", Arial, sans-serif;
-}
-
 img {
   opacity: 1;
   cursor: pointer;
 }
 
-img:hover {
-  opacity: 0.8;
-  cursor: pointer;
-}
-
 .galleryItem:hover,
 .galleryItem:focus {
-  background-color: #a8c4e7;
+  opacity: 0.5;
+  cursor: pointer;
+  background-color: #cedae9;
 }
 
 .galleryItem {
   /*border-style: solid;*/
   height: 190px;
   width: 200px;
+  border-radius: 10px;
+  padding: 2px;
   /*overflow: hidden;*/
 }
 

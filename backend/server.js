@@ -152,7 +152,7 @@ app.post("/signup", upload.none(), function (req, res) {
             if (err) throw err;
             console.log("DB: Successfully added entry to Sessions collection");
             res.cookie("sid", newSessionId);
-            res.send(JSON.stringify({ success: true }));
+            res.send(JSON.stringify({ success: true, username: req.body.username }));
          });
       });
    })
@@ -184,7 +184,7 @@ app.post("/login", upload.none(), function (req, res) {
       });
       console.log(`Logging in user ${enteredName}`);
       res.cookie("sid", newSessionId); // Send back set-cookie and successful response
-      res.send(JSON.stringify({ success: true }));
+      res.send(JSON.stringify({ success: true, username: enteredName }));
    })
 })
 
@@ -413,13 +413,30 @@ app.get("clear-cart", function (req, res) {
 
 app.get("/verify-cookie", function (req, res) {
    const currentCookie = req.cookies.sid
-   sessionsCollection.find({ sessionId: currentCookie }).toArray((err, result) => {
+
+   let query = [
+      {
+         $match: {
+            sessionId: currentCookie
+         }
+      },
+      {
+         $lookup: {
+            from: "Users",
+            localField: "user",
+            foreignField: "username",
+            as: "user"
+         }
+      }
+   ]
+   sessionsCollection.aggregate(query).toArray((err, result) => {
       if (err) throw err;
       if (result === undefined) {
          res.send(JSON.stringify({ success: false }))
          return;
       }
-      res.send(JSON.stringify({ success: true }))
+
+      res.send(JSON.stringify({ success: true, username: result[0].user[0].username }))
    })
 })
 
