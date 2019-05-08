@@ -18,22 +18,33 @@ class UnconnectedAddToCart extends Component {
          console.log("user needs to be logged in");
          return;
       }
-      this.props.dispatch({
-         type: "add-to-cart",
-         item: this.props.item,
-         quantity: this.props.numberInputValues[this.props.item.itemId]
-      });
       let cartItemIds = this.props.cart.map(item => {
-         return item.item.itemId;
+         let localItemId = item.item.itemId;
+         for (let i = 1; i < item.quantity; i++) {
+            localItemId = localItemId + " " + item.item.itemId;
+         }
+         return localItemId;
       });
 
+      let itemQuantity = this.props.numberInputValues[this.props.item.itemId];
+      for (let i = 0; i < itemQuantity; i++) {
+         cartItemIds.push(this.props.item.itemId);
+      }
+
       let idString = cartItemIds.slice().join(" ");
+
       let data = new FormData();
       data.append("itemIds", idString);
+
       fetch("http://localhost:4000/set-cart", {
          method: "POST",
          body: data,
          credentials: "include"
+      });
+      this.props.dispatch({
+         type: "add-to-cart",
+         item: this.props.item,
+         quantity: this.props.numberInputValues[this.props.item.itemId]
       });
    };
    render = () => {
