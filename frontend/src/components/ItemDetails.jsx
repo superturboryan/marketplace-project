@@ -1,26 +1,55 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { initialItems, itemReviews } from "./../dummyData.js";
+import { withRouter } from "react-router-dom";
 import AddToCart from "./AddToCart.jsx";
 import AddReview from "./AddReview.jsx";
+import ReviewList from "./ReviewList.jsx";
 import TabbedImageGallery from "./TabbedImageGallery.jsx";
 
 class UnconnectedItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      item: initialItems.find(item => {
-        return item.id === this.props.match.params.id;
-      })
+      item: undefined
     };
     console.log("Initial state: ");
     console.log(this.state);
   }
 
+  componentDidMount = () => {
+    // Fetch item details from server
+    fetch("/get-single-item?itemId=" + this.getItemId())
+      .then(response => {
+        return response.text();
+      })
+      .then(responseBody => {
+        let body = JSON.parse(responseBody);
+
+        if (body.success === false) {
+          console.log("Item does not exist.", body);
+          return;
+        }
+
+        console.log("Received item details: ", body);
+        this.setState({
+          item: body
+        });
+      });
+  };
+
+  getItemId = () => {
+    let temp = this.props.location.pathname;
+    return temp.substring(temp.lastIndexOf("/") + 1);
+  };
+
   render() {
     console.log("ItemDetailsCompenent props: ");
     console.log(this.props.match.params.id);
+
+    if (this.state.item === undefined) {
+      return null;
+    }
 
     return (
       <div>
@@ -35,26 +64,10 @@ class UnconnectedItem extends Component {
           ${this.state.item.price.toLocaleString({ style: "currency" })}
         </div>
         <div>{this.state.item.stock} in stock.</div>
-        <Link to={"/profile/" + this.state.item.sellerId}>
-          {" "}
-          Link to seller{" "}
-        </Link>
+        <Link to={"/profile/" + this.state.item.userId}> Link to seller </Link>
         <AddToCart item={this.state.item} />
         <AddReview itemId={this.state.item.id} />
-        <div>Reviews: </div>
-        <div>
-          {itemReviews.map(review => {
-            if (review.itemID === this.state.item.id) {
-              console.log(this.state.item.id + review.reviewerId);
-              return (
-                <div key={this.state.item.id + review.reviewerId}>
-                  {review.reviewString + " rating: " + review.rating}
-                </div>
-              );
-            }
-            return "";
-          })}
-        </div>
+        <ReviewList itemId={this.state.item.itemId} />
       </div>
     );
   }
@@ -62,4 +75,4 @@ class UnconnectedItem extends Component {
 
 let ItemDetails = connect()(UnconnectedItem);
 
-export default ItemDetails;
+export default withRouter(ItemDetails);

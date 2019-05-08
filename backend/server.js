@@ -56,18 +56,36 @@ MongoClient.connect(url, { useNewUrlParser: true }, (err, allDbs) => { // Add op
 
 app.get("/get-items", function (req, res) {
 
-   let decodedQuery = decodeURIComponent(req.query.search)
+   const decodedSearch = decodeURIComponent(req.query.search)
+   console.log(decodedSearch)
 
-   if (req.query.search === undefined)
-      console.log("Returning  all items...");
-   itemsCollection.find({}).toArray((err, resultArr) => {  // Get ALL items from DB
+   if (decodedSearch === undefined) {// If not query is provided, return all items!
+      console.log("No query provided, returning  all items...");
+      itemsCollection.find({}).toArray((err, resultArr) => {
+         if (err) throw err;
+         res.send(JSON.stringify(resultArr))
+         return
+      })
+   }
+
+   searchWordsArray = decodedSearch.split(" ")
+
+   const query = {
+      title: {
+         $regex: new RegExp("(" + searchWordsArray.join("|") + ")"),
+         $options: "$i"
+      },
+      // details: {
+      //    $regex: new RegExp("(" + searchWordsArray.join("|") + ")"),
+      //    $options: "$i"
+      // },
+   }
+
+   itemsCollection.find(query).toArray((err, resultArr) => {
       if (err) throw err;
+      console.log(`Returning items that match provided query`)
       res.send(JSON.stringify(resultArr))
    })
-
-
-
-
 });
 
 
@@ -292,8 +310,8 @@ app.get("/get-cart", function (req, res) {
             itemId: {
                $regex: new RegExp("(" + itemIdArray.join("|") + ")")
             },
-
          }
+
          itemsCollection.find(query).toArray((err, result) => {
 
             cartItems.push(result)
