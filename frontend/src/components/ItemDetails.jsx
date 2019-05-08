@@ -1,26 +1,83 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { initialItems, itemReviews } from "./../dummyData.js";
+import { withRouter } from "react-router-dom";
 import AddToCart from "./AddToCart.jsx";
 import AddReview from "./AddReview.jsx";
+import ReviewList from "./ReviewList.jsx";
 import TabbedImageGallery from "./TabbedImageGallery.jsx";
 
 class UnconnectedItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      item: initialItems.find(item => {
-        return item.id === this.props.match.params.id;
-      })
+      item: undefined,
+      reviews: []
     };
     console.log("Initial state: ");
     console.log(this.state);
   }
 
+  componentDidMount = () => {
+    // Fetch item details from server
+    fetch("/get-single-item?itemId=" + this.getItemId())
+      .then(response => {
+        return response.text();
+      })
+      .then(responseBody => {
+        let body = JSON.parse(responseBody);
+
+        if (body.success === false) {
+          console.log("Item does not exist.", body);
+          return;
+        }
+
+        console.log("Received item details: ", body);
+        this.setState({
+          item: body
+        });
+      });
+
+    // Fetch item reviews from server
+    fetch("/get-reviews-for-id?itemId=" + this.getItemId())
+      .then(response => {
+        return response.text();
+      })
+      .then(responseBody => {
+        let body = JSON.parse(responseBody);
+
+        if (body.success === false) {
+          console.log("Reviews could not be retrieved.");
+          return;
+        }
+
+        console.log("Received item reviews: ", body);
+        this.setState({
+          reviews: body
+        });
+      });
+  };
+
+  getItemId = () => {
+    let temp = this.props.location.pathname;
+    return temp.substring(temp.lastIndexOf("/") + 1);
+  };
+
   render() {
     console.log("ItemDetailsCompenent props: ");
     console.log(this.props.match.params.id);
+
+    let itemReviews = this.state.reviews;
+
+    if (this.state.item === undefined) {
+      return null;
+    }
+
+    if (itemReviews.count === 0) {
+      itemReviews = <div>This item has not been reviewed yet.</div>;
+    } else {
+      itemReviews = <ReviewList itemId={this.state.item.itemId} />;
+    }
 
     return (
       <div>
@@ -41,20 +98,7 @@ class UnconnectedItem extends Component {
         </Link>
         <AddToCart item={this.state.item} />
         <AddReview itemId={this.state.item.id} />
-        <div>Reviews: </div>
-        <div>
-          {itemReviews.map(review => {
-            if (review.itemID === this.state.item.id) {
-              console.log(this.state.item.id + review.reviewerId);
-              return (
-                <div key={this.state.item.id + review.reviewerId}>
-                  {review.reviewString + " rating: " + review.rating}
-                </div>
-              );
-            }
-            return "";
-          })}
-        </div>
+        {itemReviews}
       </div>
     );
   }
@@ -62,4 +106,4 @@ class UnconnectedItem extends Component {
 
 let ItemDetails = connect()(UnconnectedItem);
 
-export default ItemDetails;
+export default withRouter(ItemDetails);
