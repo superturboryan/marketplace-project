@@ -414,32 +414,42 @@ app.get("/get-cart", function (req, res) {
 
 app.post("/set-cart", upload.none(), function (req, res) {
 
-   console.log(req.body.item)
-
    const { itemId, quantity } = req.body
    const currentCookie = req.cookies.sid
 
-   console.log("ItemId: ", item)
+   console.log("ItemId: ", itemId)
    console.log("Quantity: ", quantity)
 
    //Get username from remote sessions colleciton
-   sessionsCollection
-      .find({ sessionId: currentCookie })
-      .toArray((err, result) => {
+   sessionsCollection.find({ sessionId: currentCookie }).toArray((err, result) => {
+      if (err) throw err;
+      const currentUserName = result[0].user;
+      //Get userId from users collection
+      usersCollection.find({ username: currentUserName }).toArray((err, result) => {
          if (err) throw err;
-         const currentUserName = result[0].user;
-         //Get userId from users collection
-         usersCollection
-            .find({ username: currentUserName })
-            .toArray((err, result) => {
-               const currentUserId = result[0].userId;
-               let addToCart = { ...item, quantity: quantity, cartUserId: currentUserId }
-               cartCollection.insertOne(addToCart, (err, result) => {
+         const currentUserId = result[0].userId;
+         itemsCollection.find({ itemId: itemId }).toArray((err, result) => {
+            if (err) throw err;
+            let newCartItem = { ...result[0], _id: generateId(), quantity: quantity, cartUserId: currentUserId }
+            let newCartItemStock = result[0].stock
+            if (newCartItemStock < quantity) {
+               console.log("DB: Item cannot be added to cart, not enough in stock!")
+               res.send(JSON.stringify({ success: false }))
+               return;
+            }
+            cartCollection.insertOne(newCartItem, (err, result) => {
+               if (err) throw err;
+               console.log(`DB: Successfully added entry to cart collection`)
+
+               itemsCollection.updateOne({ itemId: itemId }, { $set: { stock: newCartItemStock - quantity } }, (err, result) => {
                   if (err) throw err;
-                  console.log("DB: Entry successfully added to cart collection")
+                  console.log("DB: Successfully updated item's stock in Items collection")
+                  res.send(JSON.stringify({ success: true }))
                })
-            });
+            })
+         })
       });
+   });
 })
 
 
