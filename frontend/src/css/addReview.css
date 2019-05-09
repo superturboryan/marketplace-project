@@ -1,9 +1,12 @@
+/* AddReview stuff */
+
 .your-review {
+  position: relative;
   margin: 0 auto;
   width: 90%;
   border-style: outset;
   border-radius: 10px;
-  padding: 0px 10px 10px 10px;
+  padding: 15px 10px 10px 10px;
 }
 
 .write-a-review {
@@ -51,4 +54,44 @@
 
 .review-top-inputs {
   margin-bottom: 20px;
+}
+
+.review-title {
+  font-family: "Lato", sans-serif;
+  font-size: 30px;
+  font-style: italic;
+  margin-bottom: 20px;
+}
+
+.review-rating-spacer {
+  position: absolute;
+  right: 20px;
+}
+
+.review-content {
+  font-family: "Lato", sans-serif;
+  font-size: 17px;
+}
+
+/* Review.jsx stuff */
+
+.your-review-mini {
+  position: relative;
+  margin: 0 auto 10px auto;
+  width: 90%;
+  border-style: outset;
+  border-radius: 10px;
+  padding: 15px 10px 10px 10px;
+  width: 600px;
+}
+
+.review-content-mini {
+  font-family: "Lato", sans-serif;
+  font-size: 17px;
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.review-seller-link {
+  text-align: right;
 }

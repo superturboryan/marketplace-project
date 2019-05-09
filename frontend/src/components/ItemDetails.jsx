@@ -44,6 +44,11 @@ class UnconnectedItem extends Component {
     return temp.substring(temp.lastIndexOf("/") + 1);
   };
 
+  getCityStr = () => {
+    let item = this.state.item;
+    return item.city + ", " + item.province + ", " + item.country;
+  };
+
   render() {
     console.log("ItemDetailsCompenent props: ");
     console.log(this.props.match.params.id);
@@ -87,6 +92,10 @@ class UnconnectedItem extends Component {
               <dl>
                 <dt>In Stock</dt>
                 <dd>{this.state.item.stock} available</dd>
+              </dl>
+              <dl>
+                <dt>Ships from</dt>
+                <dd>{this.getCityStr()}</dd>
               </dl>
             </fieldset>
             <AddToCart item={this.state.item} />
