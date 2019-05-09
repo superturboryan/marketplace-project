@@ -53,7 +53,7 @@ class UnconnectedReviewList extends Component {
     if (this.state.allReviews.length === 0) {
       console.log("Reviews count. ", this.state.allReviews.length);
       return (
-        <h3>
+        <h3 className="review-list-header">
           There are no reviews
           {this.isForItemId() ? " for this item " : " by this user "}yet
         </h3>
@@ -62,7 +62,7 @@ class UnconnectedReviewList extends Component {
 
     return (
       <div>
-        <h3>Reviews</h3>
+        <h3 className="review-list-header">Reviews</h3>
         <div>{this.state.allReviews.map(listElementMaker)}</div>
       </div>
     );
