@@ -15,12 +15,15 @@ class UnconnectedNavigationBar extends Component {
   getSignupLogin = () => {
     if (!this.props.loggedIn) {
       return (
-        <div className="toTheEnd">
-          <div>
-            <Link to={"/signup"}>Signup</Link>
-          </div>
-          <div>
-            <Link to={"/login"}>Login</Link>
+        <div className="toTheEnd navigation-unflex" id={"signup-login"}>
+          <div className="toTheEnd">
+            <span className={"top-top-bar"}>
+              <Link to={"/signup"}>Signup</Link>
+            </span>
+            <span className={"top-top-bar"}>
+              {" | "}
+              <Link to={"/login"}>Login</Link>
+            </span>
           </div>
         </div>
       );
@@ -30,12 +33,16 @@ class UnconnectedNavigationBar extends Component {
   getUserRelatedLinks = () => {
     return (
       <div className="toTheEnd navigation-unflex">
-        <div>
-          <span>{this.props.username + " |"}</span>
-          <Link to={"/cart"}>My Cart</Link>
-        </div>
         <div className="toTheEnd">
-          <Link to={"/add-item"}>Sell Something!</Link>
+          <span className={"top-top-bar"}>{this.props.username + " | "}</span>
+          <Link className={"top-top-bar"} to={"/add-item"}>
+            Sell Something!
+          </Link>
+          <span className={"top-top-bar"}>{" | "}</span>
+          <Link className={"top-top-bar"} to={"/cart"}>
+            My Cart
+          </Link>
+          <Logout className="toTheEnd" />
         </div>
       </div>
     );
@@ -56,12 +63,42 @@ class UnconnectedNavigationBar extends Component {
 
   render = () => {
     return (
+      <div>
+        <div className="above-navigation-bar">
+          {this.getSignupLogin()}
+          {this.ifLoggedInDoThis(this.getUserRelatedLinks())}
+        </div>
+        <div className="navigation-bar">
+          <div className="navigation-flex">
+            <div className="toTheEnd">
+              <div />
+
+              <div />
+            </div>
+          </div>
+          <div className="navigation-flex">
+            <div id={"ali-bae-div"} className={"ali-bae-heading"}>
+              <Link to={"/"}>Ali-Bae</Link>
+            </div>
+
+            <div className="toTheEnd">
+              <div id={"search-bar-div"}>
+                <Searchbar />
+              </div>
+            </div>
+          </div>
+          <div />
+        </div>
+      </div>
+
+      /*
       <div className="navigation-bar">
         <div className="navigation-flex">
           <div className="navigation-unflex">
             <Link to={"/"}>Ali-Bae</Link>
+            <Searchbar />
           </div>
-          <Searchbar />
+
           {this.getSignupLogin()}
           {this.ifLoggedInDoThis(this.getUserRelatedLinks())}
         </div>
@@ -69,7 +106,7 @@ class UnconnectedNavigationBar extends Component {
           {this.getNavigationLinks()}
           {this.ifLoggedInDoThis(<Logout className="toTheEnd" />)}
         </div>
-      </div>
+      </div>*/
     );
   };
 }

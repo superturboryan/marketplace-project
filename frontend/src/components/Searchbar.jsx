@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router";
+import "./../css/searchbar.css";
 
 class Searchbar extends Component {
   constructor() {
@@ -38,7 +39,7 @@ class Searchbar extends Component {
     }
 
     return (
-      <div>
+      <div id={"search-bar-div"} className="toTheEnd">
         <form onSubmit={this.onSubmit}>
           <input
             className="searchBar"
@@ -46,7 +47,7 @@ class Searchbar extends Component {
             onChange={this.onChangedText}
             value={this.state.input}
           />
-          <input type="submit" value="Search" />
+          <input id={"search-bar-submit"} type="submit" value="Search" />
         </form>
       </div>
     );
