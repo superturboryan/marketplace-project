@@ -29,7 +29,7 @@ class UnconnectedNavigationBar extends Component {
 
   getNavigationLinks = () => {
     return (
-      <div className="navigation-flex link-area">
+      <div className="navigation-flex link-area just-bottom">
         Categories:
         <div>Clothing and Accessories</div>
         <div>Films and Music</div>
@@ -58,10 +58,12 @@ class UnconnectedNavigationBar extends Component {
               <Link className="toTheEnd" to={"/add-item"}>
                 Sell Something!
               </Link>
-              {this.getNavigationLinks()}
-              {this.ifLoggedInDoThis(<Logout className="toTheEnd" />)}
             </div>
           )}
+        </div>
+        <div className="navigation-left-right">
+          {this.getNavigationLinks()}
+          {this.ifLoggedInDoThis(<Logout className="toTheEnd" />)}
         </div>
       </div>
     );

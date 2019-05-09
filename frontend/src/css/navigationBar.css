@@ -40,3 +40,11 @@
 .logoutButton {
   font-size: medium;
 }
+
+.navigation-left-right {
+  display: flex;
+  justify-content: space-between;
+}
+.just-bottom {
+  align-self: flex-end;
+}
