@@ -69,15 +69,19 @@ class UnconnectedAddReview extends Component {
 
   handleContent = event => {
     this.setState({
-      content: event.target.value
+      content: event.target.value.trim()
     });
   };
 
   postedReview = () => {
     return (
       <div className="your-review">
-        <div className="review-title">{this.state.title}</div>
-        <div className="review-rating">{this.state.rating} stars</div>
+        <div className="review-flex">
+          <div className="review-title">"{this.state.title}"</div>
+          <div className="review-rating review-rating-spacer">
+            {this.state.rating} <span className="review-star">&#11088;</span>
+          </div>
+        </div>
         <div className="review-content">{this.state.content}</div>
       </div>
     );
@@ -95,7 +99,11 @@ class UnconnectedAddReview extends Component {
     return (
       <div className="your-review">
         <h3 className="write-a-review">Write a review</h3>
-        <form onSubmit={this.handleSubmit} encType={"multipart/form-data"}>
+        <form
+          id="review-form"
+          onSubmit={this.handleSubmit}
+          encType={"multipart/form-data"}
+        >
           <div className="review-label">Title</div>
           <div className="review-flex review-space-between review-top-inputs">
             <div className="review-flex">
@@ -104,6 +112,8 @@ class UnconnectedAddReview extends Component {
                 onChange={this.handleTitle}
                 value={this.state.title}
                 required={true}
+                maxLength={140}
+                minLength={4}
               />
             </div>
             <div className="review-label review-flex review-star-container">
@@ -123,11 +133,13 @@ class UnconnectedAddReview extends Component {
           </div>
           <div className="review-label">Content</div>
           <textarea
+            form="review-form"
             className="review-content-input"
-            type="text"
+            placeholder="Write a comment..."
             onChange={this.handleContent}
             value={this.state.content}
             required={true}
+            minLength={10}
           />
           <div>
             <input type="submit" value="Submit" />
