@@ -45,6 +45,7 @@ class UnconnectedReviewList extends Component {
           return;
         }
 
+        console.log("Reviews: ", parsedBody);
         this.setState({ allReviews: parsedBody });
       });
   };
