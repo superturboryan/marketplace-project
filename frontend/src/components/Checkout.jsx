@@ -55,9 +55,9 @@ class UnconnectedCheckout extends Component {
       return (
         <div className="checkout-payment-container">
           <h4 className="checkout-instructions">Enter payment info</h4>
-          <p className="checkout-total-text">
+          <p className="checkout-total-text" id={"paytotal"}>
             Total:{" "}
-            <span className="checkout-total">
+            <span className="checkout-total" id={"paytotal"}>
               $
               {parseFloat(this.props.total).toLocaleString({
                 style: "currency"
