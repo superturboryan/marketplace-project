@@ -7,7 +7,9 @@ img {
 .galleryItem:focus {
   opacity: 0.5;
   cursor: pointer;
-  background-color: #cedae9;
+  /* background-color: #cedae9; */
+  background-color: rgba(206,218,233, 0.7);
+  animation: grow 0.5s ease-in-out;
 }
 
 .galleryItem {
@@ -16,6 +18,7 @@ img {
   width: 200px;
   border-radius: 10px;
   padding: 2px;
+  text-align: center;
   /*overflow: hidden;*/
 }
 
@@ -35,7 +38,9 @@ img {
   display: grid;
   grid-template-columns: repeat(5, auto);
   grid-template-rows: repeat(5, relative);
-  grid-gap: 2rem;
+  grid-row-gap: 4rem;
+  grid-column-gap: 2rem;
+  padding: 50px;
 }
 
 .gallery__img {
@@ -46,6 +51,7 @@ img {
   border: black;
   /*border-style: solid;*/
   border-width: 3px;
+  border-radius: 20px;
 }
 
 .popover {
@@ -61,4 +67,16 @@ img {
   margin-top: 10px;
   margin-bottom: 10%;
   background-color: white;
+}
+
+@keyframes grow {
+	0% {
+      transform: scale(1)
+	}
+	50% {
+      transform: scale(1.025);
+	}
+	100% {
+      transform: scale(1);
+	}
 }
