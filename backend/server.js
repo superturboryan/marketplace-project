@@ -28,6 +28,7 @@ app.listen(4000, () => {
 // MIDDLEWARES ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 app.use("/images", express.static(__dirname + "/uploads")); // Files in local folder uploads have endpoints as /images/x
+app.use("/assets", express.static(__dirname + "/assets"));
 app.use(cors());
 app.use(cookieParser());
 app.use(cors({ credentials: true, origin: "http://localhost:3000" })); // CONFIG FOR LOCAL SERVER
@@ -324,20 +325,33 @@ app.post("/add-review", upload.none(), function (req, res) {
 //-----------------------------------------------------------------------------------------------------------------------//
 
 app.get("/get-reviews-for-id", function (req, res) {
-   // GET REVIEWS FILTERED BY EITHER USERID OR ITEMID
    const itemId = req.query.itemId;
    const userId = req.query.userId;
 
-   if (itemId === undefined) {
-      // GET REVIEWS BY SELLER
+   let query = [
+      {
+         $match: {
+            itemId: itemId
+         }
+      },
+      {
+         $lookup: {
+            from: "Items",
+            localField: "itemId",
+            foreignField: "itemId",
+            as: "item"
+         }
+      }
+   ];
+
+   if (itemId === undefined) {    // GET REVIEWS BY SELLER
       reviewsCollection.find({ userId: userId }).toArray((err, result) => {
          if (err) throw err;
          console.log("DB: Sending back reviews that match userId in response");
          res.send(JSON.stringify(result));
       });
-   } else if (userId === undefined) {
-      // OTHERWISE GET REVIEWS BY ITEM
-      reviewsCollection.find({ itemId: itemId }).toArray((err, result) => {
+   } else if (userId === undefined) {   // OTHERWISE GET REVIEWS BY ITEM
+      reviewsCollection.aggregate(query).toArray((err, result) => {
          if (err) throw err;
          if (result[0] === undefined) {
             console.log("DB: No reviews found that match the itemId provided");
@@ -371,55 +385,12 @@ app.get("/get-cart", function (req, res) {
    });
 })
 
-// app.get("/get-cart", function (req, res) {
-//    const sessionId = req.cookies.sid;
-//    //Get username from remote sessions colleciton
-//    sessionsCollection.find({ sessionId: sessionId }).toArray((err, result) => {
-//       if (err) throw err;
-//       const currentUserName = result[0].user;
-//       //Get userId from users collection
-//       usersCollection
-//          .find({ username: currentUserName })
-//          .toArray((err, result) => {
-//             const currentUserId = result[0].userId;
-
-//             const currentUserCart = userCarts.find(cart => {
-//                return cart.userId === currentUserId;
-//             });
-
-//             if (currentUserCart === undefined) {
-//                res.send(JSON.stringify({ success: false }));
-//                return;
-//             }
-
-//             const itemIdArray = currentUserCart.itemIds;
-
-//             let cartItems = [];
-
-//             const query = {
-//                itemId: {
-//                   $regex: new RegExp("(" + itemIdArray.join("|") + ")")
-//                }
-//             };
-
-//             itemsCollection.find(query).toArray((err, result) => {
-//                cartItems.push(result);
-//                res.send(JSON.stringify(result));
-//             });
-//          });
-//    });
-// });
-
 //-----------------------------------------------------------------------------------------------------------------------//
 
 app.post("/set-cart", upload.none(), function (req, res) {
 
    const { itemId, quantity } = req.body
    const currentCookie = req.cookies.sid
-
-   console.log("ItemId: ", itemId)
-   console.log("Quantity: ", quantity)
-
    //Get username from remote sessions colleciton
    sessionsCollection.find({ sessionId: currentCookie }).toArray((err, result) => {
       if (err) throw err;
@@ -451,45 +422,6 @@ app.post("/set-cart", upload.none(), function (req, res) {
       });
    });
 })
-
-
-// app.post("/set-cart", upload.none(), function (req, res) {
-//    const { itemId, quantity } = req.body;
-
-//    console.log(req.body.itemId);
-
-//    let addItem = { itemId: itemId, quantity: quantity };
-
-//    const currentCookie = req.cookies.sid;
-
-//    //Get username from remote sessions colleciton
-//    sessionsCollection
-//       .find({ sessionId: currentCookie })
-//       .toArray((err, result) => {
-//          if (err) throw err;
-//          const currentUserName = result[0].user;
-//          //Get userId from users collection
-//          usersCollection
-//             .find({ username: currentUserName })
-//             .toArray((err, result) => {
-//                const currentUserId = result[0].userId;
-//                const currentUserCart = userCarts.find(cart => {
-//                   return cart.userId === currentUserId;
-//                });
-//                // Check if cart is empty/undefined
-//                if (currentUserCart === undefined) {
-//                   userCarts.push({ userId: currentUserId, items: [addItem] });
-//                   console.log(`New cart created for user ${currentUserName}`);
-//                   res.send(JSON.stringify({ success: true }));
-//                   return;
-//                }
-//                //Otherwise add item to user's cart
-//                currentUserCart.items = currentUserCart.items.concat(addItem);
-//                console.log(`Cart successfully updated for user ${currentUserName}`);
-//                res.send(JSON.stringify({ success: true }));
-//             });
-//       });
-// });
 
 //-----------------------------------------------------------------------------------------------------------------------//
 
