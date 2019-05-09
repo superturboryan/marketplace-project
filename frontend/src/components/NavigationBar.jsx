@@ -40,7 +40,7 @@ class UnconnectedNavigationBar extends Component {
           </Link>
           <span className={"top-top-bar"}>{" | "}</span>
           <Link className={"top-top-bar"} to={"/cart"}>
-            My Cart
+            <img id={"cart-img"} height={"12px"} src="/assets/cart.png" />
           </Link>
           <Logout className="toTheEnd" />
         </div>
