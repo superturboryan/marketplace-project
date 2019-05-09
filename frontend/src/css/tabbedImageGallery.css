@@ -1,27 +1,23 @@
 * {
   box-sizing: border-box;
 }
-
 body {
   margin: 0;
 }
 
 /* The grid: Four equal imgColumns that floats next to each other */
-.imgColumn {
-  float: left;
-  width: auto;
-  padding: 10px;
-}
-
-/* Style the images inside the grid */
+.imgColumn,
 .imgColumn img {
-  opacity: 0.8;
+  padding: 10px;
+  opacity: 1;
   cursor: pointer;
-  border-radius: 8%;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  border-radius: 15px;
 }
 
-.imgColumn img:hover {
-  opacity: 1;
+.imgColumn:hover {
+  opacity: 0.8;
 }
 
 /* Clear floats after the imgColumns */
@@ -32,22 +28,22 @@ body {
 }
 .imgRow {
   background: linear-gradient(rgb(255, 255, 255), rgb(243, 240, 240));
-  border-radius: 10px;
   -webkit-box-shadow: -4px 5px 2px 0px rgba(0, 0, 0, 0.24);
   box-shadow: -4px 5px 2px 0px rgba(0, 0, 0, 0.24);
   border-radius: 10px;
   margin-left: auto;
   margin-right: auto;
-  width: 80%;
+  min-width: 80%;
+  max-width: fit-content;
   display: flex;
-  justify-content: center;
-  /*width: 35%;*/
-  /*background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));*/
+  /* justify-content: center; */
 }
 
 .tabbed-gallery-container {
   margin: auto;
-  width: 50%;
+  width: min-content;
+  min-width: 50%;
+  max-width: 80%;
   padding: 10px;
 }
 
@@ -69,7 +65,6 @@ body {
   object-fit: contain;
   max-height: 500px;
   max-width: 100%;
-
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
   border-radius: 15px;
@@ -90,5 +85,10 @@ body {
 .closebtn:hover {
   opacity: 0.5;
   cursor: pointer;
-  /*background-color: #2b333b;*/
+}
+
+#scrollmenu {
+  background-color: #333;
+  overflow: auto;
+  white-space: nowrap;
 }

@@ -9,6 +9,14 @@ class UnconnectedCart extends Component {
     super(props);
     this.state = { items: [] };
   }
+
+  clearCart = () => {
+    fetch("http://localhost:4000/clear-cart", { credentials: "include" }).then(
+      this.props.dispatch({ type: "clear-cart" })
+    );
+    this.setState({ items: [] });
+  };
+
   componentWillMount = () => {
     //______________________________________
 
@@ -37,7 +45,11 @@ class UnconnectedCart extends Component {
     return (
       <div className="cart-container">
         <ItemList allItems={this.state.items} />
-        <CheckoutButton />
+        <button onClick={this.clearCart}>Clear cart!</button>
+        <button>
+          {" "}
+          <CheckoutButton />{" "}
+        </button>
       </div>
     );
   };

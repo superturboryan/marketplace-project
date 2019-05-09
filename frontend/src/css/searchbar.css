@@ -1,0 +1,9 @@
+#search-bar-submit {
+  background-color: hsla(36, 49%, 21%, 0.527);
+  color: white;
+  font-size: 16px;
+  border-color: hsla(36, 49%, 21%, 0.527);
+  border-radius: 4px;
+  padding: 5px, 10px;
+  margin-top: 15px;
+}

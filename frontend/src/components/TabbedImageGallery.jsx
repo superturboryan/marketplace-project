@@ -47,22 +47,26 @@ class UnconnectedItem extends Component {
     }
   };
 
+  renderImage = index => {
+    return (
+      <div key={index}>
+        <img
+          className="imgColumn"
+          alt={this.props.title + "_image"}
+          height="150px"
+          src={this.props.images[index]}
+          onClick={() => this.handleClick(index)}
+        />
+      </div>
+    );
+  };
+
   render = () => {
     return (
       <div className="tabbed-gallery-container">
-        <div className="imgRow">
+        <div className="imgRow" id="scrollmenu">
           {this.props.images.map((val, index) => {
-            return (
-              <div key={index}>
-                <img
-                  className="imgColumn"
-                  alt={this.props.title + "_image"}
-                  height="150px"
-                  src={this.props.images[index]}
-                  onClick={() => this.handleClick(index)}
-                />
-              </div>
-            );
+            return this.renderImage(index);
           })}
         </div>
         {this.bigDisplay()}
