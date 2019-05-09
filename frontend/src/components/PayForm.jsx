@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import ItemList from "./ItemList.jsx";
+import "./../css/payform.css";
 
 class UnconnectedPayForm extends Component {
   constructor(props) {
@@ -34,30 +33,46 @@ class UnconnectedPayForm extends Component {
       <form onSubmit={this.handlerSubmit}>
         <div>Credit card number</div>
         <input
+          className={"PayFormInput"}
+          id={"cardnumber"}
           type={"text"}
           onChange={this.handlerCardNumber}
           value={this.state.cardNumber}
         />{" "}
         cvv
-        <input type={"text"} onChange={this.handlerCv} value={this.state.cv} />
+        <input
+          className={"PayFormInput"}
+          id={"cvv"}
+          type={"text"}
+          onChange={this.handlerCv}
+          value={this.state.cv}
+        />
         <div>Full name</div>
         <input
+          className={"PayFormInput"}
+          id={"name"}
           type={"text"}
           onChange={this.handlerName}
           value={this.state.name}
         />
-        <div>Expiration</div>month
-        <input
-          type={"text"}
-          onChange={this.handlerExpirationMonth}
-          value={this.state.expirMonth}
-        />
-        Year
-        <input
-          type={"text"}
-          onChange={this.handlerExpirationYear}
-          value={this.state.expirYear}
-        />
+        <div>Expiration</div>month/year
+        <div>
+          <input
+            className={"PayFormInput"}
+            id={"month"}
+            type={"text"}
+            onChange={this.handlerExpirationMonth}
+            value={this.state.expirMonth}
+          />
+          /
+          <input
+            className={"PayFormInput"}
+            id={"year"}
+            type={"text"}
+            onChange={this.handlerExpirationYear}
+            value={this.state.expirYear}
+          />
+        </div>
       </form>
     );
   };

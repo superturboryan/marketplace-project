@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import ItemList from "./ItemList.jsx";
 import Oops from "./Oops.jsx";
+import PayForm from "./PayForm.jsx";
 
 class UnconnectedCheckout extends Component {
   constructor(props) {
@@ -57,6 +58,9 @@ class UnconnectedCheckout extends Component {
           <p className="checkout-total-text">
             Total: <span className="checkout-total">{this.props.total}</span>
           </p>
+          <div>
+            <PayForm />
+          </div>
           <div className="cart-buttons">
             <button onClick={this.handlerStepTwoButton}>Pay</button>
           </div>
