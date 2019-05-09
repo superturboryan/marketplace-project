@@ -9,8 +9,19 @@
 .profile-username {
   text-align: center;
   margin-bottom: 60px;
+  margin-left: 10px;
 }
 
 .profile-items-header {
   text-align: center;
+}
+
+.profile-user-details {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.avatar {
+  height: 100px;
+  width: 100px;
 }
