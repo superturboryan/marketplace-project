@@ -62,32 +62,38 @@ class UnconnectedItem extends Component {
         <div className="item-details-review-details-container">
           <div className="item-details-review-container">
             <AddReview itemId={this.state.item.itemId} />
-            <ReviewList
-              className="item-details-reviews"
-              itemId={this.state.item.itemId}
-            />
           </div>
           <div className="item-details-details-container">
-            <p className="item-details-description">
-              {this.state.item.details}
-            </p>
-            <div className="item-details-price">
-              $
-              {parseFloat(this.state.item.price).toLocaleString({
-                style: "currency"
-              })}
-            </div>
-            <div className="item-details-instock">
-              {this.state.item.stock} in stock.
-            </div>
+            <h1>{this.state.item.title}</h1>
             <Link
               className="item-details-link-to-seller"
               to={"/profile/" + this.state.item.userId}
             >
               Link to seller
             </Link>
+            <p className="item-details-description">
+              {this.state.item.details}
+            </p>
+            <fieldset>
+              <dl>
+                <dt>Price</dt>
+                <dd>
+                  $
+                  {parseFloat(this.state.item.price).toLocaleString({
+                    style: "currency"
+                  })}
+                </dd>
+              </dl>
+              <dl>
+                <dt>In Stock</dt>
+                <dd>{this.state.item.stock} available</dd>
+              </dl>
+            </fieldset>
             <AddToCart item={this.state.item} />
           </div>
+        </div>
+        <div className="item-details-reviews">
+          <ReviewList itemId={this.state.item.itemId} />
         </div>
       </div>
     );
