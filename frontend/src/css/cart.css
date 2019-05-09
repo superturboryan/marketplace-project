@@ -1,5 +1,31 @@
 .cart-container {
-  width: 80%;
+  max-width: 600px;
   margin: 0 auto;
   padding: 0 40px 20px 40px;
+}
+
+.cart-buttons {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.checkout-payment-container {
+  max-width: 600px;
+  margin: 10px auto;
+  padding: 0 40px 20px 40px;
+  background: white;
+  padding-top: 20px;
+  border-radius: 5px;
+}
+
+.checkout-total-text {
+  margin-left: 80%;
+}
+
+.checkout-receipt-text {
+  text-align: center;
+}
+
+.checkout-return {
+  text-align: center;
 }
