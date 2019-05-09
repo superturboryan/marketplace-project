@@ -33,7 +33,7 @@ class UnconnectedReview extends Component {
       return (
         <Link to={"/item/" + this.props.data.itemId}>
           <span>Review for </span>
-          {this.props.data.title} TODO
+          {this.props.data.item[0].title}
         </Link>
       );
     } else {

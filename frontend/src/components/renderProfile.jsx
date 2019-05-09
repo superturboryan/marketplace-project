@@ -57,9 +57,12 @@ class Profile extends Component {
     } else {
       return (
         <div className="profile-top-half">
-          <h2 className="profile-username">
-            {this.state.items[0].user[0].username}'s profile
-          </h2>
+          <div className="profile-user-details">
+            <img className="avatar" src="/assets/default-user.png" />
+            <h2 className="profile-username">
+              {this.state.items[0].user[0].username}'s profile
+            </h2>
+          </div>
           <h3 className="profile-items-header">Items for sale</h3>
           <div className="container">
             <div className="gallery">
