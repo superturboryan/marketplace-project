@@ -1,0 +1,47 @@
+.itemList-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.itemList-items-container {
+  margin: 0 auto;
+  width: fit-content;
+}
+
+.itemList-total-info {
+}
+
+.itemList-total-text {
+}
+
+.itemList-total-text-data {
+}
+
+.itemListElem-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.7);
+  margin: 10px auto;
+  padding: 10px 10px;
+  border-radius: 5px;
+}
+
+.itemListElem-container img {
+  /*position: absolute;
+  margin: auto;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-width: 100%;
+  max-height: 100%;
+  width: inherit !important;*/
+  height: 150px;
+  width: 150px;
+  object-fit: scale-down;
+}
+
+.itemListElem-title {
+  text-align: center;
+}

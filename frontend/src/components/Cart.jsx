@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import ItemList from "./ItemList.jsx";
 import CheckoutButton from "./CheckoutButton.jsx";
+import "./../css/cart.css";
 
 class UnconnectedCart extends Component {
   constructor(props) {
@@ -34,7 +35,7 @@ class UnconnectedCart extends Component {
   handlerOnClick = () => {};
   render = () => {
     return (
-      <div>
+      <div className="cart-container">
         <ItemList allItems={this.state.items} />
         <CheckoutButton />
       </div>

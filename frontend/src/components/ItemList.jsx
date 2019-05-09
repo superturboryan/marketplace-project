@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import ItemListElem from "./ItemListElem.jsx";
+import "./../css/itemList.css";
 
 let listElementMaker = itemData => {
   return <ItemListElem item={itemData} quantity={itemData.quantity} />;
@@ -14,10 +15,15 @@ class UnconnectedItemList extends Component {
     console.log("itemlist item");
     console.log(this.props.allItems);
     return (
-      <div>
-        <ul>{this.props.allItems.map(listElementMaker)}</ul>
-        <span>Total:</span>
-        <span>{this.props.total}</span>
+      <div className="itemList-container">
+        <div className="itemList-items-container">
+          {this.props.allItems.map(listElementMaker)}
+        </div>
+        <hr />
+        <div className="itemList-total-info">
+          <div className="itemList-total-text">Total:</div>
+          <div className="itemList-total-text-data">{this.props.total}</div>
+        </div>
       </div>
     );
   };

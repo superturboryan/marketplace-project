@@ -10,24 +10,33 @@ class UnconnectedItemListElem extends Component {
     console.log(this.props);
     let price = parseInt(this.props.item.price);
     price = "$" + price.toLocaleString({ style: "currency" });
+    let subtotal =
+      "$" +
+      (this.props.item.price * this.props.quantity).toLocaleString({
+        style: "currency"
+      });
     return (
-      <li>
+      <div className="itemListElem-container">
+        <img alt={""} src={this.props.item.images[0]} />
         <div>
-          <span>{this.props.item.quantity + " X "}</span>
-          <span>{this.props.item.title}</span>
-          <span>{price}</span>
-          <span>
-            <img
-              alt={"no image"}
-              height="50px"
-              src={this.props.item.images[0]}
-            />
-          </span>
-
-          <span>sub total:</span>
-          <span>{this.props.item.price * this.props.quantity}</span>
+          <div className="itemListElem-title">{this.props.item.title}</div>
+          <hr />
+          <fieldset>
+            <dl>
+              <dt>Quantity</dt>
+              <dd>{this.props.item.quantity}</dd>
+            </dl>
+            <dl>
+              <dt>Price</dt>
+              <dd>{price}</dd>
+            </dl>
+            <dl>
+              <dt>Subtotal</dt>
+              <dd>{subtotal}</dd>
+            </dl>
+          </fieldset>
         </div>
-      </li>
+      </div>
     );
   };
 }
