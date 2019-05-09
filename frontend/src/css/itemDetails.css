@@ -1,0 +1,38 @@
+.item-details-container {
+}
+
+.item-details-review-details-container {
+  display: flex;
+  margin-top: 20px;
+}
+
+.item-details-details-container {
+  text-align: center;
+  flex-grow: 1;
+  padding-right: 20%;
+}
+
+.item-details-description {
+  font-family: "Helvetica Neue", sans-serif;
+  font-size: 15px;
+  line-height: 24px;
+  margin: 0 0 24px;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.item-details-price {
+}
+
+.item-details-instock {
+}
+
+.item-details-link-to-seller {
+}
+
+.item-details-review-container {
+  flex-grow: 1;
+}
+
+.item-details-reviews {
+}

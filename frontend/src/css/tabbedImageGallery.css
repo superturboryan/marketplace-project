@@ -6,6 +6,11 @@ body {
   margin: 0;
 }
 
+.tabbed-gallery-container {
+  width: 100%;
+  margin: 0 auto;
+}
+
 /* The grid: Four equal imgColumns that floats next to each other */
 .imgColumn {
   float: left;
@@ -32,16 +37,20 @@ body {
 .imgRow {
   display: flex;
   justify-content: center;
-  width: 35%;
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+  /*width: 35%;*/
+  /*background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));*/
 }
 
 /* The expanding image container */
 .expandedImgContainer {
-  position: relative;
+  position: absolute;
   display: visible;
   width: 35%;
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+  background: linear-gradient(rgb(243, 240, 240), rgb(255, 255, 255));
+  -webkit-box-shadow: -4px 5px 2px 0px rgba(0, 0, 0, 0.24);
+  box-shadow: -4px 5px 2px 0px rgba(0, 0, 0, 0.24);
+  border-radius: 10px;
+  z-index: 2;
 }
 
 #expandedImg {
@@ -62,10 +71,11 @@ body {
   font-size: 35px;
   cursor: pointer;
   z-index: 5;
+  color: black;
 }
 
 .closebtn:hover {
   opacity: 0.5;
   cursor: pointer;
-  background-color: #2b333b;
+  /*background-color: #2b333b;*/
 }
