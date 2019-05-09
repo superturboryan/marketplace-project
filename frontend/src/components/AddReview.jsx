@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import "./../css/addReview.css";
+import "./../css/review.css";
 
 class UnconnectedAddReview extends Component {
   constructor(props) {

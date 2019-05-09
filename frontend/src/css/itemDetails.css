@@ -1,4 +1,9 @@
 .item-details-container {
+  margin: 10px auto;
+  width: 90%;
+  padding: 15px 20px;
+  background: white;
+  box-shadow: 5px 8px 8px -8px black;
 }
 
 .item-details-review-details-container {

@@ -50,8 +50,7 @@ class UnconnectedItem extends Component {
   };
 
   render() {
-    console.log("ItemDetailsCompenent props: ");
-    console.log(this.props.match.params.id);
+    console.log("ItemDetailsCompenent props: ", this.props.match.params.id);
 
     if (this.state.item === undefined) {
       return null;

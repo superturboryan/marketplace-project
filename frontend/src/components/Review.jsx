@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 
 class UnconnectedReview extends Component {
   getStars = () => {
@@ -17,7 +17,32 @@ class UnconnectedReview extends Component {
     );
   };
 
+  getCorrectLink = () => {
+    console.log(this.props.location.pathname);
+    let str = this.props.location.pathname;
+    //  returns item or profile
+    str = str.substring(1, str.lastIndexOf("/"));
+
+    if (str === "item") {
+      return (
+        <Link to={"/profile/" + this.props.data.userId}>
+          — {this.props.data.username}
+        </Link>
+      );
+    } else if (str === "profile") {
+      return (
+        <Link to={"/item/" + this.props.data.itemId}>
+          <span>Review for </span>
+          {this.props.data.title} TODO
+        </Link>
+      );
+    } else {
+      return null;
+    }
+  };
+
   render = () => {
+    console.log("props data: ", this.props);
     return (
       <div className="your-review-mini">
         <div className="review-flex">
@@ -25,14 +50,10 @@ class UnconnectedReview extends Component {
           {this.getStars()}
         </div>
         <div className="review-content-mini">{this.props.data.content}</div>
-        <div className="review-seller-link">
-          <Link to={"/profile/" + this.props.data.userId}>
-            — {this.props.data.username}
-          </Link>
-        </div>
+        <div className="review-seller-link">{this.getCorrectLink()}</div>
       </div>
     );
   };
 }
 let Review = connect()(UnconnectedReview);
-export default Review;
+export default withRouter(Review);

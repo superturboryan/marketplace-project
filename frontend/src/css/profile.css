@@ -1,0 +1,16 @@
+.profile-body {
+  margin: 10px auto;
+  width: 75%;
+  padding: 15px 20px;
+  background: white;
+  box-shadow: 5px 8px 8px -8px black;
+}
+
+.profile-username {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.profile-items-header {
+  text-align: center;
+}
