@@ -414,10 +414,12 @@ app.get("/get-cart", function (req, res) {
 
 app.post("/set-cart", upload.none(), function (req, res) {
 
-   const { item, quantity } = req.body
+   console.log(req.body.item)
+
+   const { itemId, quantity } = req.body
    const currentCookie = req.cookies.sid
 
-   console.log("Item: ", item)
+   console.log("ItemId: ", item)
    console.log("Quantity: ", quantity)
 
    //Get username from remote sessions colleciton
