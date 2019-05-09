@@ -3,15 +3,27 @@ import { connect } from "react-redux";
 import ItemListElem from "./ItemListElem.jsx";
 
 let listElementMaker = itemData => {
-  return <ItemListElem item={itemData.item} quantity={itemData.quantity} />;
+  return <ItemListElem item={itemData} quantity={itemData.quantity} />;
 };
 
 class UnconnectedItemList extends Component {
+  componentWillMount = () => {
+    this.props.dispatch({ type: "reset-cart-total" });
+  };
   render = () => {
-    console.log("LKIST");
-    console.log(this.props.item);
-    return <ul>{this.props.allItems.map(listElementMaker)}</ul>;
+    console.log("itemlist item");
+    console.log(this.props.allItems);
+    return (
+      <div>
+        <ul>{this.props.allItems.map(listElementMaker)}</ul>
+        <span>Total:</span>
+        <span>{this.props.total}</span>
+      </div>
+    );
   };
 }
-let ItemList = connect()(UnconnectedItemList);
+let mapStateToProps = state => {
+  return { total: state.cartTotal };
+};
+let ItemList = connect(mapStateToProps)(UnconnectedItemList);
 export default ItemList;

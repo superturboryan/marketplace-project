@@ -17,8 +17,17 @@ class UnconnectedCart extends Component {
       })
       .then(resBody => {
         let cartFromServer = JSON.parse(resBody);
+        console.log("cartFromServer");
         console.log(cartFromServer);
         this.setState({ items: cartFromServer });
+        this.props.dispatch({ type: "clear-cart" });
+        cartFromServer.forEach(item => {
+          this.props.dispatch({
+            type: "add-to-cart",
+            item: item,
+            quantity: item.quantity
+          });
+        });
       });
     //______________________________________
   };

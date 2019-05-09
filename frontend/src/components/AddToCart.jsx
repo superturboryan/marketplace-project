@@ -9,53 +9,58 @@ import NumberInput from "./NumberInput.jsx";
 // };
 
 class UnconnectedAddToCart extends Component {
-   constructor(props) {
-      super(props);
-      this.state = { quantity: 1 };
-   }
-   handlerButtonAddToCart = () => {
-      if (!this.props.loggedIn) {
-         console.log("user needs to be logged in");
-         return;
-      }
-      let itemQuantity = this.props.numberInputValues[this.props.item.itemId];
+  constructor(props) {
+    super(props);
+    this.state = { quantity: 1 };
+  }
+  handlerButtonAddToCart = () => {
+    if (!this.props.loggedIn) {
+      console.log("user needs to be logged in");
+      return;
+    }
+    let itemQuantity = this.props.numberInputValues[this.props.item.itemId];
 
-<<<<<<< HEAD
     let data = new FormData();
-    data.append("item", this.props.item.itemId);
+    data.append("itemId", this.props.item.itemId);
     data.append("quantity", itemQuantity);
-=======
-      let data = new FormData();
-      data.append("itemId", this.props.item.itemId);
-      data.append("quantity", itemQuantity);
->>>>>>> b454b62ae77ee8753d0462a9320e16e01efcc761
 
-      fetch("http://localhost:4000/set-cart", {
-         method: "POST",
-         body: data,
-         credentials: "include"
+    fetch("http://localhost:4000/set-cart", {
+      method: "POST",
+      body: data,
+      credentials: "include"
+    })
+      .then(res => {
+        return res.text();
+      })
+      .then(resBody => {
+        let parsedBody = JSON.parse(resBody);
+        if (parsedBody.success === true) {
+          this.props.dispatch({
+            type: "add-to-cart",
+            itemId: this.props.item,
+            quantity: this.props.numberInputValues[this.props.item.itemId]
+          });
+        }
+        if (parsedBody.success === false) {
+          alert("not enough in stock");
+        }
       });
-      this.props.dispatch({
-         type: "add-to-cart",
-         item: this.props.item,
-         quantity: this.props.numberInputValues[this.props.item.itemId]
-      });
-   };
-   render = () => {
-      return (
-         <div>
-            <NumberInput name={this.props.item.itemId} />
-            <button onClick={this.handlerButtonAddToCart}>Add to Cart</button>
-         </div>
-      );
-   };
+  };
+  render = () => {
+    return (
+      <div>
+        <NumberInput name={this.props.item.itemId} />
+        <button onClick={this.handlerButtonAddToCart}>Add to Cart</button>
+      </div>
+    );
+  };
 }
 let mapStateToProps = state => {
-   return {
-      cart: state.cart,
-      numberInputValues: state.numberInput,
-      loggedIn: state.loggedIn
-   };
+  return {
+    cart: state.cart,
+    numberInputValues: state.numberInput,
+    loggedIn: state.loggedIn
+  };
 };
 let AddToCart = connect(mapStateToProps)(UnconnectedAddToCart);
 export default AddToCart;
