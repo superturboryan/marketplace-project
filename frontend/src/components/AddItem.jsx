@@ -142,95 +142,97 @@ class UnconnectedAddItem extends Component {
     }
 
     return (
-      <div className={"standard-container"} id={"div-container-add-item"}>
-        <h1>Sell Something!</h1>
-        <form onSubmit={this.handleSubmit} encType={"multipart/form-data"}>
-          <div>Title</div>
-          <input
-            className={"add-item-form-input"}
-            type="text"
-            onChange={this.handleTitle}
-            value={this.state.title}
-            required={true}
-          />
-          <div>Description</div>
-          <textarea
-            id="add-item-form-description"
-            className={"add-item-form-input"}
-            type="text"
-            onChange={this.handleDescription}
-            value={this.state.description}
-            required={true}
-          />
-          <div>Price</div>
-          <input
-            className={"add-item-form-input"}
-            type="number"
-            onChange={this.handlePrice}
-            value={this.state.price}
-            min={0}
-            step={0.01}
-            required={true}
-          />
-          <div>Quantity</div>
-          <input
-            className={"add-item-form-input"}
-            type="number"
-            onChange={this.handleStock}
-            value={this.state.stock}
-            min={1}
-            required={true}
-          />
-          <div id={"add-item-location-div"}>
-            <div>
-              <p className={"add-item-field-heading"}>City</p>
-
-              <input
-                className={"add-item-form-input"}
-                type="text"
-                onChange={this.handleCity}
-                value={this.state.city}
-                required={true}
-              />
-            </div>
-            <div>
-              <p className={"add-item-field-heading"}>Province/State</p>
-
-              <input
-                className={"add-item-form-input"}
-                type="text"
-                onChange={this.handleProvince}
-                value={this.state.province}
-                required={true}
-              />
-            </div>
-            <div>
-              <p className={"add-item-field-heading"}>Country</p>
-
-              <input
-                className={"add-item-form-input"}
-                type="text"
-                onChange={this.handleCountry}
-                value={this.state.country}
-                required={true}
-              />
-            </div>
-          </div>
-          <div id={"add-item-form-file-input"}>
+      <div id={"item-details-page-div"}>
+        <div className={"standard-container"} id={"div-container-add-item"}>
+          <h1>Sell Something!</h1>
+          <form onSubmit={this.handleSubmit} encType={"multipart/form-data"}>
+            <div>Title</div>
             <input
-              type="file"
-              accept="image/*"
-              onChange={this.handleFiles}
-              id="images"
-              name="images"
-              multiple
+              className={"add-item-form-input"}
+              type="text"
+              onChange={this.handleTitle}
+              value={this.state.title}
               required={true}
             />
-          </div>
-          <div>
-            <input id={"submitAddItem"} type="submit" value="Submit" />
-          </div>
-        </form>
+            <div>Description</div>
+            <textarea
+              id="add-item-form-description"
+              className={"add-item-form-input"}
+              type="text"
+              onChange={this.handleDescription}
+              value={this.state.description}
+              required={true}
+            />
+            <div>Price</div>
+            <input
+              className={"add-item-form-input"}
+              type="number"
+              onChange={this.handlePrice}
+              value={this.state.price}
+              min={0}
+              step={0.01}
+              required={true}
+            />
+            <div>Quantity</div>
+            <input
+              className={"add-item-form-input"}
+              type="number"
+              onChange={this.handleStock}
+              value={this.state.stock}
+              min={1}
+              required={true}
+            />
+            <div id={"add-item-location-div"}>
+              <div>
+                <p className={"add-item-field-heading"}>City</p>
+
+                <input
+                  className={"add-item-form-input"}
+                  type="text"
+                  onChange={this.handleCity}
+                  value={this.state.city}
+                  required={true}
+                />
+              </div>
+              <div>
+                <p className={"add-item-field-heading"}>Province/State</p>
+
+                <input
+                  className={"add-item-form-input"}
+                  type="text"
+                  onChange={this.handleProvince}
+                  value={this.state.province}
+                  required={true}
+                />
+              </div>
+              <div>
+                <p className={"add-item-field-heading"}>Country</p>
+
+                <input
+                  className={"add-item-form-input"}
+                  type="text"
+                  onChange={this.handleCountry}
+                  value={this.state.country}
+                  required={true}
+                />
+              </div>
+            </div>
+            <div id={"add-item-form-file-input"}>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={this.handleFiles}
+                id="images"
+                name="images"
+                multiple
+                required={true}
+              />
+            </div>
+            <div>
+              <input id={"submitAddItem"} type="submit" value="Submit" />
+            </div>
+          </form>
+        </div>
       </div>
     );
   };

@@ -28,14 +28,12 @@
   padding: 0px;
 }
 #div-container-add-item {
-  background-color: rgba(121, 121, 121, 0.42);
+  background-color: white;
   margin: 0 auto;
+  border: none;
 }
 #submitAddItem {
-  background-color: #1e1eb2;
-  color: white;
   font-size: 16px;
-  border-color: #1e1eb2;
   border-radius: 4px;
   padding: 5px, 10px;
   margin-top: 15px;
@@ -44,4 +42,20 @@
   height: 80px;
   width: 100%;
   padding: auto;
+}
+#item-details-page-div {
+  width: 50%;
+  height: 100%;
+  margin: 5%;
+  margin-top: 2%;
+  margin-left: 25%;
+  padding: 30px;
+  border: solid;
+  border-top-width: 1px;
+  border-bottom-width: 2px;
+  border-right-width: 2px;
+  border-left-width: 0.5px;
+  border-color: rgb(153, 147, 147);
+  background-color: white;
+  border-radius: 4px;
 }
