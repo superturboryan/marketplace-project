@@ -22,7 +22,10 @@ class UnconnectedItemList extends Component {
         <hr />
         <div className="itemList-total-info">
           <div className="itemList-total-text">Total:</div>
-          <div className="itemList-total-text-data">${this.props.total}</div>
+          <div className="itemList-total-text-data">
+            $
+            {parseFloat(this.props.total).toLocaleString({ style: "currency" })}
+          </div>
         </div>
       </div>
     );

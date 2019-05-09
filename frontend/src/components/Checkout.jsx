@@ -55,7 +55,13 @@ class UnconnectedCheckout extends Component {
         <div className="checkout-payment-container">
           <h4 className="checkout-instructions">Enter payment info</h4>
           <p className="checkout-total-text">
-            Total: <span className="checkout-total">{this.props.total}</span>
+            Total:{" "}
+            <span className="checkout-total">
+              $
+              {parseFloat(this.props.total).toLocaleString({
+                style: "currency"
+              })}
+            </span>
           </p>
           <div className="cart-buttons">
             <button onClick={this.handlerStepTwoButton}>Pay</button>
