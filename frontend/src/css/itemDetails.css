@@ -1,0 +1,70 @@
+.item-details-container {
+}
+
+.item-details-review-details-container {
+  display: flex;
+  margin-top: 20px;
+}
+
+.item-details-details-container {
+  text-align: center;
+  flex-grow: 1;
+  max-width: 50%;
+  padding: 0 50px;
+}
+
+.item-details-description {
+  font-family: "Lato", sans-serif;
+  font-size: 15px;
+  line-height: 24px;
+  margin: 10 0 24px;
+  text-align: center;
+  text-justify: inter-word;
+}
+
+.item-details-price {
+}
+
+.item-details-instock {
+}
+
+.item-details-link-to-seller {
+}
+
+.item-details-review-container {
+  flex-grow: 1;
+  margin-top: 20px;
+}
+
+.item-details-reviews {
+  text-align: center;
+}
+
+fieldset {
+  border: 0;
+  border-bottom: 1px solid #eee;
+  font-size: 1em;
+  margin: 15px 5px 15px 5px;
+  padding: 0;
+  background: #fff;
+}
+
+dl {
+  clear: both;
+  margin: 0;
+  padding: 0px;
+  border-top: 1px solid #eee;
+}
+
+dt {
+  float: left;
+  width: 170px;
+  padding: 8px;
+  background: #f0f3f6;
+}
+
+dd {
+  margin-left: 180px;
+  padding: 8px 10px 8px 20px;
+  background: #fff;
+}

@@ -6,9 +6,9 @@ import Searchbar from "./Searchbar.jsx";
 import "./../css/navigationBar.css";
 
 class UnconnectedNavigationBar extends Component {
-  ifLoggedInDoThis = ret => {
+  ifLoggedInDoThis = returnThis => {
     if (this.props.loggedIn) {
-      return ret;
+      return returnThis;
     }
   };
 
@@ -27,6 +27,19 @@ class UnconnectedNavigationBar extends Component {
     }
   };
 
+  getNavigationLinks = () => {
+    return (
+      <div className="navigation-flex link-area just-bottom">
+        Categories:
+        <div>Clothing and Accessories</div>
+        <div>Films and Music</div>
+        <div>Home and Appliances</div>
+        <div>Electronics</div>
+        <div>Video Games</div>
+      </div>
+    );
+  };
+
   render = () => {
     return (
       <div className="navigation-bar">
@@ -38,33 +51,19 @@ class UnconnectedNavigationBar extends Component {
           {this.getButtonHtml()}
           {this.ifLoggedInDoThis(
             <div className="toTheEnd navigation-unflex">
-              <Link className="toTheEnd" to={"/cart"}>
-                My Cart
-              </Link>
+              <div>
+                <span>{this.props.username + " |"}</span>
+                <Link to={"/cart"}>My Cart</Link>
+              </div>
               <Link className="toTheEnd" to={"/add-item"}>
                 Sell Something!
               </Link>
             </div>
           )}
         </div>
-        <div>
-          {this.ifLoggedInDoThis(
-            <div className="navigation-flex">
-              <div>{this.props.username}</div>
-              <div>
-                <Logout />
-              </div>
-              <div />
-            </div>
-          )}
-        </div>
-        <div className="navigation-flex link-area">
-          Categories:
-          <div>Clothing and Accessories</div>
-          <div>Films and Music</div>
-          <div>Home and Appliances</div>
-          <div>Electronics</div>
-          <div>Video Games</div>
+        <div className="navigation-left-right">
+          {this.getNavigationLinks()}
+          {this.ifLoggedInDoThis(<Logout className="toTheEnd" />)}
         </div>
       </div>
     );

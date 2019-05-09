@@ -1,15 +1,54 @@
 .your-review {
+  margin: 0 auto;
+  width: 90%;
   border-style: outset;
   border-radius: 10px;
-  width: fit-content;
   padding: 0px 10px 10px 10px;
-  margin: 20px 0px 20px 0px;
 }
 
-.new-review-container {
-  border-style: outset;
-  border-radius: 10px;
-  width: fit-content;
-  padding: 0px 10px 10px 10px;
-  margin: 20px 0px 20px 0px;
+.write-a-review {
+  font-family: "Lato", sans-serif;
+  font-size: 30px;
+  font-weight: 300;
+  margin: 15px auto;
+}
+
+.review-label {
+  font-family: "Lato", sans-serif;
+  font-size: 16px;
+}
+
+.review-flex {
+  display: flex;
+}
+
+.review-space-between {
+  justify-content: space-between;
+}
+
+.review-rating {
+  font-family: "Lato", sans-serif;
+  font-size: 30px;
+  border-style: none;
+  border-color: rgba(#000000, #000000, #000000, 0.01);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.review-star {
+  font-size: 20px;
+}
+
+.review-content-input {
+  width: 100%;
+  min-height: 200px;
+}
+
+.review-star-container {
+  padding-right: 5%;
+}
+
+.review-top-inputs {
+  margin-bottom: 20px;
 }

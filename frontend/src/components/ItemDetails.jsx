@@ -6,6 +6,7 @@ import AddToCart from "./AddToCart.jsx";
 import AddReview from "./AddReview.jsx";
 import ReviewList from "./ReviewList.jsx";
 import TabbedImageGallery from "./TabbedImageGallery.jsx";
+import "./../css/itemDetails.css";
 
 class UnconnectedItem extends Component {
   constructor(props) {
@@ -52,26 +53,48 @@ class UnconnectedItem extends Component {
     }
 
     return (
-      <div>
-        {" "}
-        <div>{this.state.item.description}</div>{" "}
+      <div className="item-details-container">
         <TabbedImageGallery
           images={this.state.item.images}
           itemId={this.state.item.id}
           title={this.state.item.title}
         />
-        <p>{this.state.item.details}</p>
-        <div>
-          $
-          {parseFloat(this.state.item.price).toLocaleString({
-            style: "currency"
-          })}
+        <div className="item-details-review-details-container">
+          <div className="item-details-review-container">
+            <AddReview itemId={this.state.item.itemId} />
+          </div>
+          <div className="item-details-details-container">
+            <h1>{this.state.item.title}</h1>
+            <Link
+              className="item-details-link-to-seller"
+              to={"/profile/" + this.state.item.userId}
+            >
+              Link to seller
+            </Link>
+            <p className="item-details-description">
+              {this.state.item.details}
+            </p>
+            <fieldset>
+              <dl>
+                <dt>Price</dt>
+                <dd>
+                  $
+                  {parseFloat(this.state.item.price).toLocaleString({
+                    style: "currency"
+                  })}
+                </dd>
+              </dl>
+              <dl>
+                <dt>In Stock</dt>
+                <dd>{this.state.item.stock} available</dd>
+              </dl>
+            </fieldset>
+            <AddToCart item={this.state.item} />
+          </div>
         </div>
-        <div>{this.state.item.stock} in stock.</div>
-        <Link to={"/profile/" + this.state.item.userId}> Link to seller </Link>
-        <AddToCart item={this.state.item} />
-        <AddReview itemId={this.state.item.itemId} />
-        <ReviewList itemId={this.state.item.itemId} />
+        <div className="item-details-reviews">
+          <ReviewList itemId={this.state.item.itemId} />
+        </div>
       </div>
     );
   }

@@ -76,9 +76,9 @@ class UnconnectedAddReview extends Component {
   postedReview = () => {
     return (
       <div className="your-review">
-        <h3>{this.state.title}</h3>
-        <h4>{this.state.rating} stars</h4>
-        <p>{this.state.content}</p>
+        <div className="review-title">{this.state.title}</div>
+        <div className="review-rating">{this.state.rating} stars</div>
+        <div className="review-content">{this.state.content}</div>
       </div>
     );
   };
@@ -93,28 +93,41 @@ class UnconnectedAddReview extends Component {
     }
 
     return (
-      <div className="new-review-container">
-        <h3>Rate:</h3>
+      <div className="your-review">
+        <h3 className="write-a-review">Write a review</h3>
         <form onSubmit={this.handleSubmit} encType={"multipart/form-data"}>
-          <div>Title</div>
-          <input
-            type="text"
-            onChange={this.handleTitle}
-            value={this.state.title}
-          />
-          <div>Rating</div>
-          <select value={this.state.rating} onChange={this.handleRating}>
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-          </select>
-          <div>Content</div>
-          <input
+          <div className="review-label">Title</div>
+          <div className="review-flex review-space-between review-top-inputs">
+            <div className="review-flex">
+              <input
+                type="text"
+                onChange={this.handleTitle}
+                value={this.state.title}
+                required={true}
+              />
+            </div>
+            <div className="review-label review-flex review-star-container">
+              <select
+                className="review-rating"
+                value={this.state.rating}
+                onChange={this.handleRating}
+              >
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+              <span className="review-star">&#11088;</span>
+            </div>
+          </div>
+          <div className="review-label">Content</div>
+          <textarea
+            className="review-content-input"
             type="text"
             onChange={this.handleContent}
             value={this.state.content}
+            required={true}
           />
           <div>
             <input type="submit" value="Submit" />

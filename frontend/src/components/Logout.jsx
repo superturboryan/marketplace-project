@@ -28,7 +28,11 @@ class UnconnectedLogout extends Component {
   };
 
   render = () => {
-    return <button onClick={this.handleClick}>Logout</button>;
+    return (
+      <button className="logoutButton" onClick={this.handleClick}>
+        Logout
+      </button>
+    );
   };
 }
 
