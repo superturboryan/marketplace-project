@@ -1,14 +1,18 @@
 * {
   box-sizing: border-box;
 }
+body {
+  margin: 0;
+}
 
 /* The grid: Four equal imgColumns that floats next to each other */
-.imgColumn {
+.imgColumn,
+.imgColumn img {
   /* float: left; */
   width: auto;
   padding: 10px;
   /* margin: auto; */
-  opacity: 0.8;
+  opacity: 1;
   cursor: pointer;
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
@@ -18,16 +22,8 @@
   margin-right: auto;
 }
 
-.imgColumn img {
-  -webkit-border-radius: 15px;
-  -moz-border-radius: 15px;
-  border-radius: 15px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
 .imgColumn:hover {
-  opacity: 1;
+  opacity: 0.8;
 }
 
 /* Clear floats after the imgColumns */
