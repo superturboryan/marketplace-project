@@ -8,6 +8,16 @@ body {
 }
 
 .standard-container {
+  border-color: rgba(177, 145, 76, 0.658);
+  border-style: outset;
+  border-radius: 10px;
+  width: fit-content;
+  padding: 0px 10px 10px 10px;
+  margin: 20px 0px 20px 0px;
+  background-color: rgba(177, 145, 76, 0.658);
+}
+.white-container {
+  border-color: rgba(177, 145, 76, 0.658);
   border-style: outset;
   border-radius: 10px;
   width: fit-content;
