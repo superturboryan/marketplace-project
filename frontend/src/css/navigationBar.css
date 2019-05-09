@@ -4,7 +4,7 @@
   border-style: solid;
   border-radius: 10px;
   padding: 5px;
-  background: grey;
+  background: rgba(134, 134, 134, 0.5);
   color: #ffffff;
   width: 99%;
 }
@@ -16,7 +16,10 @@
   display: grid;
 }
 
-.navigation-bar a {
+.navigation-bar a,
+.navigation-bar span,
+.navigation-bar link {
+  margin: 5px;
   color: white !important;
 }
 
@@ -32,4 +35,8 @@
 .searchBar {
   margin: 5px;
   width: 500px;
+}
+
+.logoutButton {
+  font-size: medium;
 }
