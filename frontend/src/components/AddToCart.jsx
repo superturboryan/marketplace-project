@@ -40,6 +40,10 @@ class UnconnectedAddToCart extends Component {
             itemId: this.props.item,
             quantity: this.props.numberInputValues[this.props.item.itemId]
           });
+          this.props.dispatch({
+            type: "show-message",
+            message: "Added to cart."
+          });
         }
         if (parsedBody.success === false) {
           alert("not enough in stock");
