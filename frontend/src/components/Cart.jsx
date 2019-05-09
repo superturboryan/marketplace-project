@@ -11,7 +11,7 @@ class UnconnectedCart extends Component {
   }
 
   clearCart = () => {
-    fetch("http://localhost:4000/clear-cart", { credentials: "include" }).then(
+    fetch("/clear-cart", { credentials: "include" }).then(
       this.props.dispatch({ type: "clear-cart" })
     );
     this.setState({ items: [] });
@@ -20,7 +20,7 @@ class UnconnectedCart extends Component {
   componentWillMount = () => {
     //______________________________________
 
-    fetch("http://localhost:4000/get-cart", { credentials: "include" })
+    fetch("/get-cart", { credentials: "include" })
       .then(res => {
         return res.text();
       })

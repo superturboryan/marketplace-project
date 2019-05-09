@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 class UnconnectedAutoLogin extends Component {
   componentDidMount = () => {
-    fetch("http://localhost:4000/verify-cookie", { credentials: "include" })
+    fetch("/verify-cookie", { credentials: "include" })
       .then(res => {
         return res.text();
       })

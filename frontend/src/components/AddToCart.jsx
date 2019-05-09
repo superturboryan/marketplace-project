@@ -24,7 +24,7 @@ class UnconnectedAddToCart extends Component {
     data.append("itemId", this.props.item.itemId);
     data.append("quantity", itemQuantity);
 
-    fetch("http://localhost:4000/set-cart", {
+    fetch("/set-cart", {
       method: "POST",
       body: data,
       credentials: "include"
