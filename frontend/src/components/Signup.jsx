@@ -79,7 +79,7 @@ class UnconnectedSignup extends Component {
     }
 
     return (
-      <div className={"standard-container"}>
+      <div className={"standard-container"} id={"signup-main-div"}>
         <h1 id={"signupPageTitle"}>Signup</h1>
         <form onSubmit={this.handleSubmit} encType={"multipart/form-data"}>
           <h4 className={"signupHeaderText"}>Username</h4>
