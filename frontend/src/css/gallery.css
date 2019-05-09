@@ -8,7 +8,7 @@ img {
   /* opacity: 0.9; */
   cursor: pointer;
   /* background-color: #cedae9; */
-  background-color: rgba(206,218,233, 0.4);
+  background-color: rgba(206, 218, 233, 0.4);
   animation: grow 0.4s ease-in-out;
 }
 
@@ -69,31 +69,28 @@ img {
   margin-bottom: 10%;
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 10px;
-
 }
 
-
 @keyframes grow {
-	0% {
-      transform: scale(1)
-	}
-	50% {
-      transform: scale(1.025);
-	}
-	100% {
-      transform: scale(1);
-	}
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.025);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 @keyframes highlight {
-
-   0% {
-      background-color: transparent
-   }
-   50% {
-      background-color: rgba(174, 177, 182, 0.7);
-   }
-   100% {
-      background-color: transparent;
-   }
+  0% {
+    background-color: transparent;
+  }
+  50% {
+    background-color: rgba(174, 177, 182, 0.7);
+  }
+  100% {
+    background-color: transparent;
+  }
 }

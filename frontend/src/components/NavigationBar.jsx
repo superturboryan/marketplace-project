@@ -78,7 +78,7 @@ class UnconnectedNavigationBar extends Component {
           </div>
           <div className="navigation-flex">
             <div id={"ali-bae-div"} className={"ali-bae-heading"}>
-              <Link to={"/"}>Ali-Bae</Link>
+              <Link to={"/"}>RockyBay</Link>
             </div>
 
             <div className="toTheEnd">
