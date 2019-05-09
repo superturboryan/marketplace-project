@@ -22,7 +22,7 @@ class UnconnectedCheckout extends Component {
           return res.text();
         })
         .then(resBody => {
-          /*let parsedBody;
+          /*let parsedBody= JSON.parse(resBody);
           
           if (parsedBody.success === true) {
       this.setState({ step: this.state.step + 1 });
