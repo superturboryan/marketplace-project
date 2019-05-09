@@ -331,7 +331,7 @@ app.get("/get-reviews-for-id", function (req, res) {
    let query = [
       {
          $match: {
-            itemId: itemId
+            userId: userId
          }
       },
       {
@@ -345,13 +345,13 @@ app.get("/get-reviews-for-id", function (req, res) {
    ];
 
    if (itemId === undefined) {    // GET REVIEWS BY SELLER
-      reviewsCollection.find({ userId: userId }).toArray((err, result) => {
+      reviewsCollection.aggregate(query).toArray((err, result) => {
          if (err) throw err;
          console.log("DB: Sending back reviews that match userId in response");
          res.send(JSON.stringify(result));
       });
    } else if (userId === undefined) {   // OTHERWISE GET REVIEWS BY ITEM
-      reviewsCollection.aggregate(query).toArray((err, result) => {
+      reviewsCollection.find({ itemId: itemId }).toArray((err, result) => {
          if (err) throw err;
          if (result[0] === undefined) {
             console.log("DB: No reviews found that match the itemId provided");

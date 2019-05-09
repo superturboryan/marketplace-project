@@ -3,7 +3,7 @@
 .your-review {
   position: relative;
   margin: 0 auto;
-  width: 90%;
+  max-width: 600px;
   border-style: outset;
   border-radius: 10px;
   padding: 15px 10px 10px 10px;
@@ -78,11 +78,10 @@
 .your-review-mini {
   position: relative;
   margin: 0 auto 10px auto;
-  width: 90%;
   border-style: outset;
   border-radius: 10px;
   padding: 15px 10px 10px 10px;
-  width: 600px;
+  max-width: 600px;
 }
 
 .review-content-mini {

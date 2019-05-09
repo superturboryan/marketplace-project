@@ -63,42 +63,38 @@ class UnconnectedItem extends Component {
           itemId={this.state.item.id}
           title={this.state.item.title}
         />
-        <div className="item-details-review-details-container">
-          <div className="item-details-review-container">
-            <AddReview itemId={this.state.item.itemId} />
-          </div>
-          <div className="item-details-details-container">
-            <h1>{this.state.item.title}</h1>
-            <Link
-              className="item-details-link-to-seller"
-              to={"/profile/" + this.state.item.userId}
-            >
-              Link to seller
-            </Link>
-            <p className="item-details-description">
-              {this.state.item.details}
-            </p>
-            <fieldset>
-              <dl>
-                <dt>Price</dt>
-                <dd>
-                  $
-                  {parseFloat(this.state.item.price).toLocaleString({
-                    style: "currency"
-                  })}
-                </dd>
-              </dl>
-              <dl>
-                <dt>In Stock</dt>
-                <dd>{this.state.item.stock} available</dd>
-              </dl>
-              <dl>
-                <dt>Ships from</dt>
-                <dd>{this.getCityStr()}</dd>
-              </dl>
-            </fieldset>
-            <AddToCart item={this.state.item} />
-          </div>
+        <div className="item-details-details-container">
+          <h1>{this.state.item.title}</h1>
+          <Link
+            className="item-details-link-to-seller"
+            to={"/profile/" + this.state.item.userId}
+          >
+            Link to seller
+          </Link>
+          <p className="item-details-description">{this.state.item.details}</p>
+          <fieldset>
+            <dl>
+              <dt>Price</dt>
+              <dd>
+                $
+                {parseFloat(this.state.item.price).toLocaleString({
+                  style: "currency"
+                })}
+              </dd>
+            </dl>
+            <dl>
+              <dt>In Stock</dt>
+              <dd>{this.state.item.stock} available</dd>
+            </dl>
+            <dl>
+              <dt>Ships from</dt>
+              <dd>{this.getCityStr()}</dd>
+            </dl>
+          </fieldset>
+          <AddToCart item={this.state.item} />
+        </div>
+        <div className="item-details-review-container">
+          <AddReview itemId={this.state.item.itemId} />
         </div>
         <div className="item-details-reviews">
           <ReviewList itemId={this.state.item.itemId} />

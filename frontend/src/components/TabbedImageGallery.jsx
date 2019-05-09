@@ -50,7 +50,7 @@ class UnconnectedItem extends Component {
   render = () => {
     return (
       <div className="tabbed-gallery-container">
-        <div className="imgRow">
+        <div className="imgRow" id="scrollmenu">
           {this.props.images.map((val, index) => {
             return (
               <div key={index}>
