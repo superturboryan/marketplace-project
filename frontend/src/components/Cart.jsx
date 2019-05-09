@@ -17,18 +17,8 @@ class UnconnectedCart extends Component {
       })
       .then(resBody => {
         let cartFromServer = JSON.parse(resBody);
-        let cartToStore = {};
-        cartFromServer.forEach(item => {
-          if (cartToStore[item.itemId] === undefined) {
-            cartToStore[item.itemId] = { item: item, quantity: 1 };
-            return;
-          }
-          cartToStore[item.itemId] = {
-            ...cartToStore[item.itemId],
-            quantity: cartToStore[item.itemId]["quantity"]
-          };
-        });
-        this.setState({ items: Object.values(cartToStore) });
+        console.log(cartFromServer);
+        this.setState({ items: cartFromServer });
       });
     //______________________________________
   };

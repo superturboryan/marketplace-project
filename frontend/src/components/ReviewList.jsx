@@ -3,11 +3,7 @@ import { connect } from "react-redux";
 import Review from "./Review.jsx";
 
 let listElementMaker = reviewData => {
-  return (
-    <li>
-      <Review data={reviewData} />
-    </li>
-  );
+  return <Review data={reviewData} />;
 };
 
 class UnconnectedReviewList extends Component {
@@ -67,7 +63,7 @@ class UnconnectedReviewList extends Component {
     return (
       <div>
         <h3>Reviews</h3>
-        <ul>{this.state.allReviews.map(listElementMaker)}</ul>
+        <div>{this.state.allReviews.map(listElementMaker)}</div>
       </div>
     );
   };
