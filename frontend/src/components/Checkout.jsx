@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import ItemList from "./ItemList.jsx";
+import Oops from "./Oops.jsx";
 
 class UnconnectedCheckout extends Component {
   constructor(props) {
@@ -32,7 +33,7 @@ class UnconnectedCheckout extends Component {
   };
   renderSwitch = () => {
     if (this.state.cart.length < 1) {
-      return <div>Invalid Checkout</div>;
+      return <Oops message="An error occurred." />;
     }
     if (this.state.step === 0) {
       console.log("in checkout");
@@ -41,18 +42,24 @@ class UnconnectedCheckout extends Component {
       });
 
       return (
-        <div>
+        <div className="cart-container">
           <ItemList allItems={cartToItems} />
-          <button onClick={this.handlerStepOneButton}>Confirm</button>
+          <div className="cart-buttons">
+            <button onClick={this.handlerStepOneButton}>Confirm</button>
+          </div>
         </div>
       );
     }
     if (this.state.step === 1) {
       return (
-        <div>
-          <h4>enter payment info</h4>
-          <p>total: {this.props.total}</p>
-          <button onClick={this.handlerStepTwoButton}>Pay</button>
+        <div className="checkout-payment-container">
+          <h4 className="checkout-instructions">Enter payment info</h4>
+          <p className="checkout-total-text">
+            Total: <span className="checkout-total">{this.props.total}</span>
+          </p>
+          <div className="cart-buttons">
+            <button onClick={this.handlerStepTwoButton}>Pay</button>
+          </div>
         </div>
       );
     }
@@ -61,16 +68,16 @@ class UnconnectedCheckout extends Component {
         return item.item;
       });
       return (
-        <div>
-          <div>
-            <h4>Recipt</h4>
-          </div>
+        <div className="cart-container">
+          <h4 className="checkout-receipt-text">Receipt</h4>
           <ItemList allItems={cartToItems} />
-          <Link to={"/"}>Return to homepage</Link>
+          <div className="checkout-return">
+            <Link to={"/"}>Return to homepage</Link>
+          </div>
         </div>
       );
     }
-    return <p>invalid checkout step</p>;
+    return <Oops message="An error occurred. Are you logged in?" />;
   };
   render = () => {
     return this.renderSwitch();

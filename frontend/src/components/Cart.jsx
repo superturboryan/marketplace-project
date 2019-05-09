@@ -45,11 +45,13 @@ class UnconnectedCart extends Component {
     return (
       <div className="cart-container">
         <ItemList allItems={this.state.items} />
-        <button onClick={this.clearCart}>Clear cart!</button>
-        <button>
-          {" "}
-          <CheckoutButton />{" "}
-        </button>
+        <div className="cart-buttons">
+          <button onClick={this.clearCart}>Clear cart!</button>
+          <button>
+            {" "}
+            <CheckoutButton />{" "}
+          </button>
+        </div>
       </div>
     );
   };
