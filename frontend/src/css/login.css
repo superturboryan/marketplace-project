@@ -1,7 +1,7 @@
 #usernameInputLogin {
   -webkit-border-radius: 4px;
   border-radius: 4px;
-  color: #202124;
+  color: hsl(36, 49%, 14%);
   font-size: 16px;
   height: 28px;
   margin: 1px 1px 0 1px;
@@ -11,7 +11,7 @@
 #passwordInputLogin {
   -webkit-border-radius: 4px;
   border-radius: 4px;
-  color: #202124;
+  color: hsl(36, 49%, 14%);
   font-size: 16px;
   height: 28px;
   margin: 1px 1px 1px 1px;
@@ -19,22 +19,25 @@
   z-index: 1;
 }
 #submitLogin {
-  background-color: #1e1eb2;
+  background-color: hsla(36, 49%, 21%, 0.527);
   color: white;
   font-size: 16px;
-  border-color: #1e1eb2;
+  border-color: hsla(36, 49%, 21%, 0.527);
   border-radius: 4px;
   padding: 5px, 10px;
   margin-top: 15px;
 }
 .loginHeaderText {
-  color: #202124;
+  color: white;
   margin: 0px;
   padding: 0px;
 }
 #loginPageTitle {
-  color: #202124;
+  color: white;
   margin-bottom: 20px;
   padding: 0px;
   font-size: 25px;
+}
+#login-page-container {
+  margin: 0 auto;
 }

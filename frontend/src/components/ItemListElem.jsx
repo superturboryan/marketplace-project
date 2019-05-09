@@ -18,7 +18,7 @@ class UnconnectedItemListElem extends Component {
               src={this.props.item.images[0]}
             />
           </span>
-          <span>{this.props.quantity}</span>
+          <span>{this.props.item.quantity}</span>
         </div>
       </li>
     );

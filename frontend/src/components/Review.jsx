@@ -3,21 +3,33 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
 class UnconnectedReview extends Component {
+  getStars = () => {
+    let stars = [];
+    for (let i = 0; i < this.props.data.rating; i++) {
+      stars.push(i);
+    }
+    return (
+      <div className="review-rating review-rating-spacer">
+        {stars.map(star => {
+          return <span className="review-star">&#11088;</span>;
+        })}
+      </div>
+    );
+  };
+
   render = () => {
     return (
-      <div>
-        <div>
-          <span>
-            <h4>{this.props.data.title}</h4>
-          </span>
-          <span>
-            <p>{this.props.data.rating}</p>
-          </span>
+      <div className="your-review-mini">
+        <div className="review-flex">
+          <div className="review-title">"{this.props.data.title}"</div>
+          {this.getStars()}
         </div>
-        <p>{this.props.data.content}</p>
-        <Link to={"/profile/" + this.props.data.userId}>
-          {this.props.data.username}
-        </Link>
+        <div className="review-content-mini">{this.props.data.content}</div>
+        <div className="review-seller-link">
+          <Link to={"/profile/" + this.props.data.userId}>
+            — {this.props.data.username}
+          </Link>
+        </div>
       </div>
     );
   };

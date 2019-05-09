@@ -19,22 +19,25 @@
   z-index: 1;
 }
 #submitSignup {
-  background-color: #1e1eb2;
+  background-color: hsla(36, 49%, 21%, 0.527);
   color: white;
   font-size: 16px;
-  border-color: #1e1eb2;
+  border-color: hsla(36, 49%, 21%, 0.527);
   border-radius: 4px;
   padding: 5px, 10px;
   margin-top: 15px;
 }
 .signupHeaderText {
-  color: #202124;
+  color: white;
   margin: 0px;
   padding: 0px;
 }
 #signupPageTitle {
-  color: #202124;
+  color: white;
   margin-bottom: 20px;
   padding: 0px;
   font-size: 25px;
+}
+#signup-main-div {
+  margin: 0 auto;
 }
