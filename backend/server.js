@@ -430,7 +430,8 @@ app.post("/set-cart", upload.none(), function (req, res) {
          const currentUserId = result[0].userId;
          itemsCollection.find({ itemId: itemId }).toArray((err, result) => {
             if (err) throw err;
-            let newCartItem = { ...result[0], _id: generateId(), quantity: quantity, cartUserId: currentUserId }
+            let newCartItem = { ...result[0], quantity: quantity, cartUserId: currentUserId }
+            delete newCartItem._id
             let newCartItemStock = result[0].stock
             if (newCartItemStock < quantity) {
                console.log("DB: Item cannot be added to cart, not enough in stock!")
@@ -440,7 +441,6 @@ app.post("/set-cart", upload.none(), function (req, res) {
             cartCollection.insertOne(newCartItem, (err, result) => {
                if (err) throw err;
                console.log(`DB: Successfully added entry to cart collection`)
-
                itemsCollection.updateOne({ itemId: itemId }, { $set: { stock: newCartItemStock - quantity } }, (err, result) => {
                   if (err) throw err;
                   console.log("DB: Successfully updated item's stock in Items collection")
@@ -493,23 +493,22 @@ app.post("/set-cart", upload.none(), function (req, res) {
 
 //-----------------------------------------------------------------------------------------------------------------------//
 
-app.get("clear-cart", function (req, res) {
+app.get("/clear-cart", function (req, res) {
    const sessionId = req.cookies.sid;
    //Get username from remote sessions colleciton
    sessionsCollection.find({ sessionId: sessionId }).toArray((err, result) => {
       if (err) throw err;
       const currentUserName = result[0].user;
       //Get userId from users collection
-      usersCollection
-         .find({ username: currentUserName })
-         .toArray((err, result) => {
-            const currentUserId = result[0].userId;
-            const currentUserCart = userCarts.find(cart => {
-               return cart.userId === currentUserId;
-            });
-            currentUserCart.itemIds = [];
-            console.log("User's cart has been cleared!");
-         });
+      usersCollection.find({ username: currentUserName }).toArray((err, result) => {
+         const currentUserId = result[0].userId;
+
+         cartCollection.deleteMany({ cartUserId: currentUserId }, (err, result) => {
+            if (err) throw err;
+            console.log("DB: Deleted all of user's items from cart")
+            res.send(JSON.stringify({ success: true }))
+         })
+      });
    });
 });
 
