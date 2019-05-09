@@ -12,10 +12,10 @@ class UnconnectedNavigationBar extends Component {
     }
   };
 
-  getButtonHtml = () => {
+  getSignupLogin = () => {
     if (!this.props.loggedIn) {
       return (
-        <div>
+        <div className="toTheEnd">
           <div>
             <Link to={"/signup"}>Signup</Link>
           </div>
@@ -25,6 +25,20 @@ class UnconnectedNavigationBar extends Component {
         </div>
       );
     }
+  };
+
+  getUserRelatedLinks = () => {
+    return (
+      <div className="toTheEnd navigation-unflex">
+        <div>
+          <span>{this.props.username + " |"}</span>
+          <Link to={"/cart"}>My Cart</Link>
+        </div>
+        <div className="toTheEnd">
+          <Link to={"/add-item"}>Sell Something!</Link>
+        </div>
+      </div>
+    );
   };
 
   getNavigationLinks = () => {
@@ -48,18 +62,8 @@ class UnconnectedNavigationBar extends Component {
             <Link to={"/"}>Ali-Bae</Link>
           </div>
           <Searchbar />
-          {this.getButtonHtml()}
-          {this.ifLoggedInDoThis(
-            <div className="toTheEnd navigation-unflex">
-              <div>
-                <span>{this.props.username + " |"}</span>
-                <Link to={"/cart"}>My Cart</Link>
-              </div>
-              <Link className="toTheEnd" to={"/add-item"}>
-                Sell Something!
-              </Link>
-            </div>
-          )}
+          {this.getSignupLogin()}
+          {this.ifLoggedInDoThis(this.getUserRelatedLinks())}
         </div>
         <div className="navigation-left-right">
           {this.getNavigationLinks()}
