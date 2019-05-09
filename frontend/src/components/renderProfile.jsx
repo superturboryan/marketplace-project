@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import ReviewList from "./ReviewList.jsx";
 import { Link } from "react-router-dom";
+import "./../css/profile.css";
 
 class Profile extends Component {
   constructor(props) {
@@ -48,11 +49,18 @@ class Profile extends Component {
 
   itemHtml = () => {
     if (this.state.items.length === 0) {
-      return <h3>There are no items on sale by this user.</h3>;
+      return (
+        <h3 className="profile-username">
+          There are no items on sale by this user.
+        </h3>
+      );
     } else {
       return (
-        <div>
-          <h2>{this.state.items[0].user[0].username}</h2>
+        <div className="profile-top-half">
+          <h2 className="profile-username">
+            {this.state.items[0].user[0].username}'s profile
+          </h2>
+          <h3 className="profile-items-header">Items for sale</h3>
           <div className="container">
             <div className="gallery">
               {this.state.items.map(item => this.itemDetailsHtml(item))}
@@ -65,8 +73,9 @@ class Profile extends Component {
 
   render = () => {
     return (
-      <div>
+      <div className="profile-body">
         {this.itemHtml()}
+        <hr />
         <ReviewList userId={this.props.match.params.userId} />
       </div>
     );

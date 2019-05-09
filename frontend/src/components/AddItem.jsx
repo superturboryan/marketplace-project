@@ -154,7 +154,8 @@ class UnconnectedAddItem extends Component {
             required={true}
           />
           <div>Description</div>
-          <input
+          <textarea
+            id="add-item-form-description"
             className={"add-item-form-input"}
             type="text"
             onChange={this.handleDescription}
