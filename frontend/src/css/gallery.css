@@ -55,3 +55,10 @@ img {
 .panel-default > .panel-heading {
   background-color: #464545;
 }
+.galleryContainer {
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-top: 10px;
+  margin-bottom: 10%;
+  background-color: white;
+}
